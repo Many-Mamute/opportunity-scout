@@ -1,0 +1,595 @@
+{
+ "ask_reason_for": [],
+ "downweights": {},
+ "etag_cache": {
+  "https://aefeup.pt/": {
+   "body_sha256": "ef5d8dd69ac2b3c7434b5e1c06483c61a5400f6dfbbb71d3de336638300c03ae",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://ai.lahacks.com/?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=LA+Hacks+AI+Hackathon+2026": {
+   "body_sha256": "3cfafaea71e4bd19b7058a9296b629b1548afcd0cc4d7b5077a8d619d9b2b736",
+   "etag": "W/\"b24f3c040300982883049f9b11eaa9c3\"",
+   "last_modified": "Tue, 11 Aug 2026 06:52:02 GMT"
+  },
+  "https://careers.cern/jobs/short-term-internship": {
+   "body_sha256": "ca3d0c91245d212feaadb22939b73e233dc2368c9c2673919819effad538136b",
+   "etag": null,
+   "last_modified": "Thu, 13 Aug 2026 09:42:25 GMT"
+  },
+  "https://careers.cern/programmes/short-term-internship": {
+   "body_sha256": "7e3a73b3c12c31d454d4d629edb8d72910d482a6e3517ab2117c58abe63ddd40",
+   "etag": null,
+   "last_modified": "Thu, 13 Aug 2026 09:42:39 GMT"
+  },
+  "https://careers.cern/programmes/summer-studentship": {
+   "body_sha256": "6397b5a4199d0f07517a858b9cf1d63c763194a0cc1f834e69b6e80580a0c618",
+   "etag": null,
+   "last_modified": "Thu, 13 Aug 2026 09:42:39 GMT"
+  },
+  "https://careers.smartrecruiters.com/BoschGroup/portugal": {
+   "body_sha256": "c166e31949c04ed74473bfb096eccab06d3ef9c2a608de0efe437e75a28a3436",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://careers.smartrecruiters.com/BoschGroup/portugal#main": {
+   "body_sha256": "c166e31949c04ed74473bfb096eccab06d3ef9c2a608de0efe437e75a28a3436",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://careers.vestas.com/search/?q=&locationsearch=Portugal": {
+   "body_sha256": "33ae159b1941d374ba3bccab18cbfcd52764633c4f7bc57dead2fd7d0824edd5",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://collab.dvb.bayern/spaces/TUMedschoolofficeintern/pages/71999506/Aktuelles+News": {
+   "body_sha256": "9540759866caf5b0ba0c41aaba8a1b0cd2f68c19203aa2b6ca3907fce0edef72",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://devpost.com/hackathons": {
+   "body_sha256": "3a31230f55d035ec7874b97ba7a05a1bffb21177404fce33e3c0dfb8302b4254",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://devpost.com/hackathons?status[]=upcoming&status[]=open": {
+   "body_sha256": "ecb85a4b4a486feb6c3fbd320129761b9398f0272d5acfa5b92fc9007d236e6f",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://devpost.com/hackathons?status[]=upcoming&status[]=open#host-a-hackathon": {
+   "body_sha256": "f869b4c047f007d99f0456a096b18a8f4ba6d47b983345bdb1a25992d57daf88",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://devpost.com/hackathons?status[]=upcoming&status[]=open#join-a-hackathon": {
+   "body_sha256": "7224bcff24780a415a0981fb0cde8bf63af491fb7d9e9c6bd4dc9fd2855c6e7f",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://events.mlh.com/events/14413-midnight-hackathon?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=Midnight+Virtual+Hackathon+%5BJuly%5D": {
+   "body_sha256": "173b1378d8807ce38a92267e733c78f5085ce92e3f6d7bb1073b1242819246b3",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://events.mlh.com/events/14510-midnight-hackathon-august?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=Midnight+Virtual+Hackathon+%5BAugust%5D": {
+   "body_sha256": "d6524b273c4fe296c60583867dd01ffde9c172a8a8a7c926c7c380e3d3bee91c",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://fellowship.mlh.io/#programs": {
+   "body_sha256": "9a1371f3dbced74af6751c530e123cfab290c82e5094beffafe441b35673c06b",
+   "etag": "W/\"54nnf4dxxh19sa\"",
+   "last_modified": null
+  },
+  "https://foundersfounders.co/": {
+   "body_sha256": "6dc9c7fc93bb488bb0520a6c780a8d3c0fb5486a4711aca49b4c53fac7393023",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://fs-alpeadria.com/fs-alpe-adria-2026/team-registration-2026": {
+   "body_sha256": "1fee10a75316fbf227dc8667e47e302264b723bb9f5e4db1fec04081341ae114",
+   "etag": "\"7fa3-6a7d8e84-0;gz\"",
+   "last_modified": "Thu, 13 Aug 2026 09:29:40 GMT"
+  },
+  "https://fseast.eu": {
+   "body_sha256": "71acb42b8d292b0024286adb9bef861ccc1f793bb732a8e6c77b8c0746dc6453",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://global.rutgers.edu/program-search/details/summer-london-school-economics-lse": {
+   "body_sha256": "ee4f38bbcb13d57205a6d91d5fc1d469c38255374a29afbc31d128593e7ecf7b",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://hackp.ac/fellowship-faq": {
+   "body_sha256": "cfb68fc6b489f06b1d343dc9304c8174a9ae1b070444e0d9eae489961757869f",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://home.cern/summer-student-programme": {
+   "body_sha256": "9905dcf931a4b204fb9262b792466fc28e8e53fa61139ef2f3cb350f5bb89473",
+   "etag": null,
+   "last_modified": "Wed, 12 Aug 2026 09:40:12 GMT"
+  },
+  "https://idealeague.org/students/summerschools": {
+   "body_sha256": "78e34962329aa479b78b45bfa18ce6b806c54f32ff74a348aded0290668eca04",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://info.devpost.com/product/ai-hackathons": {
+   "body_sha256": "54846004c33c5b4eace5cca4fedc100df1386ee5b5413233fc7600e7ec3a173b",
+   "etag": null,
+   "last_modified": "Tue, 11 Aug 2026 14:14:35 GMT"
+  },
+  "https://info.devpost.com/product/devpost-for-teams": {
+   "body_sha256": "b3ca7f31f9aabb2982597c8a417a9b6ddf68d627092cb53347f545984e7290b6",
+   "etag": null,
+   "last_modified": "Wed, 12 Aug 2026 16:52:41 GMT"
+  },
+  "https://info.devpost.com/product/public-hackathons": {
+   "body_sha256": "90cae7d37fe7b1020f9bd0c5a720354ce88ef07eb7b104c6222a256534eb8af9",
+   "etag": null,
+   "last_modified": "Tue, 11 Aug 2026 14:12:12 GMT"
+  },
+  "https://jobs.siemens.com/careers?location=Portugal": {
+   "body_sha256": "d17fc1f95d88e2a5598d957a4fa76af86b3160ab53761bf44515683f85688da1",
+   "etag": null,
+   "last_modified": "Thu, 13 Aug 2026 09:46:13 GMT"
+  },
+  "https://junifeup.pt/": {
+   "body_sha256": "954cda8f6bc7bce99cccca427e2e7313480eadf79846a48cec467460c6b3b3fb",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://lifelong-learning.ox.ac.uk/courses/oxford-university-summer-school-for-adults": {
+   "body_sha256": "d940366f300cf0aeced37ece4d247b3899115ff278f1184d914c003e0ea98346",
+   "etag": "\"6a7d8b6f-bb8e\"",
+   "last_modified": "Thu, 13 Aug 2026 09:16:31 GMT"
+  },
+  "https://lu.ma/cursorcommunity?k=c": {
+   "body_sha256": "b90c331a76d17b36f066430f78d2c1eb4753be1f0bb29e97780e313fa0da93e6",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://lu.ma/porto": {
+   "body_sha256": "15798938b5c8c3b8ac6c330c2fc57718ac27ae1d8c0175aab1a7e38344a88fb9",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://mlh.io/seasons/2027/events": {
+   "body_sha256": "b3a5806748971e86e340e4181528cee0d8b5c18039537f4a576b5ededd92ba4f",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://namrc.sme.org/competitions/student-manufacturing-design-competition": {
+   "body_sha256": "d2877857d2af9bcc16161aa81dd1eb38eabd72ded7fe762695f265435b7f4065",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://noticias.up.pt/": {
+   "body_sha256": "a12e5a17d018da7cf819a239e604a4243671c45b69a8b652066f0a9b313289d7",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://noticias.up.pt/feup/": {
+   "body_sha256": "6d36ce73b968a908ee24db9ea0921334d1c670245e30ff5f73a1824f9de123fc",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://noticias.up.pt/feup/formula-student-feup-domina-junior-class-na-suica/": {
+   "body_sha256": "d9f36d8c6b219dd12cdebdda1bebd56ed9298e3a0d375aa99f3c4e3da39f6828",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://noticias.up.pt/feup/tag/flv": {
+   "body_sha256": "aaacc4df6bcf69aabcadd1357b2743d275e80b2f2fcdfa27ecde7e0757e1be1a",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://noticias.up.pt/oportunidades/icbas-tecnico-a-superior-servico-de-planeamento-e-gestao-de-informacao-ref-a-teg-icbas-26-17/": {
+   "body_sha256": "fdf2126b91cc48da101472b11c5504323daded64dcc12e6af5c7de952bca9672",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://openlab.cern/cern-openlab-summer-student-programme": {
+   "body_sha256": "031f57385eaed85b70e4049f23cdda1350b39c2de409b584ee060ea87a52ee3f",
+   "etag": null,
+   "last_modified": "Mon, 10 Aug 2026 14:21:50 GMT"
+  },
+  "https://oxbridge-scholars.co.uk/best-summer-schools-in-the-uk-for-international-students-2026": {
+   "body_sha256": "4061a19d68d28f23d2e2dcd5780a0bd3fc3dfc435a63bc9775dfc525d978dae5",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://preh8-portal.rexx-recruitment.com/job-offers.html": {
+   "body_sha256": "81ced727557248cf204fea78945cd9aa346c68284c0c5214d38ad5e19c501671",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://preh8-portal.rexx-recruitment.com/jobalert-eng.html": {
+   "body_sha256": "e64495e70ca9a2dad08a3842b19dd47baa8cddaf34f5527177fe5eb6bb7950da",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://register.makethefuture.shell": {
+   "body_sha256": "3d18b16f879ee5ab6e671308f2787a37e5b69e73af98efb078962fa94c95baeb",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://scholarshipscorner.website/desy-summer-student-program": {
+   "body_sha256": "29480161be6cee47050ab7e296c87d05cf03c0000609b1872daebba421703fd9",
+   "etag": null,
+   "last_modified": "Thu, 13 Aug 2026 09:25:52 GMT"
+  },
+  "https://sigarra.up.pt/feup/pt/noticias_geral.lista_noticias": {
+   "body_sha256": "714fb400e814005fc47235d840513f722483647825bbd4b1b9828977b2fca6e7",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://sigarra.up.pt/feup/pt/noticias_geral.ver_noticia?p_nr=194277": {
+   "body_sha256": "6a3bbcb0456a769d0a9958e2862a87736192ca030e79c28881ace746e25b4a01",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://sigarra.up.pt/feup/pt/noticias_geral.ver_noticia?p_nr=196637": {
+   "body_sha256": "1086439b1787a9454f38edcf4315dd9e32f2bad97ec4e47485a0726cfe165a6d",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://sigarra.up.pt/feup/pt/noticias_geral.ver_noticia?p_nr=199522": {
+   "body_sha256": "d09d0b161fb53969205c1126c2d7f7cf5d1294e585bb97b1783b0a692cd10eff",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://tcr.rwth-aachen.de/enhance-synergic-urban-systems": {
+   "body_sha256": "f32b7bebe168c5f3a2f439093b7724978bee3805829c8a8d7fe3129a6061b5fb",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://timeassociation.org/t-i-m-e-projects": {
+   "body_sha256": "aaf2c96ca4f45e0f5850e391124eb39c576c5b11bfd3e75de1c9218402764f26",
+   "etag": null,
+   "last_modified": "Fri, 07 Aug 2026 07:56:22 GMT"
+  },
+  "https://unstop.com/competitions": {
+   "body_sha256": "b47459a3cd5691d33d42a84bf80783955f8914a71f36f6a8ad9baff03b817489",
+   "etag": "W/\"6a7c6004-5e23\"",
+   "last_modified": "Wed, 12 Aug 2026 11:59:00 GMT"
+  },
+  "https://unstop.com/hackathons": {
+   "body_sha256": "b47459a3cd5691d33d42a84bf80783955f8914a71f36f6a8ad9baff03b817489",
+   "etag": "W/\"6a7c6004-5e23\"",
+   "last_modified": "Wed, 12 Aug 2026 11:59:00 GMT"
+  },
+  "https://uptec.up.pt/comunidade/estagios-e-bolsas": {
+   "body_sha256": "5e0bc4d39d50e870715fd99ad043bf9bbd797ee5a3f197fac8b02be14a6c8052",
+   "etag": "\"ngvveapbh92v1n\"",
+   "last_modified": null
+  },
+  "https://uptec.up.pt/eventos/": {
+   "body_sha256": "4441ba935fe157af38806cc1af0b4ad1f807b2b2333b704b02868c0d52513aef",
+   "etag": "\"c38xyect6g29ro\"",
+   "last_modified": null
+  },
+  "https://www.asme.org/conferences-events/competitions": {
+   "body_sha256": "1b141cd703ef5bffa7e6383d859b6d0977141e0055fae8b7ec46b7d1bf77a46f",
+   "etag": null,
+   "last_modified": "Thu, 22 Jan 2026 16:00:08 GMT"
+  },
+  "https://www.desy.de/career/praktikum/index_eng.html": {
+   "body_sha256": "e954bc4355324f4f2fae60906fa51a207605b37d8527231bf9a7c1ae858be4c6",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.edchoice.org/school-choice/programs/south-carolina-education-scholarship-trust-fund-program": {
+   "body_sha256": "8ab190387ef15389a15e1c5ee89e73d15f0828166629da417511220ec0bb75d6",
+   "etag": null,
+   "last_modified": "Thu, 13 Aug 2026 09:17:42 GMT"
+  },
+  "https://www.esa.int/About_Us/Careers_at_ESA/Student_Internships2": {
+   "body_sha256": "3be3dbc06e8490ff40d12cbed14d08199fc6af48aba7c3983931bcb625a84f8a",
+   "etag": null,
+   "last_modified": "Thu, 13 Aug 2026 09:47:00 GMT"
+  },
+  "https://www.esa.int/Education": {
+   "body_sha256": "c43421d041021dac34d74874a88b64fb86801b1e9f181d173ff0dc9ba10551f9",
+   "etag": null,
+   "last_modified": "Thu, 13 Aug 2026 09:39:12 GMT"
+  },
+  "https://www.eventbrite.com/e/built-for-nyc-ai-hackathon-at-nypl-tickets-1994000516221?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=Built+for+NYC%3A+AI+Hackathon+at+NYPL": {
+   "body_sha256": "a08809064a01ac2ddf7a07019b429851cc0d27253694529572efa526cbda3656",
+   "etag": "\"k1c0xzcl4d4g79\"",
+   "last_modified": null
+  },
+  "https://www.fabricadestartups.com/": {
+   "body_sha256": "9da25bfedba2f811fced7aa2eb6e958f75a243ccfa33288744376c4f975a5fae",
+   "etag": "W/\"e505e8ec5bca3e33641eb54bd3fc69ed\"",
+   "last_modified": null
+  },
+  "https://www.formulastudent.pt/": {
+   "body_sha256": "d41d6a2dadaba32d8cf09dc040ddcc8c34dbf463fad1aa29f575c97c246219ce",
+   "etag": "W/\"a5d7b979008d51ddf99e2fdac39f2597\"",
+   "last_modified": null
+  },
+  "https://www.formulastudent.pt/competition": {
+   "body_sha256": "4fd4d85f909a3970349f7e6cf06888b79ac4a2e371e4f5e96d06b7379a0d08c8",
+   "etag": "W/\"327114878a40d203910b38b878a6c5cd\"",
+   "last_modified": null
+  },
+  "https://www.formulastudent.pt/competition/fspt23": {
+   "body_sha256": "c40acf892a6b55548eb7b9840abc8ac0091573eae1c16b8374e4ecf51c48986a",
+   "etag": "W/\"b504a788fd8e07396576dea1649a724e\"",
+   "last_modified": null
+  },
+  "https://www.formulastudent.pt/competition/fspt24": {
+   "body_sha256": "6fb1ace03cdaa557f56d7cf5b75a7e3b3583ded2668ca163fa51defd6ba1b2ed",
+   "etag": "W/\"01f424d6d92e8e218473c6fd500757fd\"",
+   "last_modified": null
+  },
+  "https://www.formulastudent.pt/competition/fspt25": {
+   "body_sha256": "88ffb9cb4e0072bd7fe6fab09cae3fbb9297018f9a286fec69a2e9ea3fd710e5",
+   "etag": "W/\"befc97ae2ad9670d8286628bf974a61c\"",
+   "last_modified": null
+  },
+  "https://www.formulastudent.pt/competition/fspt25/c\u00f3pia-penalties-2025": {
+   "body_sha256": "7fe3e8b4888982aa29838910128948c37f26b76622a9b93e6e7fbbaf8d028f57",
+   "etag": "W/\"eadd8c4296d3144f67694994de10c280\"",
+   "last_modified": null
+  },
+  "https://www.formulastudent.pt/competition/fspt26": {
+   "body_sha256": "70a90cee4530f0c1a00dfc0ead1114d82c2eb20160e2a53cc7e9878166306eff",
+   "etag": "W/\"3e137024d83ad282f177d74132786b48\"",
+   "last_modified": null
+  },
+  "https://www.formulastudent.pt/competition/pre-event-2025": {
+   "body_sha256": "3c149eebe516774e3e5cf8db701e96387952ef95e8d2234549996f24d724a08b",
+   "etag": "W/\"4743fa950fd0a3fe2d0fc04f69188c5a\"",
+   "last_modified": null
+  },
+  "https://www.formulastudent.pt/competition/why-fspt": {
+   "body_sha256": "7c9de6959d2d0405ed961ab2677d493c4e1b814a12a588992543810950a83e4f",
+   "etag": "W/\"4926740780a5661379146d26009bff67\"",
+   "last_modified": null
+  },
+  "https://www.henhackshackathon.com/?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=HenHacks": {
+   "body_sha256": "b3dcf3e91c927a3c5d1594e97c5fad34466cbb991814f6b4cc24719f653422f8",
+   "etag": "W/\"08dcc1d454bce07e95397e2f2f8a8920\"",
+   "last_modified": null
+  },
+  "https://www.inesctec.pt/en/events": {
+   "body_sha256": "03c2020b7ebb61e5af4fbb54c8d1b12f15b158e523745bde08ed9af8c05feb7a",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.inesctec.pt/en/events/ai4lungs-workshop-on-ai-based-personalised-care-for-respiratory-disease-using-diverse-data-modalities-for-patient-stratification": {
+   "body_sha256": "0c3034f650785ac8374a78890f7dfbd64f74884718160514628ca2305589987e",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.inesctec.pt/en/events/debate-on-the-challenges-of-automation-in-industry": {
+   "body_sha256": "ca0ea60a80566537e2ab8fb78ef91c3364c18f85c4a8d5118f62439fbe970171",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.inesctec.pt/en/events/epicure-hackathon-code-optimisation-for-heterogeneous-hpc-environments": {
+   "body_sha256": "b215055179d103e2f1e5836dfa0457eabdfcb981115d9e545a2ae696bed70b9f",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.inesctec.pt/en/events/inesc-tec-summer-research-internships": {
+   "body_sha256": "05034ff746e260946fe9d3c4b73b0b3d0efea5de43936b53b3176575fcc87945",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.inesctec.pt/en/events/nada-se-perde-tudo-se-transforma-como-e-que-a-tecnologia-ajuda-na-sustentabilidade-ciencia-viva-internship-at-inesc-tec": {
+   "body_sha256": "435e76e70800ae21559815334446316d6ab90848f120f236393996ba9a54294e",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.inesctec.pt/en/events/workshop-on-quantified-occupational-health": {
+   "body_sha256": "b0fbdd54c2fcfd85d6e91cb8181507d7505acae8a4a1fa241ecb34dfccfd821b",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.jeronimomartins.com/en/careers/": {
+   "body_sha256": "2a90b206a90de0884f63f53d4a469fa4f6e6da1a2901555e97aa513b46056cec",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.jeronimomartins.com/en/careers/students-and-recent-graduates/curricular-internship/": {
+   "body_sha256": "8401f043ea5a56dbc793b722e211bf2cd936bebcd9a74210cc43e6c8e67c4496",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.jeronimomartins.com/en/careers/students-and-recent-graduates/professional-internship-programme/": {
+   "body_sha256": "8dc34dc0b193947456c471d575219978cbf12980e18fdf8442d3eeb0d4e1e37d",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.jeronimomartins.com/en/careers/students-and-recent-graduates/summer-internship-programme/": {
+   "body_sha256": "8861f61b96ae4d9d7b97afba69ccb9cd03021cafe46ad89ffa3944e6702a3d74",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.kaggle.com/competitions": {
+   "body_sha256": "1098f12f164d8f1d748921d7c9a53e7148aedf8631133f856faca1031029ca31",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.kirchhoff-automotive.com/career": {
+   "body_sha256": "0630a27f79f3c29b4dc610872ea8e67c156ab789bd8890e5b11698ecb8439c1f",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.lse.ac.uk/study-at-lse/summer-schools/summer-school/academic-directors-scholarships": {
+   "body_sha256": "f3144c3a4f72d49f71d3cf5b3c1ed3c92ef499e33d694c0011e9e883326a6de1",
+   "etag": "W/\"19d46-wJZRMHwA5XakMdQ+xGBpVbtQRO0\"",
+   "last_modified": null
+  },
+  "https://www.meetup.com/find/?location=pt--Porto&source=EVENTS": {
+   "body_sha256": "7b5b94e349916a8f6afe27cfdcce51d9414bf6170e8839c5a7e7ab3c67fe2df3",
+   "etag": "W/\"OVNTOnhLCi4T2ZfDkRAZ8oI6Mbrf0aX3\"",
+   "last_modified": null
+  },
+  "https://www.mlh.com/seasons/2026/events": {
+   "body_sha256": "a8d61723c4b918ab0938cc9bbad4c73e779f9355f607bc04d1b4507e670ec681",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.polimi.it/en/campus-e-servizi/international-mobility/study-abroad/the-opportunities/special-projects/idea-league": {
+   "body_sha256": "aa6a780456a8b14e61371424bc8adb02f24d099c035e22aee4b81f48f8ee3f2c",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.porto.ucp.pt/en/events": {
+   "body_sha256": "8f7db6db7465d1c7b55523582af3582d4c5446cfc66e580dc99e69ccebb08f57",
+   "etag": "\"1786614309-1\"",
+   "last_modified": "Thu, 13 Aug 2026 09:45:09 GMT"
+  },
+  "https://www.preh.com/en/career/": {
+   "body_sha256": "81ced727557248cf204fea78945cd9aa346c68284c0c5214d38ad5e19c501671",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.sae.org/events": {
+   "body_sha256": "255291091428be9129d9db78e247478a8c4996c1f43f4172e080b4b4d68c5f05",
+   "etag": "W/\"507cc791d6f4a4d4448d5462e83e922d\"",
+   "last_modified": "Wed, 05 Aug 2026 21:10:59 GMT"
+  },
+  "https://www.sae.org/events/student/about/aero-design": {
+   "body_sha256": "255291091428be9129d9db78e247478a8c4996c1f43f4172e080b4b4d68c5f05",
+   "etag": "W/\"507cc791d6f4a4d4448d5462e83e922d\"",
+   "last_modified": "Wed, 05 Aug 2026 21:10:59 GMT"
+  },
+  "https://www.saefoundation.org/programs/educational-programs/collegiate-design-series": {
+   "body_sha256": "9eae0f0969956e3dec3c1b3c111d7d1b2fa6300dc0f83aeadf6ad73bb04dc582",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.shellecomarathon.com": {
+   "body_sha256": "95d5d7354043bb448731b1135f3aa6f1fc693f9c3f7aa76969e07868d147309c",
+   "etag": null,
+   "last_modified": "Wed, 12 Aug 2026 10:49:16 GMT"
+  },
+  "https://www.shellecomarathon.com/about/faq/gc-travel-stipend.html": {
+   "body_sha256": "12458eb9d4fc17682f295766868986786c18d386a0fdd873af7b5f711d43475a",
+   "etag": null,
+   "last_modified": "Wed, 12 Aug 2026 09:44:53 GMT"
+  },
+  "https://www.shellecomarathon.com/about/register.html": {
+   "body_sha256": "a0fa1aff03e6384142a0c9caa546979c816915ea856057e24b5c83d89e1a387c",
+   "etag": null,
+   "last_modified": "Wed, 12 Aug 2026 09:50:12 GMT"
+  },
+  "https://www.shellecomarathon.com/programme.html": {
+   "body_sha256": "8d8a972425e484c78c20ae80d4efd69e45266bc05e1746afcf368753f5afc683",
+   "etag": null,
+   "last_modified": "Wed, 12 Aug 2026 11:56:38 GMT"
+  },
+  "https://www.smartrecruiters.com/legal/general-privacy-policy/": {
+   "body_sha256": "2dd0db7838e0338fd7bf9316618127204137a612f758a246bb0ad8a4e8aaa9a3",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.sonae.pt/en/careers/": {
+   "body_sha256": "a338f0fb74a0a0430b46dcb1b1ee0c981423e38e8710e7257874f49ab74b3b51",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.youtube.com/watch?v=aeFwRXOmCLA": {
+   "body_sha256": "e80279309de6ad8c521b373dfdfd3fb8255a1bd45a24bac506cc6ebfba7cde46",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://youth.europa.eu/go-abroad/volunteering/opportunities_en": {
+   "body_sha256": "a62a839600fe7869aaf8413cd37cfcd5bea24be64f31dea34947d27cee60a3fa",
+   "etag": "\"1786614311-gzip\"",
+   "last_modified": "Thu, 13 Aug 2026 09:45:11 GMT"
+  }
+ },
+ "feedback_reasons": [],
+ "geocode_cache": {
+  "1 chome 15 30 tenjin fukuoka": {
+   "country": "jp",
+   "municipality": "\u798f\u5ca1\u5e02"
+  },
+  "alx kenya the piano nairobi": {
+   "country": null,
+   "municipality": null
+  },
+  "austin tx austin": {
+   "country": "us",
+   "municipality": "Austin"
+  },
+  "buenos aires argentina buenos aires": {
+   "country": "es",
+   "municipality": "Santa Cruz de Tenerife"
+  },
+  "ciudad de guatemala guatemala ciudad de guatemala": {
+   "country": "gt",
+   "municipality": "Ciudad de Guatemala"
+  },
+  "egypt": {
+   "country": null,
+   "municipality": null
+  },
+  "gridakl john lysaght startup coworking space auckland": {
+   "country": null,
+   "municipality": null
+  },
+  "las vegas nv las vegas": {
+   "country": "us",
+   "municipality": "Las Vegas"
+  },
+  "lemon studio nairobi": {
+   "country": null,
+   "municipality": null
+  },
+  "new cairo 3 egypt new cairo 3": {
+   "country": null,
+   "municipality": null
+  },
+  "pure good cape town": {
+   "country": null,
+   "municipality": null
+  },
+  "santa marta colombia santa marta": {
+   "country": null,
+   "municipality": null
+  },
+  "society1 preston": {
+   "country": null,
+   "municipality": null
+  },
+  "split croatia split": {
+   "country": null,
+   "municipality": null
+  },
+  "stavros niarchos foundation library new york": {
+   "country": "us",
+   "municipality": "New York"
+  },
+  "toronto on toronto": {
+   "country": "ca",
+   "municipality": "Toronto"
+  },
+  "verndale quito": {
+   "country": null,
+   "municipality": null
+  },
+  "vivino k benhavn": {
+   "country": "dk",
+   "municipality": "K\u00f8benhavns Kommune"
+  },
+  "wiseapple coffee shop lusaka": {
+   "country": null,
+   "municipality": null
+  }
+ },
+ "next_event_id": 45,
+ "tavily": {
+  "date": "2026-08-13",
+  "used": 16
+ }
+}
