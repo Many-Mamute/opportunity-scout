@@ -1,0 +1,247 @@
+# All behaviour knobs live here. sources.yaml only lists where to look.
+
+settings:
+  target_hour: 6              # local Europe/Lisbon hour the scheduled run may execute in
+  timezone: Europe/Lisbon
+  max_runtime_min: 20         # hard stop: send what we have
+  tavily_daily_cap: 30
+  gemini_run_cap: 30          # max LLM calls per run
+  gemini_batch_size: 10       # candidate pages per LLM call
+  gemini_model: gemini-2.5-flash-lite
+  gemini_seconds_between_calls: 5   # free tier ~15 RPM
+  top_section_cap: 20
+  max_detail_pages_per_source: 8
+  backfill_detail_multiplier: 3
+
+# --------------------------------------------------------------- stage 1 triage
+triage:
+  include_any:               # title+url+snippet must match at least one (case-insensitive)
+    - internship
+    - "est[áa]gio"
+    - hackathon
+    - hackaton
+    - competition
+    - concurso
+    - challenge
+    - "case comp"
+    - bootcamp
+    - "summer school"
+    - "escola de ver[ãa]o"
+    - "summer program"
+    - masterclass
+    - workshop
+    - "forma[çc][ãa]o"
+    - "curso intensivo"
+    - "formula student"
+    - "shell eco"
+    - datathon
+    - ideathon
+    - olympiad
+    - "olimp[íi]adas"
+    - scholarship
+    - fellowship
+    - "open day"
+    - recruit
+    - vaga
+    - traineeship
+  blacklist:                 # any match kills the candidate at zero cost
+    - webinar replay
+    - "on-?demand recording"
+    - "for (senior|experienced) professionals"
+    - "\\b(mba|emba)\\b"
+    - executive education
+    - "phd (position|only|student[s]? only)"
+    - postdoc
+    - "5\\+ years"
+    - casino
+    - crypto airdrop
+    - "adult(s)? only"
+
+# ------------------------------------------------------------------- geography
+geography:
+  # municipality (normalised, accent-free) -> approx drive minutes from Porto
+  allowlist:
+    porto: 0
+    matosinhos: 15
+    vila nova de gaia: 15
+    maia: 20
+    gondomar: 20
+    valongo: 20
+    povoa de varzim: 35
+    vila do conde: 30
+    santo tirso: 35
+    trofa: 30
+    espinho: 25
+    santa maria da feira: 30
+    sao joao da madeira: 35
+    oliveira de azemeis: 40
+    aveiro: 55
+    braga: 50
+    guimaraes: 50
+    vila nova de famalicao: 40
+    barcelos: 55
+    penafiel: 35
+    paredes: 30
+    amarante: 45
+    viana do castelo: 60
+  multi_day_municipalities: [porto]
+  nominatim_user_agent_note: "opportunity-scout personal aggregator"
+
+# funded-or-prestigious override: admitted anywhere, "Worth The Travel" section
+override:
+  funded_keywords:
+    - fully funded
+    - "travel and accommodation (are )?(covered|paid|included)"
+    - all expenses paid
+    - "despesas (de viagem )?(cobertas|pagas|inclu[íi]das)"
+    - "bolsa completa"
+    - stipend provided
+  prestigious_organisers:
+    - cern
+    - esa
+    - desy
+    - epfl
+    - eth zurich
+    - tum
+    - rwth
+    - kth
+    - politecnico di milano
+    - oxford
+    - cambridge
+    - lse
+    - mit
+    - imperial college
+    - shell eco-marathon
+    - formula student
+    - asme
+    - sae international
+    - european space agency
+    - imeche
+
+# ------------------------------------------------- FEUP 2026/27 hard blackout
+calendar:
+  heavy_buffer_days: 14        # 20h+ events must end this many days before exams
+  heavy_hours: 20
+  light_hours: 5
+  exam_periods:
+    - {start: 2027-01-04, end: 2027-02-05}
+    - {start: 2027-06-07, end: 2027-07-13}
+  class_periods:
+    - {start: 2026-09-14, end: 2026-12-18}
+    - {start: 2027-02-15, end: 2027-06-04}
+  breaks:
+    - {name: FEUP Week,     start: 2026-10-26, end: 2026-10-30}
+    - {name: Christmas,     start: 2026-12-21, end: 2027-01-01}
+    - {name: Carnival,      start: 2027-02-08, end: 2027-02-09}
+    - {name: Easter,        start: 2027-03-22, end: 2027-03-29}
+    - {name: Academic Week, start: 2027-05-03, end: 2027-05-07}
+
+# ------------------------------------------------------------------------ level
+level:
+  reject_patterns:
+    - "master'?s? (students )?only"
+    - "phd"
+    - doctoral
+    - "5\\+ years"
+    - "senior (engineer|professional)s?"
+    - executive
+    - "completed (a )?(bachelor|degree)"
+    - "graduates? with .*experience"
+    - "p[óo]s-gradua[çc][ãa]o obrigat[óo]ria"
+  accept_hints:              # informational only, never required
+    - open to all
+    - no experience
+    - first-year
+    - undergraduate
+    - pre-university
+    - "students and recent graduates"
+  min_age_user: 18
+  advantage_age_patterns: ["under.?19", "under.?21", "sub.?19", "sub.?21", "u19", "u21"]
+
+# ------------------------------------------------------------------------ cost
+cost:
+  max_eur: 500
+  justification_above_eur: 100
+  certificate_mill_signals: ["self.?paced", "learn at your own pace", "lifetime access",
+                             "watch anytime", "no deadline"]
+  live_signals: ["live", "cohort", "in person", "presencial", "on.?site", "workshop",
+                 "bootcamp", "sess[õo]es"]
+
+# ------------------------------------------------------------------ classifiers
+classify:
+  type:
+    internship: ["internship", "est[áa]gio", "traineeship", "vaga", "recruit"]
+    hackathon: ["hackathon", "hackaton", "datathon", "ideathon"]
+    competition: ["competition", "concurso", "challenge", "case comp", "olymp", "olimp[íi]", "eco-marathon", "formula student"]
+    summer_school: ["summer school", "escola de ver[ãa]o", "summer program", "summer student"]
+    masterclass: ["masterclass"]
+    workshop: ["workshop", "forma[çc][ãa]o", "bootcamp", "curso intensivo"]
+    conference: ["conference", "confer[êe]ncia", "summit", "congresso"]
+    volunteer: ["volunteer", "voluntariado"]
+  fields:
+    mechanical: ["mechanic", "mec[âa]nic", "\\bcad\\b", "thermo", "manufactur", "robot", "materials", "solidworks", "mechatron"]
+    automotive_motorsport: ["automotive", "motorsport", "formula", "racing", "vehicle", "autom[óo]vel", "powertrain", "aerodynamic"]
+    industrial_ops: ["industrial", "operations", "lean", "logistic", "supply chain", "production", "produ[çc][ãa]o", "kaizen"]
+    business: ["business", "gest[ãa]o", "management", "consult", "marketing", "neg[óo]cio"]
+    finance_quant: ["finance", "financ", "quant", "trading", "investment", "banking", "atuari"]
+    data_ai: ["\\bdata\\b", "\\bai\\b", "machine learning", "\\bml\\b", "analytics", "intelig[êe]ncia artificial", "python"]
+    entrepreneurship: ["startup", "entrepreneur", "empreendedor", "pitch", "incubat", "accelerat", "venture"]
+
+# ---------------------------------------------------------------------- scoring
+scoring:
+  weights:
+    cv_value: 0.28
+    field_match: 0.20
+    deadline_urgency: 0.18
+    networking: 0.14
+    competition_bonus: 0.12
+    prestige: 0.08
+  advantageous_stage_bonus: 0.15   # flat, on top of the composite
+  field_weights:                   # target fields, weighted in the user's order
+    mechanical: 1.00
+    industrial_ops: 0.90
+    automotive_motorsport: 0.85
+    business: 0.70
+    finance_quant: 0.60
+    data_ai: 0.55
+    entrepreneurship: 0.50
+  downweight_factor: 0.6           # per not-interested hit on type/organiser/field
+  downweight_floor: 0.2
+  reason_adjustments:              # multiplier applied when a feedback reason lands
+    too expensive: {key: "cost:paid", factor: 0.7}
+    wrong field: {key_from_event: fields, factor: 0.6}
+    too basic: {key: "level:basic", factor: 0.8}
+    too advanced: {key: "level:advanced", factor: 0.8}
+    bad timing: null               # timing feedback never reweights types
+    low prestige: {key_from_event: organiser, factor: 0.7}
+    dislike this format: {key_from_event: type, factor: 0.7}
+    dislike this organiser: {key_from_event: organiser, factor: 0.5}
+
+# ------------------------------------------------------- estimate heuristics
+estimates:
+  hours_per_day:
+    hackathon: 14
+    competition: 8
+    workshop: 3
+    masterclass: 3
+    summer_school: 7
+    internship: 35        # per week ≈ 7h/working day; internships use weeks
+    conference: 6
+    volunteer: 4
+    other: 4
+  base_cv:        {internship: 4, competition: 4, hackathon: 4, summer_school: 4,
+                   masterclass: 2, workshop: 2, conference: 2, volunteer: 2, other: 2}
+  base_networking: {internship: 4, competition: 3, hackathon: 4, summer_school: 4,
+                    conference: 4, masterclass: 3, workshop: 2, volunteer: 3, other: 2}
+  prestige_boost:            # normalised organiser substring -> 1-5
+    feup: 4
+    u porto: 4
+    universidade do porto: 4
+    inesc: 4
+    bosch: 4
+    continental: 4
+    siemens: 4
+    kaggle: 4
+    mlh: 3
+    devpost: 3
+  base_prestige_default: 2
