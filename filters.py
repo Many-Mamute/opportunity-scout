@@ -171,6 +171,16 @@ def geography_filter(ev: Event, cfg: dict, geocoder=None) -> Tuple[bool, str]:
 def _online_hours(ev: Event) -> Tuple[bool, str]:
     """Reject only if core sessions are stated to fall 00:00–07:00 Lisbon;
     flag if merely awkward; unknown times pass (never infer)."""
+    # A real converted start time beats scraping digits out of prose. This is
+    # what catches an online workshop published as 19:00 UTC-6 — 02:00 here.
+    if ev.start_time and ev.tz_known:
+        hour = int(ev.start_time[:2])
+        if 0 <= hour < 7:
+            return False, (f"online: starts {ev.start_time} Lisbon "
+                           f"(published {ev.tz_source})")
+        if hour >= 22:
+            ev.flags.append("late-night session")
+        return True, ""
     m = re.search(r"\b([01]?\d|2[0-3]):[0-5]\d\b", ev.one_line_summary or "")
     if not m:
         return True, ""
@@ -286,7 +296,7 @@ def relevance_filter(ev: Event, cfg: dict, today: date) -> Tuple[bool, str]:
       3. no hook — a generic "other" with no field match and no deadline is
          not an opportunity, it is an activity.
     """
-    hay = f"{ev.title} {ev.one_line_summary}"
+    hay = f"{ev.title} {ev.one_line_summary} {ev.organiser}"
     hit = _any(cfg.get("social_noise", []), hay)
     if hit:
         return False, f"social event, not an opportunity: matched '{hit}'"

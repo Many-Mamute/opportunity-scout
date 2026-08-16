@@ -137,6 +137,18 @@ def main(argv=None) -> int:
                             gmail_address=gmail, app_password=app_pw,
                             diagnostics=diag)
 
+    # 1b. Apply today's filters to yesterday's stored events. Tightening a rule
+    # should clean up the backlog, not only affect events not yet seen.
+    def _still_valid(ev):
+        if ev.confidence == "low":
+            return filters.relevance_filter(ev, cfg, today)
+        return filters.apply_all(ev, cfg, None, today)
+
+    evicted = store.revalidate(_still_valid, today)
+    if evicted:
+        diag["evicted"] = evicted
+        print(f"Retired {len(evicted)} stored events that no longer pass filters")
+
     # 2. gather
     fetcher = Fetcher(state, gmail, deadline)
     geocoder = Geocoder(fetcher, state)
@@ -230,16 +242,29 @@ def main(argv=None) -> int:
 
     # 5. sections
     act_now = store.stage_alerts(today)
-    total_cap = args.limit or cfg["settings"]["max_total_events"]
+    top_cap = args.limit or cfg["settings"]["top_section_cap"]
     low_cap = cfg["settings"]["low_confidence_cap"]
     low_conf = sorted(low_conf, key=lambda e: -e.score)[:low_cap]
-    worth = [e for e in new_events if "worth the travel" in e.flags]
-    # One ceiling across the whole email: verified events get first claim on it,
-    # then whatever snippets fit.
-    room = max(0, total_cap - len(act_now) - len(worth) - len(low_conf))
-    top = [e for e in new_events if e not in worth][:room]
-    roundup = sorted((e for e in store.open.values() if e.confidence != "low"),
-                     key=lambda e: (e.next_deadline is None, e.next_deadline or today))
+    new_ids = {e.id for e in new_events}
+    for e in store.open.values():
+        if e.id in new_ids:
+            e.flags.append("new today")
+
+    # The shortlist is the best N open right now, not merely what turned up in
+    # the last 24h — on a quiet day "3 new" is not the same as "3 worth doing".
+    far = date(2100, 1, 1)
+    ranked = sorted((e for e in store.open.values() if e.confidence != "low"),
+                    key=lambda e: (-e.score, e.start_date or far,
+                                   e.next_deadline or far))
+    alerted = {ev.id for ev, _, _ in act_now}
+    worth = [e for e in ranked if "worth the travel" in e.flags
+             and e.id not in alerted]
+    top = [e for e in ranked if e not in worth
+           and e.id not in alerted][:top_cap]
+
+    # Everything open that did not make a full card, so nothing is ever lost.
+    shown = {e.id for e in top + worth + low_conf} | alerted
+    roundup = [e for e in ranked if e.id not in shown]
     diag.update(tavily_used=state.data["tavily"]["used"],
                 tavily_remaining=state.tavily_remaining(today, tavily_budget.cap),
                 gemini_calls=gemini.used, fetched=fetcher.fetched,
@@ -250,7 +275,7 @@ def main(argv=None) -> int:
 
     subject, html, text = email_render.build(
         today, sunday, act_now=act_now, top=top, worth_travel=worth,
-        roundup=roundup if sunday else [], low_conf=low_conf,
+        roundup=roundup, low_conf=low_conf,
         diagnostics=diag, ask_reason_for=list(state.data["ask_reason_for"]),
         reply_to=gmail or recipient)
 

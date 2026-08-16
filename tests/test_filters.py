@@ -220,3 +220,70 @@ def test_past_events_rejected():
               end_date=date(2026, 8, 2))
     ok, reason = filters.relevance_filter(e, CFG, TODAY)
     assert not ok and "already started" in reason
+
+
+# ------------------------------- foreign events (the Nepal hackathon problem)
+def _snip(title, summary="", **kw):
+    base = dict(url="https://x", organiser="not stated", confidence="low",
+                type="hackathon", fields=["data_ai"], one_line_summary=summary)
+    base.update(kw)
+    return Event(title=title, **base)
+
+
+def test_foreign_in_person_events_rejected():
+    """Every one of these reached the first live digest."""
+    foreign = [
+        _snip("Khalti Events - Nepal's biggest hackathon is back!",
+              "Codefest 2026 is your chance to turn ideas into real impact"),
+        _snip("SOLVIO AI Hackathon 2026",
+              "Sheba HQ, Jessore High-Tech IT Park. Event by Sheba Platform Limited."),
+        _snip("Yala Smart AI Hackathon SEASON 3 - Final Competition",
+              "Aug 13 at 8:30 AM +07"),
+        _snip("Sedrah Hackathon", "Saudi Arabia Riyadh Riyadh, Riyadh."),
+        _snip("Hackathon : Morocco Social TECH", "Event by LE MATIN.ma"),
+        _snip("Hackathon by SAYNA avec ERANOVE ACADEMY", ""),
+    ]
+    for e in foreign:
+        ok, reason = filters.relevance_filter(e, CFG, TODAY)
+        assert not ok, f"should have been rejected: {e.title}"
+        assert "Portugal" in reason, reason
+
+
+def test_brazilian_porto_does_not_pass_as_ours():
+    e = _snip("Toyota do Brasil | Programa de Estágio",
+              "Engenharia Civil da Planta, Toyota Porto Feliz: Residir em "
+              "Porto Feliz ou Itu. Engenharia Mecânica",
+              type="internship", fields=["mechanical"])
+    ok, reason = filters.relevance_filter(e, CFG, TODAY)
+    assert not ok and "different Porto" in reason
+
+    e2 = _snip("Publicação de Brasil Terminal Portuário",
+               "Programa de Estágio da BTP. Engenharia Mecânica",
+               type="internship", fields=["mechanical"])
+    ok, reason = filters.relevance_filter(e2, CFG, TODAY)
+    assert not ok
+
+
+def test_portuguese_and_override_events_still_pass():
+    ok, _ = filters.relevance_filter(
+        _snip("openBIM Hackathon in Porto, March 2027",
+              "developers, engineers and BIM specialists"), CFG, TODAY)
+    assert ok
+    ok, _ = filters.relevance_filter(
+        _snip("Estágio de Verão — Bosch Braga", "Engenharia Mecânica",
+              type="internship", fields=["mechanical"]), CFG, TODAY)
+    assert ok
+    # Funded/prestigious clears the geography requirement entirely.
+    ok, _ = filters.relevance_filter(
+        _snip("CERN Summer Student Programme 2027", "fully funded, Geneva",
+              organiser="CERN", type="summer_school", cost="funded"), CFG, TODAY)
+    assert ok
+
+
+def test_online_foreign_event_not_geo_blocked_but_needs_a_field():
+    """Online is location-independent, so geography must not apply — but a
+    generic 'other' with no field still has no business in the digest."""
+    e = _snip("Cursor Togo - From IDE to Agent", format="online",
+              location="online", type="other", fields=[])
+    ok, reason = filters.relevance_filter(e, CFG, TODAY)
+    assert not ok and "no field match" in reason

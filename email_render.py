@@ -66,9 +66,29 @@ def _d(day: date) -> str:
 def _when(ev: Event, today: date) -> str:
     if not ev.start_date:
         return "Dates not stated"
+    multi = ev.end_date and ev.end_date != ev.start_date
     s = _d(ev.start_date)
-    if ev.end_date and ev.end_date != ev.start_date:
-        s += f" → {_d(ev.end_date)} ({(ev.end_date - ev.start_date).days + 1} days)"
+    if ev.start_time and not multi:
+        s += f", {ev.start_time}"
+        if ev.end_time and ev.end_time != ev.start_time:
+            s += f"–{ev.end_time}"
+    if multi:
+        if ev.start_time:
+            s += f", {ev.start_time}"
+        s += f" → {_d(ev.end_date)}"
+        if ev.end_time:
+            s += f", {ev.end_time}"
+        s += f" ({(ev.end_date - ev.start_date).days + 1} days)"
+    # Times are converted, so say whose clock this is — the whole point is that
+    # you never have to work it out.
+    if ev.start_time:
+        s += (" Lisbon time" if ev.tz_known
+              else " (time as published, no timezone stated)")
+        if ev.tz_known and ev.tz_source and ev.tz_source not in ("UTC+00:00",
+                                                                 "UTC+01:00"):
+            s += f", published {ev.tz_source}"
+    elif ev.format == "online":
+        s += " · start time not stated"
     delta = (ev.start_date - today).days
     when = ("today" if delta == 0 else "tomorrow" if delta == 1
             else f"in {delta} days" if 0 < delta < 90 else "")
@@ -163,7 +183,7 @@ def _feedback(ev: Event, reply_to: str) -> str:
             + '</div>')
 
 
-def _card(ev: Event, today: date, reply_to: str, lead: str = "") -> str:
+def _card_body(ev: Event, today: date, reply_to: str, lead: str = "") -> str:
     head = ""
     if lead:
         head = (f'<div style="background:#fdf3e3;color:{WARM};font:700 11px '
@@ -201,6 +221,11 @@ def _card(ev: Event, today: date, reply_to: str, lead: str = "") -> str:
     rows.append(_row("Scored", f"CV {ev.cv_value_score}/5 · prestige "
                                f"{ev.prestige_score}/5 · networking "
                                f"{ev.networking_score}/5*"))
+    basis = " · ".join(f"{k}: {v.replace('est. — ', '')}"
+                       for k, v in ev.estimate_notes.items()
+                       if k in ("cv", "prestige", "networking"))
+    if basis:
+        rows.append(_row("Why", basis))
     table = ('<table role="presentation" cellpadding="0" cellspacing="0" '
              'style="width:100%;border-collapse:collapse">'
              + "".join(rows) + "</table>")
@@ -213,9 +238,38 @@ def _card(ev: Event, today: date, reply_to: str, lead: str = "") -> str:
             + ("&nbsp;· unverified snippet" if ev.confidence == "low" else "")
             + '</span></div>')
 
+    return (f'{head}{title}{org}<div style="margin-bottom:9px">{pills}</div>'
+            f'{summary_html}{table}{link}{_feedback(ev, reply_to)}')
+
+
+def _card(ev: Event, today: date, reply_to: str, lead: str = "") -> str:
     return (f'<tr><td style="padding:22px;border-bottom:1px solid {LINE}">'
-            f'{head}{title}{org}<div style="margin-bottom:9px">{pills}</div>'
-            f'{summary_html}{table}{link}{_feedback(ev, reply_to)}</td></tr>')
+            + _card_body(ev, today, reply_to, lead) + '</td></tr>')
+
+
+def _roundup_row(ev: Event, today: date, reply_to: str) -> str:
+    """One line you can open into the full card, without leaving the email.
+
+    <details> is the only no-JavaScript disclosure widget that email clients
+    accept. Apple Mail, iOS Mail and Thunderbird collapse it properly; Gmail
+    strips the tag but keeps the contents, so there it simply renders expanded.
+    Either way the facts are in the email rather than behind a link.
+    """
+    dl = (f"deadline {_d(ev.next_deadline)}" if ev.next_deadline
+          else "no stated deadline")
+    when = _d(ev.start_date) if ev.start_date else "dates not stated"
+    summary = (f'<summary style="cursor:pointer;padding:9px 22px;'
+               f'font:400 13px/1.5 Georgia,serif;color:{INK};'
+               f'border-bottom:1px dotted {LINE};list-style:none">'
+               f'<span style="color:{ACCENT};font:700 12px monospace">＋</span> '
+               f'<b>{escape(clean_text(ev.title, 72))}</b>'
+               f'<span style="color:{MUT}"> — {escape(ev.organiser)} · '
+               f'{escape(when)} · {escape(_money(ev).split(" · ")[0])} · '
+               f'{escape(dl)}</span></summary>')
+    body = (f'<div style="padding:16px 22px 20px;background:#fcfbf8;'
+            f'border-bottom:1px solid {LINE}">'
+            + _card_body(ev, today, reply_to) + '</div>')
+    return (f'<tr><td><details>{summary}{body}</details></td></tr>')
 
 
 def _section(title: str, inner: str, note: str = "") -> str:
@@ -283,21 +337,13 @@ def build(today: date, sunday: bool, *,
     parts.append(_section("Worth the travel", "".join(
         _card(e, today, reply_to) for e in worth_travel),
         "funded or exceptionally prestigious, so the 1-hour rule is waived"))
-    if sunday:
-        inner = "".join(
-            f'<tr><td style="padding:9px 22px;border-bottom:1px dotted {LINE};'
-            f'font:400 13px/1.5 Georgia,serif">'
-            f'<a href="{escape(e.url)}" style="color:{INK}">'
-            f'{escape(clean_text(e.title, 80))}</a>'
-            f'<span style="color:{MUT}"> — {escape(e.organiser)} · '
-            f'{escape(_money(e).split(" · ")[0])} · '
-            + (f"deadline {_d(e.next_deadline)}" if e.next_deadline
-               else "no stated deadline")
-            + '</span></td></tr>' for e in roundup)
+    if roundup:
+        inner = "".join(_roundup_row(e, today, reply_to) for e in roundup)
         week = [e for e in roundup if e.days_until_next_deadline is not None
                 and e.days_until_next_deadline <= 7]
-        parts.append(_section("Still open — the full list", inner,
-                              f"{len(roundup)} open; "
+        parts.append(_section("Also still open", inner,
+                              f"{len(roundup)} more — tap any line to open the "
+                              f"full card; "
                               + (f"{len(week)} close within 7 days" if week
                                  else "none close within 7 days")))
     parts.append(_section("Unverified", "".join(
@@ -353,8 +399,13 @@ def build(today: date, sunday: bool, *,
             f'<tr><td style="padding:18px 22px;color:{MUT};font:400 11px/1.7 '
             f'-apple-system,Segoe UI,sans-serif;border-top:1px solid {LINE};'
             f'white-space:pre-line">'
-            f'* effort and the 1-5 scores are the scout&#39;s estimates, not facts '
-            f'from the page. Everything else is quoted from the source or says '
+            f'* effort and the 1-5 scores are the scout&#39;s estimates from lookup '
+            f'tables in config/filters.yaml, not facts from the page and not '
+            f'judgements about this specific event. CV starts from the event '
+            f'type and gains +1 for a recognised organiser; prestige is purely '
+            f'organiser-name matching; networking is the event type alone. '
+            f'Correct them by replying — that is what trains the ranking. '
+            f'Everything else is quoted from the source or says '
             f'&quot;not stated&quot;.\n\n{escape(FOOTER_SYNTAX)}</td></tr>'
             f'</table></td></tr></table></body>')
 
@@ -397,11 +448,19 @@ def _plain_text(today, sunday, act_events, act_leads, top, worth_travel,
         if group:
             out += [f"— {name} " + "—" * max(0, 48 - len(name)), ""]
             out += [block(e, leads.get(e.id, "")) + "\n" for e in group]
-    if sunday and roundup:
-        out += ["— STILL OPEN " + "—" * 38, ""]
-        out += [f"{e.id}  {clean_text(e.title, 70)} — {e.organiser} — "
-                + (f"deadline {e.next_deadline}" if e.next_deadline
-                   else "no deadline stated") for e in roundup] + [""]
+    if roundup:
+        # Plain text has no toggle, so give each line enough to decide on
+        # without opening the link.
+        out += ["— ALSO STILL OPEN " + "—" * 33, ""]
+        for e in roundup:
+            out += [f"{e.id}  {clean_text(e.title, 70)}",
+                    f"  {e.organiser} · {_when(e, today)} · {_where(e)}",
+                    f"  {_money(e)} · "
+                    + (f"deadline {e.next_deadline}" if e.next_deadline
+                       else "no deadline stated"),
+                    f"  {e.url}",
+                    f"  Reply -> interested: {e.id} | meh: {e.id} "
+                    f"| uninterested: {e.id}", ""]
     out += ["— DIAGNOSTICS " + "—" * 37, ""] + diag_lines + [
         "", "* effort and the 1-5 scores are estimates, not facts from the page.",
         "", FOOTER_SYNTAX]

@@ -31,26 +31,33 @@ def enrich_estimates(ev: Event, cfg: dict) -> None:
     ev.intensity = ("light" if h < 5 else "moderate" if h < 20
                     else "heavy" if h < 60 else "intense")
 
+    # Every score below is a lookup table, not judgement. The notes say exactly
+    # which row of which table produced the number, so a wrong score points at
+    # the line of config to change.
     if ev.prestige_score is None:
         org = normalise(ev.organiser)
-        boost = est["base_prestige_default"]
+        boost, why = est["base_prestige_default"], "unrecognised organiser"
         for key, val in est["prestige_boost"].items():
-            if key in org:
-                boost = max(boost, int(val))
+            if key in org and int(val) >= boost:
+                boost, why = int(val), f"'{key}' is on the known-names list"
         for p in cfg["override"]["prestigious_organisers"]:
             if normalise(p) in org:
-                boost = 5
+                boost, why = 5, f"'{p}' is on the prestigious-organisers list"
         ev.prestige_score = boost
-        ev.estimate_notes["prestige"] = "est. — organiser recognition heuristic"
+        ev.estimate_notes["prestige"] = f"est. — {why}"
     if ev.cv_value_score is None:
         base = est["base_cv"].get(ev.type, 2)
+        why = f"{ev.type.replace('_', ' ')} baseline {base}"
         if ev.prestige_score >= 4:
             base = min(5, base + 1)
+            why += ", +1 for a recognised organiser"
         ev.cv_value_score = base
-        ev.estimate_notes["cv"] = "est. — type + organiser heuristic"
+        ev.estimate_notes["cv"] = f"est. — {why}"
     if ev.networking_score is None:
         ev.networking_score = est["base_networking"].get(ev.type, 2)
-        ev.estimate_notes["networking"] = "est. — event-type heuristic"
+        ev.estimate_notes["networking"] = (
+            f"est. — {ev.type.replace('_', ' ')} baseline, "
+            f"nothing about this event specifically")
 
     if not ev.cv_line:
         yr = (ev.start_date or ev.first_seen_date or date.today()).year

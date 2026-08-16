@@ -162,10 +162,28 @@ To revive one: find the page's real current URL in your browser, paste it into `
 
 Twenty-five sources are live, including all of Meetup, Luma, Devpost, MLH, Unstop, Kaggle, FEUP, U.Porto, UPTEC, JuniFEUP, AEFEUP, Formula Student Portugal, and the Bosch/Preh/Kirchhoff/Sonae/Siemens/Vestas careers pages.
 
-## 16. If a digest looks wrong
+## 16. How the 1-5 scores are produced
+
+They are lookup tables in `config/filters.yaml`, not judgements about the specific event. Each card states its own basis on the **Why** row.
+
+- **Prestige** is organiser-name matching only. `prestige_boost` maps substrings (feup, bosch, siemens, kaggle, mlh…) to a number; anything on `override.prestigious_organisers` (CERN, ESA, EPFL…) scores 5; everything unrecognised gets `base_prestige_default: 2`. A brilliant event by an organiser not on the list scores 2 — that is the tool's blind spot, not a verdict.
+- **CV value** starts from `base_cv` for the event type (internship / competition / hackathon / summer school = 4; workshop / masterclass / conference / other = 2) and gains +1 if prestige reached 4 or more.
+- **Networking** is `base_networking` for the type alone, with no organiser input.
+- **Effort** is `hours_per_day` for the type multiplied by the number of days (internships are counted in weeks).
+
+To change them, edit the tables. To teach the ranking instead, reply — `interested` / `meh` / `uninterested` adjust the weight of the type, organiser and field, which is the part that actually learns.
+
+## 17. The "Also still open" list
+
+Every open opportunity that did not make the daily shortlist appears there. Each row is a `<details>` toggle: tap it to expand the full card, including the feedback buttons, without leaving the email.
+
+Apple Mail, iOS Mail and Thunderbird collapse these properly. Gmail strips the `<details>` tag but keeps its contents, so in Gmail the rows render already expanded — longer, but nothing is hidden behind a link. There is no way to build a reliable collapsible section that Gmail honours without JavaScript, which email cannot run.
+
+## 18. If a digest looks wrong
 
 The three failure shapes and what they mean:
 
 - **Too much noise** (social events, irrelevant posts) → add a pattern to `social_noise` in `config/filters.yaml`. Anything matching that list is dropped before scoring, no matter how it ranked.
 - **Almost nothing, and Diagnostics shows Gemini errors** → the Gemini key is the problem. The scout auto-discovers a working model if the configured one 404s, but it cannot fix an invalid key. Regenerate it (step 5).
+- **Junk you thought was filtered keeps reappearing** → it was stored before the rule existed. Each run now re-tests every stored event against the current filters and retires the failures, listing them in Diagnostics. One run after a config change is enough.
 - **Nothing at all, and no email** → the job crashed. Check the Actions log (step 9). The scout never sends a clean-looking email built on a failed run.

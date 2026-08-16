@@ -51,6 +51,13 @@ class Event(BaseModel):
     travel_time_from_porto_min: Optional[int] = None
     start_date: Optional[date] = None
     end_date: Optional[date] = None
+    # Clock times, already converted to Europe/Lisbon so the digest never makes
+    # you do timezone arithmetic. tz_known=False means the source published a
+    # bare time with no offset, so it is shown as published and labelled.
+    start_time: Optional[str] = None      # "HH:MM", Lisbon
+    end_time: Optional[str] = None
+    tz_known: bool = False
+    tz_source: Optional[str] = None       # e.g. "UTC-06:00", for the label
     duration_days: Optional[int] = None
     estimated_effort_hours: Optional[int] = None      # ESTIMATE
     intensity: Optional[Intensity] = None

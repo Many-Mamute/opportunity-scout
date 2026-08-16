@@ -12,6 +12,7 @@ import re
 import time
 from datetime import date
 from typing import List, Optional, Tuple
+from zoneinfo import ZoneInfo
 
 import requests
 from bs4 import BeautifulSoup
@@ -74,6 +75,42 @@ def _to_date(v) -> Optional[date]:
             return None
 
 
+LISBON = ZoneInfo("Europe/Lisbon")
+
+
+def _to_lisbon(v) -> Tuple[Optional[date], Optional[str], bool, Optional[str]]:
+    """Parse a schema.org date/dateTime into (date, 'HH:MM' Lisbon, tz_known,
+    original offset). A bare date returns no time — the scout never invents one.
+
+    Guatemala publishing "2026-08-20T19:00:00-06:00" is 02:00 the next morning
+    in Lisbon; without this conversion that fact is invisible in the digest and
+    the night-hours filter has nothing to test.
+    """
+    if not v:
+        return None, None, False, None
+    raw = str(v)
+    has_time = "T" in raw or re.search(r"\d{1,2}:\d{2}", raw) is not None
+    try:
+        dt = dateparser.isoparse(raw)
+    except (ValueError, OverflowError):
+        try:
+            dt = dateparser.parse(raw, dayfirst=True, fuzzy=False)
+        except Exception:
+            return None, None, False, None
+    if dt is None:
+        return None, None, False, None
+    if not has_time:
+        return dt.date(), None, False, None
+    if dt.tzinfo is None:
+        # No offset published. Show the time as written and say so, rather than
+        # assuming a timezone and quietly getting it wrong.
+        return dt.date(), dt.strftime("%H:%M"), False, None
+    offset = dt.strftime("%z")
+    local = dt.astimezone(LISBON)
+    return local.date(), local.strftime("%H:%M"), True, \
+        f"UTC{offset[:3]}:{offset[3:]}" if offset else None
+
+
 def _clean(text: str, limit: int = 180) -> str:
     t = re.sub(r"<[^>]+>", " ", text or "")
     t = re.sub(r"\s+", " ", t).strip()
@@ -129,8 +166,10 @@ def _map_event_node(node: dict, page_url: str, source: str,
     elif isinstance(org, str):
         ev.organiser = _clean(org, 120)
 
-    ev.start_date = _to_date(node.get("startDate"))
-    ev.end_date = _to_date(node.get("endDate")) or ev.start_date
+    ev.start_date, ev.start_time, tz_known, tz_src = _to_lisbon(node.get("startDate"))
+    end_d, ev.end_time, _, _ = _to_lisbon(node.get("endDate"))
+    ev.end_date = end_d or ev.start_date
+    ev.tz_known, ev.tz_source = tz_known, tz_src
     if ev.start_date and ev.end_date:
         ev.duration_days = (ev.end_date - ev.start_date).days + 1
 

@@ -246,6 +246,26 @@ class Store:
                      ev.first_seen_date, 1, json.dumps(self.dismissed[h]))
 
     # --------------------------------------------------------------- prune
+    def revalidate(self, predicate, today: date) -> List[str]:
+        """Re-test every stored open event against the current filters.
+
+        Without this, tightening a rule only ever affects events that have not
+        been seen yet: anything already in seen.jsonl keeps surfacing in the
+        roundup forever. The pub crawls and psychic readings that survived the
+        first run were exactly this. Evicted events are recorded as dismissed
+        so they cannot be re-ingested tomorrow.
+        """
+        evicted = []
+        for eid, ev in list(self.open.items()):
+            ok, reason = predicate(ev)
+            if ok:
+                continue
+            # Report by ID and title; the dict key is a content hash and means
+            # nothing to a human reading the diagnostics section.
+            evicted.append(f"{ev.id} {ev.title[:44]} — {reason}")
+            self.dismiss(ev, "filtered_out", today)
+        return evicted
+
     def prune(self, today: date) -> int:
         cutoff = today - timedelta(days=PRUNE_AFTER_DAYS)
         n = 0
