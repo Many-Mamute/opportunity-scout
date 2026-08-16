@@ -34,13 +34,17 @@ ROOT = Path(__file__).resolve().parent
 
 
 class TavilyBudget:
-    def __init__(self, state: State, today, cap: int):
-        self.state, self.today, self.cap = state, today, cap
+    def __init__(self, state: State, today, cap: int, monthly_cap: int = 900):
+        self.state, self.today = state, today
+        self.cap, self.monthly_cap = cap, monthly_cap
+
+    def remaining(self) -> int:
+        return self.state.tavily_remaining(self.today, self.cap, self.monthly_cap)
 
     def take(self) -> bool:
-        if self.state.tavily_remaining(self.today, self.cap) <= 0:
+        if self.remaining() <= 0:
             return False
-        self.state.tavily_spend(1)
+        self.state.tavily_spend(1, self.today)
         return True
 
 
@@ -153,7 +157,8 @@ def main(argv=None) -> int:
     fetcher = Fetcher(state, gmail, deadline)
     geocoder = Geocoder(fetcher, state)
     tavily_budget = TavilyBudget(state, today,
-                                 cfg["settings"]["tavily_daily_cap"])
+                                 cfg["settings"]["tavily_daily_cap"],
+                                 cfg["settings"]["tavily_monthly_cap"])
     raw_events: list[Event] = []
     llm_candidates: list[dict] = []
     for src in sorted(sources, key=lambda s: s.get("tier", 1)):
@@ -165,7 +170,7 @@ def main(argv=None) -> int:
             diag["timed_out"] = True
             break
         if src.get("tier") == 2 and \
-                state.tavily_remaining(today, tavily_budget.cap) <= 0:
+                tavily_budget.remaining() <= 0:
             diag["tavily_exhausted"] = True
             continue
         diag["sources_queried"] += 1
@@ -275,7 +280,8 @@ def main(argv=None) -> int:
         shown = {e.id for e in top + worth + low_conf} | alerted
         roundup = [e for e in ranked if e.id not in shown]
     diag.update(tavily_used=state.data["tavily"]["used"],
-                tavily_remaining=state.tavily_remaining(today, tavily_budget.cap),
+                tavily_remaining=tavily_budget.remaining(),
+                tavily_month=state.data["tavily"].get("month_used", 0),
                 gemini_calls=gemini.used, fetched=fetcher.fetched,
                 unchanged=fetcher.unchanged,
                 runtime_s=int(time.monotonic() - start))

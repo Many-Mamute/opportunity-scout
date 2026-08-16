@@ -84,3 +84,27 @@ def test_uninterested_downweights_everything_and_asks_why(tmp_path):
                    store, state, CFG, TODAY)
     assert state.data["ask_reason_for"] == []        # answered, prompt cleared
     assert state.data["feedback_reasons"]
+
+
+def test_the_digest_itself_is_not_read_as_feedback():
+    """The digest lands in the same inbox the poller reads."""
+    digest = ("OPPORTUNITY SCOUT — Sunday 16 August 2026\n"
+              "E-0049  CERN Summer Student Programme 2027\n"
+              "  CERN · internship · mechanical\n"
+              "  The CERN Summer Student Programme 2027 is a flagship "
+              "international programme for university students.\n"
+              "  Where: In person · Geneva, Switzerland\n"
+              "  Money: Cost not stated · too expensive to ignore\n")
+    p = parse_body(digest)
+    assert p["interested"] == [] and p["meh"] == [] and p["uninterested"] == []
+    assert p["notes"] == [] and p["reasons"] == []
+
+
+def test_a_real_reply_still_captures_its_justification():
+    p = parse_body("interested: E-0049\nExactly the kind of thing I want.")
+    assert p["interested"] == ["E-0049"]
+    assert p["notes"] == ["Exactly the kind of thing I want."]
+
+
+def test_short_followup_reason_without_an_id_still_counts():
+    assert parse_body("It was too expensive for me.")["reasons"] == ["too expensive"]

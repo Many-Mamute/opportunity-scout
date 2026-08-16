@@ -43,7 +43,7 @@ def event_hash(title: str, organiser: str, start_date: Optional[date]) -> str:
 def default_state() -> dict:
     return {
         "next_event_id": 1,
-        "tavily": {"date": "", "used": 0},
+        "tavily": {"date": "", "used": 0, "month": "", "month_used": 0},
         "etag_cache": {},        # url -> {etag, last_modified, body_sha256}
         "geocode_cache": {},     # normalised place -> {municipality, country}
         "downweights": {},       # "type:hackathon" / "organiser:x" / "field:y" -> count
@@ -68,14 +68,28 @@ class State:
         self.path.write_text(json.dumps(self.data, indent=1, sort_keys=True))
 
     # Tavily daily budget -------------------------------------------------
-    def tavily_remaining(self, today: date, cap: int) -> int:
+    def _tavily_roll(self, today: date) -> dict:
+        """Roll the day and month windows. Called by both remaining() and
+        spend(), so a spend can never land in a stale window and vanish."""
         t = self.data["tavily"]
         if t.get("date") != today.isoformat():
             t["date"], t["used"] = today.isoformat(), 0
-        return max(0, cap - t["used"])
+        month = today.strftime("%Y-%m")
+        if t.get("month") != month:
+            t["month"], t["month_used"] = month, 0
+        return t
 
-    def tavily_spend(self, n: int = 1) -> None:
-        self.data["tavily"]["used"] += n
+    def tavily_remaining(self, today: date, cap: int,
+                         monthly_cap: int = 900) -> int:
+        """Two ceilings. The daily one leaves room for manual re-runs; the
+        monthly one is what actually protects the free tier (1,000/month)."""
+        t = self._tavily_roll(today)
+        return max(0, min(cap - t["used"], monthly_cap - t["month_used"]))
+
+    def tavily_spend(self, n: int = 1, today: Optional[date] = None) -> None:
+        t = self._tavily_roll(today or date.today())
+        t["used"] += n
+        t["month_used"] = t.get("month_used", 0) + n
 
 
 class Store:

@@ -54,3 +54,35 @@ def test_stale_outbox_is_refused(outbox, monkeypatch):
                         lambda *a, **k: pytest.fail("must not send stale mail"))
     assert main.deliver(CFG) == 1
     assert outbox.exists()              # left in place for diagnosis
+
+
+# ------------------------------------------------- Tavily budget accounting
+def test_daily_resets_but_monthly_persists(tmp_path):
+    from datetime import date as D
+    from store import State
+    s = State(tmp_path / "s.json")
+    for _ in range(24):
+        s.tavily_spend(1)
+    assert s.tavily_remaining(D(2026, 8, 16), 24, 900) == 0
+    # New day: daily allowance returns, monthly total keeps counting.
+    assert s.tavily_remaining(D(2026, 8, 17), 24, 900) == 24
+    assert s.data["tavily"]["month_used"] == 24
+
+
+def test_monthly_cap_overrides_the_daily_allowance(tmp_path):
+    from datetime import date as D
+    from store import State
+    s = State(tmp_path / "s.json")
+    s.tavily_remaining(D(2026, 8, 16), 24, 900)
+    s.data["tavily"]["month_used"] = 895
+    assert s.tavily_remaining(D(2026, 8, 16), 24, 900) == 5   # not 24
+
+
+def test_month_rollover_clears_the_monthly_counter(tmp_path):
+    from datetime import date as D
+    from store import State
+    s = State(tmp_path / "s.json")
+    s.tavily_remaining(D(2026, 8, 31), 24, 900)
+    s.data["tavily"]["month_used"] = 900
+    assert s.tavily_remaining(D(2026, 8, 31), 24, 900) == 0
+    assert s.tavily_remaining(D(2026, 9, 1), 24, 900) == 24

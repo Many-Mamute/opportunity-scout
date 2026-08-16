@@ -163,11 +163,11 @@ def _extras(ev: Event) -> List[Tuple[str, str]]:
     if ev.selectivity != NOT_STATED:
         out.append(("Entry", ev.selectivity.replace("_", " ")))
     if ev.prerequisites != NOT_STATED:
-        out.append(("Requires", clean_text(ev.prerequisites, 90)))
+        out.append(("Requires", clean_text(ev.prerequisites, 2000)))
     if ev.age_limits != NOT_STATED:
         out.append(("Age", ev.age_limits))
     if ev.value_justification:
-        out.append(("Worth it?", ev.value_justification))
+        out.append(("Worth it?", clean_text(ev.value_justification, 2000)))
     if ev.language != NOT_STATED:
         out.append(("Language", ev.language))
     for s in ev.stages:
@@ -205,6 +205,16 @@ def _row(label: str, value: str) -> str:
             f'{escape(value)}</td></tr>')
 
 
+def _row_multi(label: str, lines: List[str]) -> str:
+    body = "<br>".join(escape(x) for x in lines)
+    return (f'<tr><td style="padding:3px 12px 3px 0;color:{MUT};'
+            f'font:600 11px/1.6 -apple-system,Segoe UI,sans-serif;'
+            f'text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;'
+            f'vertical-align:top">{escape(label)}</td>'
+            f'<td style="padding:3px 0;color:{MUT};font:400 12px/1.7 Georgia,serif">'
+            f'{body}</td></tr>')
+
+
 def _feedback(ev: Event, reply_to: str) -> str:
     def link(cmd: str, text: str, colour: str) -> str:
         body = quote(f"{cmd}: {ev.id}\n\n(optional, one line on why:)\n")
@@ -221,7 +231,8 @@ def _feedback(ev: Event, reply_to: str) -> str:
             + '</div>')
 
 
-def _card_body(ev: Event, today: date, reply_to: str, lead: str = "") -> str:
+def _card_body(ev: Event, today: date, reply_to: str, lead: str = "",
+               show_header: bool = True) -> str:
     head = ""
     if lead:
         head = (f'<div style="background:#fdf3e3;color:{WARM};font:700 11px '
@@ -271,11 +282,10 @@ def _card_body(ev: Event, today: date, reply_to: str, lead: str = "") -> str:
     rows.append(_row("Scored", f"CV {ev.cv_value_score}/5 · prestige "
                                f"{ev.prestige_score}/5 · networking "
                                f"{ev.networking_score}/5*"))
-    basis = " · ".join(f"{k}: {v.replace('est. — ', '')}"
-                       for k, v in ev.estimate_notes.items()
-                       if k in ("cv", "prestige", "networking"))
+    basis = [ev.estimate_notes[k] for k in ("cv", "prestige", "networking", "effort")
+             if ev.estimate_notes.get(k)]
     if basis:
-        rows.append(_row("Why", basis))
+        rows.append(_row_multi("How scored", basis))
     table = ('<table role="presentation" cellpadding="0" cellspacing="0" '
              'style="width:100%;border-collapse:collapse">'
              + "".join(rows) + "</table>")
@@ -288,6 +298,10 @@ def _card_body(ev: Event, today: date, reply_to: str, lead: str = "") -> str:
             + ("&nbsp;· unverified snippet" if ev.confidence == "low" else "")
             + '</span></div>')
 
+    if not show_header:
+        # The <summary> line above already carries the title and organiser and
+        # stays on screen while the row is open.
+        title = org = ""
     return (f'{head}{title}{org}<div style="margin-bottom:9px">{pills}</div>'
             f'{summary_html}{table}{link}{_feedback(ev, reply_to)}')
 
@@ -318,7 +332,7 @@ def _roundup_row(ev: Event, today: date, reply_to: str) -> str:
                f'{escape(dl)}</span></summary>')
     body = (f'<div style="padding:16px 22px 20px;background:#fcfbf8;'
             f'border-bottom:1px solid {LINE}">'
-            + _card_body(ev, today, reply_to) + '</div>')
+            + _card_body(ev, today, reply_to, show_header=False) + '</div>')
     return (f'<tr><td><details>{summary}{body}</details></td></tr>')
 
 
@@ -414,8 +428,10 @@ def build(today: date, sunday: bool, *,
         "Failed: " + (", ".join(
             f"{k} ({v})" for k, v in diagnostics.get("sources_errored", {}).items())
             or "none"),
-        f"Tavily {diagnostics.get('tavily_used', 0)} used, "
-        f"{diagnostics.get('tavily_remaining', 0)} left today"
+        f"Tavily {diagnostics.get('tavily_used', 0)} used today, "
+        f"{diagnostics.get('tavily_remaining', 0)} left"
+        + (f" · {diagnostics['tavily_month']}/900 this month"
+           if diagnostics.get("tavily_month") is not None else "")
         + (" — cap hit, sweep skipped" if diagnostics.get("tavily_exhausted") else ""),
         f"Gemini {diagnostics.get('gemini_calls', 0)} calls"
         + (f" on {diagnostics['gemini_model_used']}"
@@ -539,6 +555,9 @@ def send(subject: str, html: str, text: str, *, gmail_address: str,
     msg["From"] = gmail_address
     msg["To"] = recipient
     msg["Reply-To"] = gmail_address
+    # Lets the IMAP poller recognise and skip its own output, which lands in
+    # the same inbox when you send the digest to yourself.
+    msg["X-Opportunity-Scout"] = "digest"
     msg.set_content(text)
     msg.add_alternative(html, subtype="html")
     with smtplib.SMTP("smtp.gmail.com", 587, timeout=30) as s:

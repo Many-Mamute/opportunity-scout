@@ -4,7 +4,8 @@ settings:
   target_hour: 6              # local Europe/Lisbon hour the scheduled run may execute in
   timezone: Europe/Lisbon
   max_runtime_min: 18        # cron fires 06:05, so worst case lands 06:23 — before 06:30         # hard stop: send what we have
-  tavily_daily_cap: 12       # was 30; 8 queries/run leaves headroom for a manual re-run
+  tavily_daily_cap: 24       # 8 per run, so ~3 runs/day incl. manual tests
+  tavily_monthly_cap: 900    # the real guard on the 1,000/month free tier
   gemini_run_cap: 30          # max LLM calls per run
   gemini_batch_size: 10       # candidate pages per LLM call
   gemini_model: gemini-2.5-flash-lite

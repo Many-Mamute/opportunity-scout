@@ -104,10 +104,12 @@ def test_roundup_rows_are_expandable_and_carry_the_full_card():
 def test_scores_state_their_own_basis():
     e = Event(title="X", organiser="Bosch", url="https://x", type="hackathon")
     enrich_estimates(e, CFG)
-    assert "known-names list" in e.estimate_notes["prestige"]
-    assert "hackathon baseline" in e.estimate_notes["cv"]
+    assert "prestige table scores" in e.estimate_notes["prestige"]
+    assert "starts at 4 on the event-type table" in e.estimate_notes["cv"]
     card = R._card_body(e, TODAY, "me@example.com")
-    assert ">Why<" in card and "baseline" in card
+    assert "How scored" in card and "event-type table" in card
+    # Full sentences, not shorthand.
+    assert "est. —" not in card
 
 
 # ------------------------------------------------------- Sunday full recap
@@ -186,3 +188,39 @@ def test_build_stamp_appears_in_diagnostics():
                             diagnostics={"runtime_s": 12}, ask_reason_for=[],
                             reply_to="x@y.z")
     assert f"Build {BUILD}" in html and f"Build {BUILD}" in text
+
+
+
+# ---------------------------------------- card layout fixes from run 3
+def test_roundup_body_does_not_repeat_the_title():
+    """<summary> stays visible when open, so the body must not repeat it."""
+    e = Event(title="CERN Summer Student Programme 2027", organiser="CERN",
+              url="https://home.cern", type="internship", fields=["mechanical"],
+              location="Geneva, Switzerland")
+    enrich_estimates(e, CFG)
+    row = R._roundup_row(e, TODAY, "me@example.com")
+    body = row.split("</summary>", 1)[1]
+    assert "CERN Summer Student Programme 2027" not in body
+    assert "When" in body and "Interested" in body      # facts still there
+    assert row.count("CERN Summer Student Programme 2027") == 1
+
+
+def test_requirements_are_not_truncated():
+    long_req = ("Undergraduate students are eligible if they have completed at "
+                "least six semesters of full-time studies in physics, "
+                "engineering, computer science or mathematics by the start of "
+                "the programme, and are enrolled at the time of application.")
+    e = Event(title="X", organiser="CERN", url="https://x", type="internship",
+              prerequisites=long_req)
+    enrich_estimates(e, CFG)
+    card = R._card_body(e, TODAY, "me@example.com")
+    assert "enrolled at the time of application" in card
+    assert "six semesters of…" not in card
+
+
+def test_grammar_of_the_rationale():
+    for typ in ("internship", "workshop", "other", "hackathon"):
+        e = Event(title="X", organiser="Nobody", url="https://x", type=typ)
+        enrich_estimates(e, CFG)
+        blob = " ".join(e.estimate_notes.values())
+        assert " a internship" not in blob and " a other" not in blob

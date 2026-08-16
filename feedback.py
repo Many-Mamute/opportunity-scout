@@ -32,9 +32,18 @@ REASONS = ["too expensive", "wrong field", "too basic", "too advanced",
            "dislike this organiser"]
 
 
+# Fingerprints of the scout's own output. A length heuristic is not enough:
+# a short digest containing the words "too expensive" would be read as a reason.
+DIGEST_MARKERS = ("OPPORTUNITY SCOUT —", "Reply -> interested:",
+                  "Tap a button on any card")
+
+
 def parse_body(text: str) -> Dict[str, List[str]]:
     """Pure parser. Ignores quoted reply lines (>) and the footer's own
     syntax examples (E-0247/E-0301/E-0255 shown as documentation)."""
+    if any(m in (text or "") for m in DIGEST_MARKERS):
+        return {"interested": [], "meh": [], "uninterested": [],
+                "reasons": [], "notes": []}
     lines = [ln for ln in (text or "").splitlines() if not ln.lstrip().startswith(">")]
     clean = "\n".join(ln for ln in lines
                       if "->" not in ln and "suppress" not in ln.lower())
@@ -52,16 +61,22 @@ def parse_body(text: str) -> Dict[str, List[str]]:
         tail = ID_RE.sub("", payload).strip(" ,.;:-")
         if len(tail) > 3:
             out["notes"].append(tail[:300])
-    # Free-text lines that are not commands are treated as justification too.
-    for ln in clean.splitlines():
+    # Free-text lines are justifications for a verdict. Without a verdict there
+    # is nothing to justify, and the scout's own digest arrives in this same
+    # inbox — without this guard every line of it became "feedback".
+    has_command = any(out[k] for k in ("interested", "meh", "uninterested"))
+    for ln in (clean.splitlines() if has_command else []):
         s = ln.strip()
         if (len(s) > 12 and not CMD_RE.match(ln) and not s.startswith("(")
                 and "optional" not in s.lower() and s[:1].isalpha()):
             out["notes"].append(s[:300])
     low = clean.lower()
-    for r in REASONS:
-        if r in low and r not in out["reasons"]:
-            out["reasons"].append(r)
+    # Not the digest (checked above), so a bare reason line is a genuine
+    # follow-up answer to "why?".
+    if True:
+        for r in REASONS:
+            if r in low and r not in out["reasons"]:
+                out["reasons"].append(r)
     return out
 
 
@@ -157,6 +172,10 @@ def poll_inbox(store: Store, state: State, cfg: dict, today: date, *,
                 if not msgdata or not msgdata[0]:
                     continue
                 msg = email.message_from_bytes(msgdata[0][1])
+                if msg.get("X-Opportunity-Scout"):
+                    state.data["last_imap_uid"] = max(
+                        int(state.data.get("last_imap_uid", 0)), int(uid))
+                    continue                      # our own digest, not a reply
                 parsed = parse_body(_plain_part(msg))
                 stats = apply_feedback(parsed, store, state, cfg, today)
                 diagnostics.setdefault("feedback", []).append(stats)

@@ -17,16 +17,26 @@ from store import normalise
 
 def enrich_estimates(ev: Event, cfg: dict) -> None:
     est = cfg["estimates"]
+    label = ev.type.replace("_", " ")
+    article = "an" if label[:1] in "aeiou" else "a"
     if ev.estimated_effort_hours is None:
         per_day = est["hours_per_day"].get(ev.type, est["hours_per_day"]["other"])
         if ev.type == "internship":
             weeks = max(1, (ev.duration_days or 30) // 7)
             ev.estimated_effort_hours = int(weeks * per_day)
-            ev.estimate_notes["effort"] = f"est. — {weeks}w internship norm"
+            src = ("the stated dates" if ev.duration_days
+                   else "a 30-day assumption, because no dates were stated")
+            ev.estimate_notes["effort"] = (
+                f"Effort {ev.estimated_effort_hours}h: internships are counted "
+                f"in weeks — {weeks} week(s) from {src}, at {per_day}h per week.")
         else:
             days = ev.duration_days or 1
             ev.estimated_effort_hours = int(days * per_day)
-            ev.estimate_notes["effort"] = f"est. — {days}-day {ev.type} norm"
+            src = ("" if ev.duration_days
+                   else " (no dates stated, so assumed a single day)")
+            ev.estimate_notes["effort"] = (
+                f"Effort {ev.estimated_effort_hours}h: {days} day(s) × {per_day}h, "
+                f"the table value for {article} {label}{src}.")
     h = ev.estimated_effort_hours
     ev.intensity = ("light" if h < 5 else "moderate" if h < 20
                     else "heavy" if h < 60 else "intense")
@@ -34,30 +44,44 @@ def enrich_estimates(ev: Event, cfg: dict) -> None:
     # Every score below is a lookup table, not judgement. The notes say exactly
     # which row of which table produced the number, so a wrong score points at
     # the line of config to change.
+    default_prestige = est["base_prestige_default"]
     if ev.prestige_score is None:
         org = normalise(ev.organiser)
-        boost, why = est["base_prestige_default"], "unrecognised organiser"
+        boost, why = default_prestige, None
         for key, val in est["prestige_boost"].items():
             if key in org and int(val) >= boost:
-                boost, why = int(val), f"'{key}' is on the known-names list"
-        for p in cfg["override"]["prestigious_organisers"]:
-            if normalise(p) in org:
-                boost, why = 5, f"'{p}' is on the prestigious-organisers list"
+                boost = int(val)
+                why = (f"the organiser name contains \"{key}\", which the "
+                       f"prestige table scores {boost}")
+        for pres in cfg["override"]["prestigious_organisers"]:
+            if normalise(pres) in org:
+                boost = 5
+                why = (f"\"{pres}\" is on the prestigious-organisers list, "
+                       f"which always scores 5")
         ev.prestige_score = boost
-        ev.estimate_notes["prestige"] = f"est. — {why}"
+        ev.estimate_notes["prestige"] = (
+            f"Prestige {boost}/5: " + (why + "." if why else
+            f"the scout does not recognise \"{ev.organiser}\", and unknown "
+            f"organisers default to {default_prestige}. This is name-matching "
+            f"only — a low score here means unrecognised, not unimpressive."))
     if ev.cv_value_score is None:
         base = est["base_cv"].get(ev.type, 2)
-        why = f"{ev.type.replace('_', ' ')} baseline {base}"
+        why = (f"CV {{}}/5: {article} {label} starts at {base} on the event-type table")
         if ev.prestige_score >= 4:
             base = min(5, base + 1)
-            why += ", +1 for a recognised organiser"
+            why += ", plus 1 because the organiser scored 4 or more on prestige"
+        else:
+            why += ("; no organiser bonus, since that needs a prestige score "
+                    "of 4 or more")
         ev.cv_value_score = base
-        ev.estimate_notes["cv"] = f"est. — {why}"
+        ev.estimate_notes["cv"] = why.format(base) + "."
     if ev.networking_score is None:
         ev.networking_score = est["base_networking"].get(ev.type, 2)
         ev.estimate_notes["networking"] = (
-            f"est. — {ev.type.replace('_', ' ')} baseline, "
-            f"nothing about this event specifically")
+            f"Networking {ev.networking_score}/5: the flat table value for "
+            f"{article} "
+            f"{label}. Nothing about who actually attends this particular "
+            f"event was assessed.")
 
     if not ev.cv_line:
         yr = (ev.start_date or ev.first_seen_date or date.today()).year

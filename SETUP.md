@@ -186,7 +186,17 @@ On **Sunday** it becomes **Sunday recap — everything still open**: a complete 
 
 Apple Mail, iOS Mail and Thunderbird collapse these properly. Gmail strips the `<details>` tag but keeps its contents, so in Gmail the rows render already expanded — longer, but nothing is hidden behind a link. There is no way to build a reliable collapsible section that Gmail honours without JavaScript, which email cannot run.
 
-## 18. If a digest looks wrong
+## 18. How feedback actually reaches the scout
+
+Nothing you send is read by a person or by an AI in a chat window. The workflow polls the Gmail inbox over IMAP at the **start of every run**, before it scrapes anything. So:
+
+- A reply sent at 14:00 is applied during the next morning's 06:10 prepare run, and its effect shows in that morning's digest.
+- To apply it immediately, trigger a manual run (**Actions → Run workflow → mode: full**).
+- The poller tracks the highest message UID it has processed, so nothing is read twice and nothing is missed if Gmail marks a message read.
+- The digest itself lands in the same inbox. It carries an `X-Opportunity-Scout` header and is fingerprinted by its own text, so it is skipped rather than parsed as feedback.
+- If IMAP fails, the Diagnostics section says `Could not read replies: ...`. Silence there means the poll worked.
+
+## 19. If a digest looks wrong
 
 The three failure shapes and what they mean:
 
