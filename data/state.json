@@ -7,7 +7,7 @@
  },
  "etag_cache": {
   "https://aefeup.pt/": {
-   "body_sha256": "03ceb9aff3ed2e7a4fe7b14dd6f040003434c3448f5645153ba5ec38b8163a76",
+   "body_sha256": "4240d2741d82e2e646f47faa7df1b09830657965520537da9a03031c1201490e",
    "etag": null,
    "last_modified": null
   },
@@ -47,7 +47,7 @@
    "last_modified": null
   },
   "https://careers.vestas.com/search/?q=&locationsearch=Portugal": {
-   "body_sha256": "a6ce94bccd5e7d4ae6a8199a49effc68403025b4c839bc44a88e85ba7123883c",
+   "body_sha256": "8f8da251b0cc49b39d57d4106a22b1c511296d8cae6dc570c1beea63e7683472",
    "etag": null,
    "last_modified": null
   },
@@ -62,22 +62,22 @@
    "last_modified": "Sun, 16 Aug 2026 00:09:28 GMT"
   },
   "https://devpost.com/hackathons": {
-   "body_sha256": "cbb460457250c6da6eb6cc70bd781902245eeba82cb82d0113eaef74828dbf97",
+   "body_sha256": "9018c5babc37f4b915d4213bb859a880fbb1520a43604b299eb016ce962dd3c7",
    "etag": null,
    "last_modified": null
   },
   "https://devpost.com/hackathons?status[]=upcoming&status[]=open": {
-   "body_sha256": "d2e5d9beb0ad309eefccb277882546138b92afb019cc091fbbef7051bbf3e403",
+   "body_sha256": "6a0df40c140a3a31202aad1e2964fec02f24068cdede92bbff98ebc7ecba5bd7",
    "etag": null,
    "last_modified": null
   },
   "https://devpost.com/hackathons?status[]=upcoming&status[]=open#host-a-hackathon": {
-   "body_sha256": "081e3c85bde2630cbb8f75f444ccd6aaeacd92ae53d214da6f1ff1cca69a2db9",
+   "body_sha256": "5b8496a936330dbf2eeae475f216d319916f0581a4008896f41be711cd78ba1a",
    "etag": null,
    "last_modified": null
   },
   "https://devpost.com/hackathons?status[]=upcoming&status[]=open#join-a-hackathon": {
-   "body_sha256": "bcb5956097361411a57abdd556e2ebc517c9080c80d4e4fe23f9a2c72de85c80",
+   "body_sha256": "95db2c9e047c8f407bccf1fc2071a49fd954fa22eb2f0de9cf04eec31ade1ef6",
    "etag": null,
    "last_modified": null
   },
@@ -92,12 +92,12 @@
    "last_modified": null
   },
   "https://events.mlh.com/events/14413-midnight-hackathon?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=Midnight+Virtual+Hackathon+%5BJuly%5D": {
-   "body_sha256": "2f2354f21d3ff63c2d15590fcdfacaceb32d90aa3f47604249bc6ab34c5325a2",
+   "body_sha256": "82d00d61755f020df6313d94f1b258b30f050b115bcec0d8e9eab298f6658312",
    "etag": null,
    "last_modified": null
   },
   "https://events.mlh.com/events/14510-midnight-hackathon-august?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=Midnight+Virtual+Hackathon+%5BAugust%5D": {
-   "body_sha256": "e95c1b74ee99633dc924d266044456f9f59e63b6e0ed1e0b81e15bfcc8b700ac",
+   "body_sha256": "2c39edd3c8d0ed3f0e54a43c485acd7ca35f630e9c3d5410de5f7f734cc4d354",
    "etag": null,
    "last_modified": null
   },
@@ -132,7 +132,7 @@
    "last_modified": null
   },
   "https://hackp.ac/fellowship-faq": {
-   "body_sha256": "5ace23b7a1e037e7b4d4c02811a837fb511ddb2b67f93ef36f1c08fadff4d3ce",
+   "body_sha256": "cc25d0ec3f2a129f96abedf8c18c8a048eecd44fe140f1fb833055868b7af972",
    "etag": null,
    "last_modified": null
   },
@@ -154,7 +154,7 @@
   "https://info.devpost.com/product/devpost-for-teams": {
    "body_sha256": "c035f071202c7c55dcea455736baea14f4b3ef382d2cd82d277e7bb50f64b6f5",
    "etag": null,
-   "last_modified": "Fri, 14 Aug 2026 21:02:42 GMT"
+   "last_modified": "Fri, 14 Aug 2026 22:21:55 GMT"
   },
   "https://info.devpost.com/product/public-hackathons": {
    "body_sha256": "a4ee89eb36207ac2b4162e6eb962d17dfd3f16b57a2a8e472e9b006e4223890b",
@@ -162,9 +162,9 @@
    "last_modified": "Fri, 14 Aug 2026 22:48:26 GMT"
   },
   "https://jobs.siemens.com/careers?location=Portugal": {
-   "body_sha256": "9721d1f010130183ae25bba45d2374d6127545a5a8e4c2e001f32578f144dcdc",
+   "body_sha256": "00eda68025b4304a55bd7e8347b03fb69ee216bb8de320360339db6ba9134cea",
    "etag": null,
-   "last_modified": "Sun, 16 Aug 2026 00:45:52 GMT"
+   "last_modified": "Sun, 16 Aug 2026 10:52:44 GMT"
   },
   "https://junifeup.pt/": {
    "body_sha256": "954cda8f6bc7bce99cccca427e2e7313480eadf79846a48cec467460c6b3b3fb",
@@ -177,12 +177,12 @@
    "last_modified": "Thu, 13 Aug 2026 09:16:31 GMT"
   },
   "https://lu.ma/cursorcommunity?k=c": {
-   "body_sha256": "c5b213aa9b1e191e938f2754995dfbfec98c217a21713d0c63cc81a6afa2be33",
+   "body_sha256": "37706568021a3ca8519adf90a6c3d9fa4455c48184fe44c501d9a1b7ce08c076",
    "etag": null,
    "last_modified": null
   },
   "https://lu.ma/porto": {
-   "body_sha256": "17481aa2d6f7810963ec90854b16a12cfdec55c0612ba9b5f02181efbab19428",
+   "body_sha256": "2f18c3e1f6362cc78bb7f2a3fb2c960afa5aa9e1fdd3a992354ac00b9a1c32bb",
    "etag": null,
    "last_modified": null
   },
@@ -192,7 +192,7 @@
    "last_modified": null
   },
   "https://mlh.io/seasons/2027/events": {
-   "body_sha256": "81ff9dc01124b2440963c1a13abe67e6675609f020789bf82f71862687de9795",
+   "body_sha256": "091134e4327d9710a69e3b105f21a9be5c588ef9dfecdca66b74ef8c7c3de65b",
    "etag": null,
    "last_modified": null
   },
@@ -267,22 +267,22 @@
    "last_modified": "Thu, 13 Aug 2026 09:25:52 GMT"
   },
   "https://sigarra.up.pt/feup/pt/noticias_geral.lista_noticias": {
-   "body_sha256": "a8e75b9290e000ec2489b63b4ec83fa8bbf225863b33b51942e1b492e8321ebf",
+   "body_sha256": "9ba7a827c74e1e83035dfc874ceb446f68bd2e0d5850a12d511fdb2644db48e8",
    "etag": null,
    "last_modified": null
   },
   "https://sigarra.up.pt/feup/pt/noticias_geral.ver_noticia?p_nr=194277": {
-   "body_sha256": "049144509767ddd99863588b152d3f0c1b06129e2ae0f702a745f783e54518ac",
+   "body_sha256": "69403b286bde0c73b314790b24278efd9cf560a5fb287df5787e871a73de296e",
    "etag": null,
    "last_modified": null
   },
   "https://sigarra.up.pt/feup/pt/noticias_geral.ver_noticia?p_nr=196637": {
-   "body_sha256": "7279e7b1025bb638a80cf3950cf6c72edcea00da10cc7707d3c3b2618dd102c4",
+   "body_sha256": "65aafb3b75718c2cfb0831d500b38504437ae2c69086d9715173495be2028c7d",
    "etag": null,
    "last_modified": null
   },
   "https://sigarra.up.pt/feup/pt/noticias_geral.ver_noticia?p_nr=199522": {
-   "body_sha256": "1f64e1a772cf847409e2be4f9eb875ca6519b4048e067d7a05767832228c323f",
+   "body_sha256": "f24baed2512ffc6543faada50bf60fba96f49fc474d137fdbd86f1674e87021f",
    "etag": null,
    "last_modified": null
   },
@@ -352,18 +352,18 @@
    "last_modified": "Thu, 13 Aug 2026 09:39:12 GMT"
   },
   "https://www.eventbrite.com/e/built-for-nyc-ai-hackathon-at-nypl-tickets-1994000516221?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=Built+for+NYC%3A+AI+Hackathon+at+NYPL": {
-   "body_sha256": "b8716e026a2f248d1c932555c2258e49a63f37a3755f7b1e4b44cf75778f8438",
-   "etag": "\"k7pdoy0x094fs4\"",
+   "body_sha256": "8f6a54b8d59f8a84031a472eeef31f5a8542d948e2185830d8ded0c2fcf22d52",
+   "etag": "\"j2pznpcvg84fs4\"",
    "last_modified": null
   },
   "https://www.fabricadestartups.com/": {
-   "body_sha256": "3c0611361542ab5e80199a006c9691feac9cf817e0abccaf6719b65d57c7d9bc",
-   "etag": "W/\"f3529ce9fcb029cba64907088a14b110--gzip\"",
+   "body_sha256": "187fe1b32f3d2fc61f9f49db5399b657f0650d6245303455cdc55984aa968f98",
+   "etag": "W/\"91217065399d234a9915d4388fe76d36--gzip\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/": {
-   "body_sha256": "6fc22c2938b1c86c11805a00591e06f1ec51b28adfa444a551bd3a750a94bb8c",
-   "etag": "W/\"01f36705f02869d3bd72824bae8d8506\"",
+   "body_sha256": "4772458a1995bb5847aa3bd3875e624489916879816249f9421763d3dbae5709",
+   "etag": "W/\"5276e2fffa6d2d39a6bb66a2d2805e74\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/about": {
@@ -372,43 +372,43 @@
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition": {
-   "body_sha256": "1aec9d1675c94e7bdf122d99a78bebbf6d7211056cdd63545c91b57942c42210",
-   "etag": "W/\"a4696b00abddb13fc7045048fc609fce\"",
+   "body_sha256": "c23806e7340f48dcedb849208151a32d51b08bae234d526837a46681f5a2addf",
+   "etag": "W/\"1b8ff6e136507fe53e46753a09ebda43\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/fspt23": {
-   "body_sha256": "dde65a19cafbb993cf492c24325b36b97a27e5b611486f282cdf3d5faa9c7674",
-   "etag": "W/\"05c2aa8eeba63efb8b06d3af85e1a2d5\"",
+   "body_sha256": "7a49b595f6b2995b32973fdc7be7186f285f341198d86eb9a9a4d989767e2864",
+   "etag": "W/\"ae2660f7842bce0a0944e31d4a689d5f\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/fspt24": {
-   "body_sha256": "ddea242845a26ba080690aef751633457b484f6135f05fa6dc275b24d19e3066",
-   "etag": "W/\"24b0d8d69b215c5d6c227016f07be48b\"",
+   "body_sha256": "6dfdcce0ee7a625fde0147f116d5f7984caf68b1cfbdd533ff68a51829a89125",
+   "etag": "W/\"69deef0b45b23f76cbf2051a1b1ce0fb\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/fspt25": {
-   "body_sha256": "740417cff3705bfc78e1bc336c74430a99fb551c674a14c174e46a01b650d508",
-   "etag": "W/\"74548eb31fb92192a9979fba8df3ecaf\"",
+   "body_sha256": "9b205441ac29e9c58a04821f6ee830880abbcece99ea71e9eea0b87c9fe1cfea",
+   "etag": "W/\"c0c371768fed35ebe74ffff2e783d532\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/fspt25/c\u00f3pia-penalties-2025": {
-   "body_sha256": "66aef8b9dae67dc1caa77da3d663a3fc1f30f2be8ae618e169e9fdeb5dfd0c28",
-   "etag": "W/\"e37c4f237b4dda5736499c499dc88151\"",
+   "body_sha256": "6f59bfb5cced6a81c2c7ab3e6563d14f49c8ce3f467813a53abea0c63f607404",
+   "etag": "W/\"bbbd337b14d5f0c353991b8c2ba1456f\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/fspt26": {
-   "body_sha256": "4df6700de3963e59e9c4f4d186bff555fec61dc6aeed6ac34c332fc4b00d1c91",
-   "etag": "W/\"f63e7a5f03141ede99322dc9ce7134a6\"",
+   "body_sha256": "35f8043376b894665466257b202e312f82e9165ee160ec892ff59178059d51d9",
+   "etag": "W/\"294ee0e27690bb07a5ef37abd7997081\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/pre-event-2025": {
-   "body_sha256": "ff23bdaab9c30c5ee0730dceb51792d13ba1829193065c1c400002b0a652d014",
-   "etag": "W/\"81192d76a087c77f66cd61e38151f42e\"",
+   "body_sha256": "41604ab3b4aff2b49be8735a9d2cf9c3c858ad80f6a2006755c5b2628d69b4e4",
+   "etag": "W/\"3ac8032253d3514e0a74aed5666d9a46\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/why-fspt": {
-   "body_sha256": "f709850aa17bfc99902c3beffe44b59566a60863046e9fd5ecc5f96f6963b25f",
-   "etag": "W/\"c9e1b46d91055e2d26ad9fab47db34bf\"",
+   "body_sha256": "a34d5f5bdc3e74633984583b38b5519ae3145681fa4ba07671f38bce9d53c35f",
+   "etag": "W/\"18f21eb8f9d283bc76404c9ba9c8d97c\"",
    "last_modified": null
   },
   "https://www.henhackshackathon.com/?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=HenHacks": {
@@ -452,32 +452,32 @@
    "last_modified": null
   },
   "https://www.jeronimomartins.com/en/careers/": {
-   "body_sha256": "ec1820c57c756674a114f82a5dac3fa6e587869cc39fb6d9ef27edf405650f9d",
+   "body_sha256": "31143920b05bbe337e65cf4eb1ed282183d8127abf1c8df05a835b1082d737f7",
    "etag": null,
    "last_modified": null
   },
   "https://www.jeronimomartins.com/en/careers/students-and-recent-graduates/curricular-internship/": {
-   "body_sha256": "4c58125519471861ae49a880374cd282381b280491159223a1e829b7d06449ca",
+   "body_sha256": "0ac1cfb7a46ef30eead8509e50325947b7aed2d06297c57965e675e0a3f39200",
    "etag": null,
    "last_modified": null
   },
   "https://www.jeronimomartins.com/en/careers/students-and-recent-graduates/professional-internship-programme/": {
-   "body_sha256": "adb17a0b8a7826d9fa343d60c5bd6330645e8444d902731d5e7eab27507f6c3d",
+   "body_sha256": "66499a696e10050323d8388c134c1315e0b843ec10ffc67e6ee51e355833f806",
    "etag": null,
    "last_modified": null
   },
   "https://www.jeronimomartins.com/en/careers/students-and-recent-graduates/summer-internship-programme/": {
-   "body_sha256": "f34104b026e43776dc605adbcf336cc4f3045ef954289f8d125dcc9224336406",
+   "body_sha256": "91efffdb75c4fc28672d7fe0773df00e1580a419bf75f4773567c5addb24b119",
    "etag": null,
    "last_modified": null
   },
   "https://www.kaggle.com/competitions": {
-   "body_sha256": "a5f08aede9a07ab36eee6bbd2a9deb8790bfbe16d3a2097dff4b84d2aedc8190",
+   "body_sha256": "52c26dfe36aaa0de9cca5ca69fadf5a35a6a18a356b6f4975d27ba1631fe57b7",
    "etag": null,
    "last_modified": null
   },
   "https://www.kirchhoff-automotive.com/career": {
-   "body_sha256": "890b8a02ad80fb756288c3b23f79b489c5a07a3b66390ca56ab964d8d8563d56",
+   "body_sha256": "2d5668259cba30584599a385ca5ca5c2f92c7e0745bbf17ddc4a94ed2f7ca359",
    "etag": null,
    "last_modified": null
   },
@@ -487,8 +487,8 @@
    "last_modified": null
   },
   "https://www.meetup.com/find/?location=pt--Porto&source=EVENTS": {
-   "body_sha256": "e43e0db3eb24d6acf84b232ee46c2b1f95f333857d77b7ca3912401a83eea1cc",
-   "etag": "W/\"Bl81Cp8zo9GEIeBqT-mQbQFvTXVJyxB6\"",
+   "body_sha256": "4c268ea772f5f1ad8c2fa0af6a8dd9890b41825d7e883847a53daa023407befc",
+   "etag": "W/\"GqvuN5J4UjUKE2aTF68C4z6X2aklqdSX\"",
    "last_modified": null
   },
   "https://www.mlh.com/seasons/2026/events": {
@@ -497,7 +497,7 @@
    "last_modified": null
   },
   "https://www.mlh.com/seasons/2027/events": {
-   "body_sha256": "0f79409da96821222ea095c6af22c5d8255f9de4a7a3b7814f69c95bad9dda53",
+   "body_sha256": "3be198f0501f846f003af68d3204c1928b62627a544739c97de0e538405ab5b7",
    "etag": null,
    "last_modified": null
   },
@@ -507,9 +507,9 @@
    "last_modified": null
   },
   "https://www.porto.ucp.pt/en/events": {
-   "body_sha256": "6b3981bf67c8fc48eca35d29d123e9427ba8cb7deac2a12056d5de289f3a7a1d",
-   "etag": "\"1786839667-1\"",
-   "last_modified": "Sun, 16 Aug 2026 00:21:07 GMT"
+   "body_sha256": "521e57de1c3efe99991969eb3727c4181384273bbc78195b1a1e74f7bc1b14e3",
+   "etag": "\"1786877526-1\"",
+   "last_modified": "Sun, 16 Aug 2026 10:52:06 GMT"
   },
   "https://www.preh.com/en/career/": {
    "body_sha256": "0344a475ff995809c904aedd07ff8495fcc8463f58fd5933c0915319e61d620f",
@@ -562,7 +562,7 @@
    "last_modified": null
   },
   "https://www.sonae.pt/en/careers/": {
-   "body_sha256": "e6e39ed075fe2e557251b741fd5b290ee82559a023e31a506bbef3e0e4c72af7",
+   "body_sha256": "793e0173d100a0cc8810f421dddff3b65e5ae45de2381fe61859adee8d8bf2aa",
    "etag": null,
    "last_modified": null
   },
@@ -1065,6 +1065,190 @@
   {
    "date": "2026-08-16",
    "note": "Several IDs per line are fine: interested: E-0004, E-0011"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "OPPORTUNITY SCOUT \u2014 Sunday 16 August 2026"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0048  Midnight Hackathon"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Major League Hacking \u00b7 hackathon \u00b7 data_ai"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Join us from August 28-30 for a weekend of creating solutions that put users back in control of their personal data."
+  },
+  {
+   "date": "2026-08-16",
+   "note": "When:  Fri 28 Aug \u2192 Sun 30 Aug (3 days) \u00b7 start time not stated \u00b7 in 12 days"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Where: Online"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Money: Cost not stated"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Age: Minors (Between 13-18)"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Language: Portuguese & English"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Effort: ~42h (heavy)*"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Link:  https://events.mlh.com/events/14510-midnight-hackathon-august?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=Midnight+Virtual+Hackathon+%5BAugust%5D"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0008  Microsoft AI Certification Paths & AI Upskilling"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Data-Driven Innovation - DDI \u00b7 other \u00b7 data_ai"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "AI Is About to Change Everything \u2014 Join Me for This Session Hi All, Every year I push myself to earn at least two Microsoft accreditations \u2014 usually in areas I\u2019m not curr\u2026"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "When:  Thu 20 Aug \u00b7 start time not stated \u00b7 in 4 days"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Where: Online"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Money: Cost not stated"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Language: Portuguese & English"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Effort: ~4h (light)*"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Link:  https://www.meetup.com/ddi-meetup-group/events/315866513/"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0045  Cursor Guatemala Workshop 1: Build with AI"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Cursor Guatemala \u00b7 workshop \u00b7 data_ai"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "When:  Thu 20 Aug \u00b7 start time not stated \u00b7 in 4 days"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Where: Online"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Language: Portuguese & English"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Effort: ~3h (light)*"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Link:  https://luma.com/rs2u8ubq"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0049  CERN Summer Student Programme 2027"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "CERN \u00b7 internship"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "The CERN Summer Student Programme 2027 is one of CERN\u2019s flagship international programmes for university students in physics, engineering, computer science and mathematics."
+  },
+  {
+   "date": "2026-08-16",
+   "note": "When:  Dates not stated"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Where: In person \u00b7 Geneva, Switzerland"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Money: Cost not stated"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Entry: application"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Requires: Undergraduate students are eligible if they have completed at least six semesters of\u2026"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Language: English"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Effort: ~140h (intense)*"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Link:  https://www.foundit.in/career-advice/cern-summer-internship-apply"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Failed: feup (HTTP 403 on https://noticias.up.pt/feup/), uporto (HTTP 403 on https://noticias.up.pt/), vestas (network error on https://careers.vestas.com/search/?q=&locationsearch=Portugal), tavily-prestige (daily Tavily cap reached; remaining queries skipped)"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Tavily 12 used, 0 left today"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Gemini 4 calls on gemini-flash-lite-latest"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Filtered out: 19\u00d7 no field match and no recognisable opportunity type, 13\u00d7 social event, not an opportunity, 9\u00d7 already started, 4\u00d7 geography, 4\u00d7 snippet with no field match \u2014 not worth your attention, 1\u00d7 online"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Gemini: model 'gemini-2.5-flash-lite' returned 404; switched to 'gemini-flash-lite-latest'"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Tap a button on any card, or reply with these lines:"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Add a sentence after any line saying why \u2014 it is read and used."
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Several IDs per line are fine: interested: E-0004, E-0011"
   }
  ],
  "geocode_cache": {
@@ -1169,7 +1353,7 @@
    "municipality": null
   }
  },
- "last_imap_uid": 11874,
+ "last_imap_uid": 11875,
  "next_event_id": 50,
  "tavily": {
   "date": "2026-08-16",
