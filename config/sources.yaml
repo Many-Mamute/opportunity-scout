@@ -58,13 +58,15 @@ sources:
   - name: feup
     tier: 1
     type: page
-    urls: ["https://noticias.up.pt/feup/",
-           "https://sigarra.up.pt/feup/pt/noticias_geral.lista_noticias"]
+    # noticias.up.pt returned HTTP 403 to the scout on 2026-08-16; SIGARRA
+    # serves the same announcements and answers normally.
+    urls: ["https://sigarra.up.pt/feup/pt/noticias_geral.lista_noticias"]
     link_pattern: "up\\.pt"
 
   - name: uporto
     tier: 1
     type: page
+    enabled: false          # HTTP 403 on 2026-08-16 run: noticias.up.pt blocks us
     urls: ["https://noticias.up.pt/"]
     link_pattern: "noticias\\.up\\.pt"
 

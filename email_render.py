@@ -18,7 +18,7 @@ from html import escape
 from typing import List, Tuple
 from urllib.parse import quote
 
-from models import NOT_STATED, Event, Stage
+from models import BUILD, NOT_STATED, Event, Stage
 
 INK, MUT, LINE, ACCENT, WARM, BG = (
     "#22252b", "#6f7580", "#e6e2d9", "#14453a", "#8a5a1f", "#faf9f6")
@@ -46,6 +46,32 @@ _MD = [(r"```.*?```", " "), (r"`([^`]*)`", r"\1"), (r"\*\*([^*]*)\*\*", r"\1"),
 _EMOJI = re.compile("[\U0001F000-\U0001FAFF\u2600-\u27BF\uFE0F\u200d]+")
 
 
+# Search snippets are cut arbitrarily at both ends by the provider, so they
+# routinely open mid-word: 'uts motorsports on February 25, 2026: "This is your
+# chance...'. Recover a clean start rather than printing the wreckage.
+_ATTRIB = re.compile(r'^.{0,120}?\bon\s+\w+\s+\d{1,2},?\s+\d{4}\s*[:\-]\s*["\u201c]?')
+_QUOTE_LEAD = re.compile(r'^.{0,120}?[:\u2014-]\s*["\u201c]')
+_SENTENCE = re.compile(r'(?<=[.!?])\s+(?=[A-Z"\u201c])')
+
+
+def _repair_lead(t: str) -> str:
+    """Trim a truncated opening fragment; mark it if nothing clean is found."""
+    if not t:
+        return t
+    for pat in (_ATTRIB, _QUOTE_LEAD):
+        m = pat.match(t)
+        if m and len(t) - m.end() > 40:
+            return t[m.end():].lstrip()
+    # Starts mid-word or mid-sentence: jump to the next real sentence if one
+    # begins soon enough, otherwise say plainly that the start is missing.
+    if t[0].islower():
+        m = _SENTENCE.search(t[:200])
+        if m and len(t) - m.end() > 40:
+            return t[m.end():]
+        return "…" + t
+    return t
+
+
 def clean_text(raw: str, limit: int = 260) -> str:
     """Scraped copy arrives full of markdown bold, headers and emoji. Strip it
     all — the digest has its own typography."""
@@ -54,9 +80,14 @@ def clean_text(raw: str, limit: int = 260) -> str:
         t = re.sub(pat, rep, t, flags=re.DOTALL | re.MULTILINE)
     t = _EMOJI.sub("", t)
     t = re.sub(r"\s+", " ", t).strip(" -–—·|")
+    t = re.sub(r"\s*\.{3,}\s*$", "…", t)          # trailing " ..." -> "…"
+    t = _repair_lead(t)
     if len(t) > limit:
         t = t[:limit].rsplit(" ", 1)[0].rstrip(",.;:") + "…"
-    return t
+    # An unbalanced quote left by the trim reads as an error.
+    if t.count('"') % 2:
+        t = t.replace('"', "", 1) if t.startswith('"') else t.rstrip('"')
+    return t.strip()
 
 
 def _d(day: date) -> str:
@@ -394,7 +425,7 @@ def build(today: date, sunday: bool, *,
         "Filtered out: " + (", ".join(
             f"{v}× {k}" for k, v in sorted(diagnostics.get("rejected", {}).items(),
                                            key=lambda x: -x[1])[:6]) or "nothing"),
-        f"Runtime {diagnostics.get('runtime_s', 0)}s"
+        f"Build {BUILD} · runtime {diagnostics.get('runtime_s', 0)}s"
         + (" — HARD STOP reached, partial results"
            if diagnostics.get("timed_out") else ""),
     ]

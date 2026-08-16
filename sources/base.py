@@ -26,9 +26,15 @@ class Fetcher:
         self.state = state
         self.deadline = deadline                  # time.monotonic() hard stop
         self.session = requests.Session()
-        self.session.headers["User-Agent"] = (
-            "OpportunityScout/1.0 (personal daily opportunity aggregator; "
-            f"contact: {contact_email or 'not-configured'})")
+        self.session.headers.update({
+            # Honest, identifying UA with a contact address, per the politeness
+            # rules. The Accept headers are not disguise — plenty of CDNs 403 a
+            # request that sends none at all, which is what noticias.up.pt did.
+            "User-Agent": ("OpportunityScout/1.0 (personal daily opportunity "
+                           f"aggregator; contact: {contact_email or 'not-configured'})"),
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "pt-PT,pt;q=0.9,en;q=0.8",
+        })
         self._robots: dict[str, urllib.robotparser.RobotFileParser | None] = {}
         self._last_hit: dict[str, float] = {}
         self.fetched = 0

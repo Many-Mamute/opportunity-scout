@@ -146,3 +146,43 @@ def test_weekday_list_is_only_the_overflow():
         reply_to="x@y.z")
     assert "Also still open" in html and "Sunday recap" not in html
     assert "2 more — tap any line" in html
+
+
+# ------------------------------------------- truncated snippet text (run 2)
+def test_snippet_starting_mid_sentence_is_repaired():
+    """Verbatim from E-0047 in the 16 Aug digest."""
+    raw = ('uts motorsports on February 25, 2026: "This is your chance to join '
+           'a Formula Student team while at uni! Applications are now open at the')
+    out = R.clean_text(raw)
+    assert out.startswith("This is your chance")
+    assert "uts motorsports" not in out
+
+
+def test_leading_fragment_marked_when_unrecoverable():
+    out = R.clean_text("reamble with nothing clean to cut back to anywhere here")
+    assert out.startswith("…")
+
+
+def test_midsentence_start_jumps_to_next_sentence():
+    out = R.clean_text("ing the deadline. Applications are now open for 2027. "
+                       "Teams of four compete over two days.")
+    assert out.startswith("Applications are now open")
+
+
+def test_trailing_ellipsis_normalised_and_quotes_balanced():
+    assert R.clean_text("Join a Formula Student team while at uni ...").endswith("…")
+    assert R.clean_text('"An unbalanced opening quote here').count('"') == 0
+
+
+def test_good_text_is_left_alone():
+    s = "A weekend of creating solutions that put users back in control."
+    assert R.clean_text(s) == s
+
+
+def test_build_stamp_appears_in_diagnostics():
+    from models import BUILD
+    _, html, text = R.build(date(2026, 8, 18), False, act_now=[], top=[],
+                            worth_travel=[], roundup=[], low_conf=[],
+                            diagnostics={"runtime_s": 12}, ask_reason_for=[],
+                            reply_to="x@y.z")
+    assert f"Build {BUILD}" in html and f"Build {BUILD}" in text

@@ -13,6 +13,7 @@ from typing import Dict, List, Literal, Optional
 from pydantic import BaseModel, Field
 
 NOT_STATED = "not stated"
+BUILD = "2026-08-16.6"   # shown in Diagnostics; bump when you change the code
 
 EventType = Literal[
     "internship", "competition", "hackathon", "masterclass",
