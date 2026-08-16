@@ -299,6 +299,29 @@ def relevance_filter(ev: Event, cfg: dict, today: date) -> Tuple[bool, str]:
     if ev.type in ("other", "volunteer") and not ev.fields:
         return False, "no field match and no recognisable opportunity type"
 
+    # An in-person event anywhere on earth used to reach the digest whenever it
+    # arrived as a snippet, because snippets skip the geography filter (they
+    # have no reliable location field to test). Hackathons in Nepal, Bangladesh
+    # and Saudi Arabia all got through on the first run. So test the words
+    # themselves: an in-person event must point at Portugal or clear the
+    # funded/prestigious override.
+    if ev.format != "online":
+        hay_loc = f"{ev.location} {ev.title} {ev.one_line_summary} {ev.organiser}"
+        geo = cfg["geography"]
+        # Applies to everything: a verified event at "Porto Feliz" would
+        # otherwise match the allowlist on the word "porto" and sail through.
+        hit = _any(geo.get("false_porto", []), hay_loc)
+        if hit:
+            return False, f"a different Porto — matched '{hit}'"
+        # Snippets only. Verified events have a real location field and get the
+        # geocoder-backed geography_filter instead; testing both would reject
+        # legitimate events whose page simply does not restate the country.
+        if ev.confidence == "low" and not is_override(ev, cfg):
+            markers = (list(geo["allowlist"].keys())
+                       + list(geo.get("portugal_extra_markers", [])))
+            if not _any(markers, hay_loc):
+                return False, "no stated connection to Portugal"
+
     if ev.start_date and ev.start_date < today:
         return False, "already started"
     if ev.confidence == "low" and not ev.fields:

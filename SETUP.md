@@ -60,16 +60,25 @@ A **Secret** is a value GitHub stores encrypted and hands to your workflow at ru
 
 A **workflow** is a recipe (the file `.github/workflows/daily.yml`) that GitHub runs for you on its own computers; a **cron schedule** is the line inside it saying *when*, written as `minute hour * * *` in UTC time.
 
-Portugal switches between UTC+0 and UTC+1, so the file has **two** crons — `5 5` and `5 6` UTC. Both fire daily; the script checks the clock in Lisbon and only the one landing inside 06:00–07:00 actually runs (the other exits in seconds). Nothing to configure.
+The run happens in **two phases**, which is how the digest arrives at 06:30 exactly without wasting Actions minutes:
 
-**Why 06:05 and not 06:30:** the run takes about 6 minutes, and the internal hard stop is 18 minutes, so starting at 06:05 means the digest is in your inbox by 06:11 typically and by 06:23 in the worst case — always before 06:30. Making it *arrive* at exactly 06:30 would mean paying GitHub for 20 minutes of idle waiting every day (roughly tripling your Actions usage), which is not worth it for a 19-minute difference in when it lands.
+| Time (Lisbon) | Phase | What it does | Duration |
+|---|---|---|---|
+| 06:10 | `prepare` | scrapes, filters, ranks, renders, and parks the finished digest in `data/outbox.json` | ~6 min |
+| 06:30 | `deliver` | reads the parked digest and sends it | ~40 sec |
+
+GitHub bills by wall-clock time, so holding one job open from 06:10 to 06:30 would cost 20 idle minutes a day (~600 min/month). Two separate jobs cost about 7 minutes a day instead, and the mail still lands at 06:30.
+
+Portugal switches between UTC+0 and UTC+1, so each phase has **two** crons. A cheap shell step checks the Lisbon clock *before* installing anything, so a wrong-DST wake-up costs seconds rather than a billed minute. Nothing to configure.
+
+**If the 06:10 job fails**, the 06:30 job finds no digest, exits non-zero and GitHub emails you. It will never send a stale digest from a previous day either — it checks the date on the outbox first.
 
 The workflow also has `workflow_dispatch`, which means you can press a button to run it manually at any time; manual runs skip the clock check.
 
 ## 8. First run
 
 1. In your repo click the **Actions** tab. If GitHub asks you to enable workflows, click enable.
-2. Click **opportunity-scout** in the left list → **Run workflow** → **Run workflow** (green button).
+2. Click **opportunity-scout** in the left list → **Run workflow** → **Run workflow** (green button). A manual run does both phases at once and emails immediately, so you never have to wait until 06:30 to test.
 3. Wait a few minutes; a digest should arrive at the recipient address. The very first run backfills every currently-open opportunity into the database but still emails only the top 20 — the backlog drains over the following days and Sunday roundups. (Optionally, for a bigger first sweep, run locally once with `--backfill`, step 10, and push the resulting `data/` files.)
 
 ## 9. Reading the Actions log when a run fails
@@ -89,13 +98,15 @@ export $(grep -v '^#' .env | xargs)      # loads the values (Windows: set them i
 python main.py --dry-run
 ```
 
-Other flags: `--limit 5` (shorter top section), `--source feup` (one source only), `--backfill` (raise per-source caps for a first sweep).
+Other flags: `--limit 5` (shorter digest), `--source feup` (one source only), `--backfill` (raise per-source caps for a first sweep), `--prepare` (park the digest instead of sending), `--deliver` (send a parked digest).
 
 Run the tests any time with `python -m pytest tests` — they use fixture HTML and never touch the network.
 
 ## 11. Changing the send time
 
-Edit `target_hour` in `config/filters.yaml` (local Lisbon hour), and move both cron lines in `.github/workflows/daily.yml` to `30 (hour-1)` and `30 hour` UTC. Commit; done.
+Edit `target_hour` in `config/filters.yaml` (local Lisbon hour), then move the four crons in `.github/workflows/daily.yml`, keeping the 20-minute gap between the prepare pair and the deliver pair, and keeping each pair one hour apart for DST. The `case` statement in the "Decide what this run should do" step lists the cron strings — update those to match, or the workflow will not know which phase to run.
+
+For example, to deliver at 07:00 instead: prepare crons `40 5` and `40 6`, deliver crons `0 6` and `0 7`, `target_hour: 7`.
 
 ## 12. Adding a source
 
@@ -129,7 +140,7 @@ Anything you write after the ID, or on a following line, is kept as a justificat
 
 | Service | Free allowance | Scout's own cap | When exhausted |
 |---|---|---|---|
-| GitHub Actions | 2,000 min/month (private repos, Free plan) | ~6 min/run + one ~1-min guard exit ≈ 210 min/mo | Runs stop until the month resets; GitHub emails you. |
+| GitHub Actions | 2,000 min/month (private repos, Free plan) | ~6 min prepare + ~1 min deliver + two ~15-sec guard exits ≈ 230 min/mo | Runs stop until the month resets; GitHub emails you. |
 | Tavily | 1,000 credits/month | 12 searches/day (8 used per run), counter persisted in `data/state.json` | Search sweep is skipped; the email's diagnostics say so; Tier 1 sources still run. |
 | Gemini (Flash-Lite, AI Studio) | ~1,000 requests/day free | ≤30 batched calls/run | Leftover pages are listed as "dropped at the LLM cap" in diagnostics — never invented. |
 | Gmail SMTP/IMAP | ~2,000 sends/day | 1 email/day | Not reachable at this volume. |

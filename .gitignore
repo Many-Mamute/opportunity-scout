@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 data/events.db
 .pytest_cache/
+
+# The delivery job needs the outbox in git to receive it from the prepare job.
+!data/outbox.json

@@ -10,6 +10,7 @@ a zero-event day still sends (sections 1, 4 on Sundays, and 6).
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 import time
@@ -43,6 +44,35 @@ class TavilyBudget:
         return True
 
 
+OUTBOX = ROOT / "data" / "outbox.json"
+
+
+def deliver(cfg: dict) -> int:
+    """Send the digest --prepare parked earlier this morning.
+
+    Deliberately loud on failure: an empty or stale outbox means the prepare
+    job broke, and a silent success would hide that behind a missing email.
+    """
+    gmail = os.environ.get("GMAIL_ADDRESS", "")
+    app_pw = os.environ.get("GMAIL_APP_PASSWORD", "")
+    if not OUTBOX.exists():
+        print("No digest was prepared this morning — the 06:10 job must have "
+              "failed. Nothing to send.", file=sys.stderr)
+        return 1
+    payload = json.loads(OUTBOX.read_text())
+    today = datetime.now(ZoneInfo(cfg["settings"]["timezone"])).date()
+    if payload.get("date") != today.isoformat():
+        print(f"Outbox holds a digest from {payload.get('date')}, not today "
+              f"({today}). Refusing to send stale mail.", file=sys.stderr)
+        return 1
+    email_render.send(payload["subject"], payload["html"], payload["text"],
+                      gmail_address=gmail, app_password=app_pw,
+                      recipient=payload["recipient"])
+    OUTBOX.unlink()
+    print(f"Delivered '{payload['subject']}' to {payload['recipient']}.")
+    return 0
+
+
 def load_cfg():
     fcfg = yaml.safe_load((ROOT / "config" / "filters.yaml").read_text())
     scfg = yaml.safe_load((ROOT / "config" / "sources.yaml").read_text())
@@ -66,9 +96,18 @@ def main(argv=None) -> int:
     ap.add_argument("--source", default=None, help="run only this source name")
     ap.add_argument("--backfill", action="store_true",
                     help="first run: raise per-source caps to sweep the backlog")
+    ap.add_argument("--prepare", action="store_true",
+                    help="do the work and park the finished digest in data/outbox.json")
+    ap.add_argument("--deliver", action="store_true",
+                    help="send whatever --prepare parked, then clear the outbox")
     args = ap.parse_args(argv)
 
     cfg, sources = load_cfg()
+    filters.prime(cfg)
+
+    if args.deliver:
+        return deliver(cfg)
+
     filters.prime(cfg)
     if not guard(cfg, args):
         print("Outside the 06:00–07:00 Europe/Lisbon window for this cron — exiting.")
@@ -221,14 +260,24 @@ def main(argv=None) -> int:
         print(f"\n[dry-run] subject: {subject}")
         print(f"[dry-run] html: {len(html)} bytes; no email sent, no state written")
         return 0
-    email_render.send(subject, html, text, gmail_address=gmail,
-                      app_password=app_pw, recipient=recipient)
+    if args.prepare:
+        # Park it. The 06:30 cron picks it up in a ~40-second job, which costs
+        # far less than holding this one open for twenty idle minutes.
+        OUTBOX.parent.mkdir(parents=True, exist_ok=True)
+        OUTBOX.write_text(json.dumps(
+            {"prepared_at": datetime.now(tz).isoformat(), "date": today.isoformat(),
+             "subject": subject, "html": html, "text": text,
+             "recipient": recipient}, ensure_ascii=False))
+        print(f"Prepared '{subject}' -> {OUTBOX} (delivery job will send it)")
+    else:
+        email_render.send(subject, html, text, gmail_address=gmail,
+                          app_password=app_pw, recipient=recipient)
 
     # 7. persist — seen.jsonl is the durable truth, committed by the workflow
     store.prune(today)
     store.save()
     state.save()
-    print(f"Sent '{subject}' to {recipient}; "
+    print(f"{'Queued' if args.prepare else 'Sent'} '{subject}' for {recipient}; "
           f"{len(store.open)} open, {len(store.dismissed)} dismissed on record.")
     return 0
 
