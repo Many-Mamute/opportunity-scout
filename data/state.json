@@ -1,9 +1,18 @@
 {
  "ask_reason_for": [],
- "downweights": {},
+ "downweights": {
+  "cost:paid": 1,
+  "level:advanced": 1,
+  "level:basic": 1
+ },
  "etag_cache": {
   "https://aefeup.pt/": {
-   "body_sha256": "ef5d8dd69ac2b3c7434b5e1c06483c61a5400f6dfbbb71d3de336638300c03ae",
+   "body_sha256": "e41003ed917941f9b49b7ff707cc3e7e64029d1780ca5dbe855aef695450e518",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://afsa.org/opportunities-students": {
+   "body_sha256": "816059f9a19675b80b2cdbe93c7b4586fa4c817a835dbacc6295c7938394f660",
    "etag": null,
    "last_modified": null
   },
@@ -23,9 +32,9 @@
    "last_modified": "Thu, 13 Aug 2026 09:42:39 GMT"
   },
   "https://careers.cern/programmes/summer-studentship": {
-   "body_sha256": "6397b5a4199d0f07517a858b9cf1d63c763194a0cc1f834e69b6e80580a0c618",
+   "body_sha256": "abfd7a539c809cebd7d1c60e21c03ab6088b581301d9f7df6d6d663ef9375146",
    "etag": null,
-   "last_modified": "Thu, 13 Aug 2026 09:42:39 GMT"
+   "last_modified": "Sat, 15 Aug 2026 23:55:15 GMT"
   },
   "https://careers.smartrecruiters.com/BoschGroup/portugal": {
    "body_sha256": "c166e31949c04ed74473bfb096eccab06d3ef9c2a608de0efe437e75a28a3436",
@@ -38,7 +47,7 @@
    "last_modified": null
   },
   "https://careers.vestas.com/search/?q=&locationsearch=Portugal": {
-   "body_sha256": "33ae159b1941d374ba3bccab18cbfcd52764633c4f7bc57dead2fd7d0824edd5",
+   "body_sha256": "a6ce94bccd5e7d4ae6a8199a49effc68403025b4c839bc44a88e85ba7123883c",
    "etag": null,
    "last_modified": null
   },
@@ -47,34 +56,54 @@
    "etag": null,
    "last_modified": null
   },
+  "https://constructor.university/talent-school/summer-camp": {
+   "body_sha256": "6664988f7409794d880506113840a5b9d26c6254d7f4d64b791568b32703c93e",
+   "etag": "W/\"1786838968\"",
+   "last_modified": "Sun, 16 Aug 2026 00:09:28 GMT"
+  },
   "https://devpost.com/hackathons": {
-   "body_sha256": "3a31230f55d035ec7874b97ba7a05a1bffb21177404fce33e3c0dfb8302b4254",
+   "body_sha256": "359332c9d8e55f16016de149d1512d9f4a4dae28eacedc5e69af6a8f12375bd5",
    "etag": null,
    "last_modified": null
   },
   "https://devpost.com/hackathons?status[]=upcoming&status[]=open": {
-   "body_sha256": "ecb85a4b4a486feb6c3fbd320129761b9398f0272d5acfa5b92fc9007d236e6f",
+   "body_sha256": "84a0df895806b628058a5945aa4b04472dd8fee346507c6038d1845386c6c393",
    "etag": null,
    "last_modified": null
   },
   "https://devpost.com/hackathons?status[]=upcoming&status[]=open#host-a-hackathon": {
-   "body_sha256": "f869b4c047f007d99f0456a096b18a8f4ba6d47b983345bdb1a25992d57daf88",
+   "body_sha256": "d63b5f3ef95ecc8b0203a99a584de50821d0e852bb8acefb20e2790a1adec17f",
    "etag": null,
    "last_modified": null
   },
   "https://devpost.com/hackathons?status[]=upcoming&status[]=open#join-a-hackathon": {
-   "body_sha256": "7224bcff24780a415a0981fb0cde8bf63af491fb7d9e9c6bd4dc9fd2855c6e7f",
+   "body_sha256": "6f527b6f86cb2bac1bd2441bb370b9fd91aadc5ea215c2cf3356836685eb9757",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://en.wikipedia.org/wiki/Shell_Eco-marathon": {
+   "body_sha256": "b56228fc2aa2860e31673db07d0481c8319b83053a7890c7362d84174db11ca3",
+   "etag": null,
+   "last_modified": "Tue, 11 Aug 2026 23:16:10 GMT"
+  },
+  "https://epicure-hpc.eu/2026/01/16/epicure-hackathon-code-optimisation-for-heterogeneous-hpc-environments": {
+   "body_sha256": "2e1e2836748bc9f6491624948e188718f9c6901cdc74e0372456969933d4318b",
    "etag": null,
    "last_modified": null
   },
   "https://events.mlh.com/events/14413-midnight-hackathon?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=Midnight+Virtual+Hackathon+%5BJuly%5D": {
-   "body_sha256": "173b1378d8807ce38a92267e733c78f5085ce92e3f6d7bb1073b1242819246b3",
+   "body_sha256": "09136d22561228d0859959da496d46dcfebacb0fcb1501c033bcc59c1615961b",
    "etag": null,
    "last_modified": null
   },
   "https://events.mlh.com/events/14510-midnight-hackathon-august?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=Midnight+Virtual+Hackathon+%5BAugust%5D": {
-   "body_sha256": "d6524b273c4fe296c60583867dd01ffde9c172a8a8a7c926c7c380e3d3bee91c",
+   "body_sha256": "446389ab4ebb9b8ece3f78c3e23ff123e56f2fdfd32acbac66ec94b0d10bc5f3",
    "etag": null,
+   "last_modified": null
+  },
+  "https://fellowship.mlh.com/#programs": {
+   "body_sha256": "9a1371f3dbced74af6751c530e123cfab290c82e5094beffafe441b35673c06b",
+   "etag": "W/\"54nnf4dxxh19sa\"",
    "last_modified": null
   },
   "https://fellowship.mlh.io/#programs": {
@@ -103,7 +132,7 @@
    "last_modified": null
   },
   "https://hackp.ac/fellowship-faq": {
-   "body_sha256": "cfb68fc6b489f06b1d343dc9304c8174a9ae1b070444e0d9eae489961757869f",
+   "body_sha256": "c930bc81c667261d73f694e399b413d10be60e2db8cbbb389e86e1f1261d5d79",
    "etag": null,
    "last_modified": null
   },
@@ -118,24 +147,24 @@
    "last_modified": null
   },
   "https://info.devpost.com/product/ai-hackathons": {
-   "body_sha256": "54846004c33c5b4eace5cca4fedc100df1386ee5b5413233fc7600e7ec3a173b",
+   "body_sha256": "d18b268b800e2454261e2d2b8ae6d4983ce7c182ed7d8b3990dbcaf537d70c61",
    "etag": null,
-   "last_modified": "Tue, 11 Aug 2026 14:14:35 GMT"
+   "last_modified": "Fri, 14 Aug 2026 22:48:26 GMT"
   },
   "https://info.devpost.com/product/devpost-for-teams": {
-   "body_sha256": "b3ca7f31f9aabb2982597c8a417a9b6ddf68d627092cb53347f545984e7290b6",
+   "body_sha256": "c035f071202c7c55dcea455736baea14f4b3ef382d2cd82d277e7bb50f64b6f5",
    "etag": null,
-   "last_modified": "Wed, 12 Aug 2026 16:52:41 GMT"
+   "last_modified": "Fri, 14 Aug 2026 21:02:42 GMT"
   },
   "https://info.devpost.com/product/public-hackathons": {
-   "body_sha256": "90cae7d37fe7b1020f9bd0c5a720354ce88ef07eb7b104c6222a256534eb8af9",
+   "body_sha256": "a4ee89eb36207ac2b4162e6eb962d17dfd3f16b57a2a8e472e9b006e4223890b",
    "etag": null,
-   "last_modified": "Tue, 11 Aug 2026 14:12:12 GMT"
+   "last_modified": "Fri, 14 Aug 2026 22:48:26 GMT"
   },
   "https://jobs.siemens.com/careers?location=Portugal": {
-   "body_sha256": "d17fc1f95d88e2a5598d957a4fa76af86b3160ab53761bf44515683f85688da1",
+   "body_sha256": "14c692d5a34402b05f425e2989e262a975462e22b9184b040e2632d0c9fc4083",
    "etag": null,
-   "last_modified": "Thu, 13 Aug 2026 09:46:13 GMT"
+   "last_modified": "Sun, 16 Aug 2026 00:21:47 GMT"
   },
   "https://junifeup.pt/": {
    "body_sha256": "954cda8f6bc7bce99cccca427e2e7313480eadf79846a48cec467460c6b3b3fb",
@@ -148,17 +177,22 @@
    "last_modified": "Thu, 13 Aug 2026 09:16:31 GMT"
   },
   "https://lu.ma/cursorcommunity?k=c": {
-   "body_sha256": "b90c331a76d17b36f066430f78d2c1eb4753be1f0bb29e97780e313fa0da93e6",
+   "body_sha256": "568a8491e936508dad8723745bba9de580bbf01817a87a4d3fc5e9a94834ca4e",
    "etag": null,
    "last_modified": null
   },
   "https://lu.ma/porto": {
-   "body_sha256": "15798938b5c8c3b8ac6c330c2fc57718ac27ae1d8c0175aab1a7e38344a88fb9",
+   "body_sha256": "63a84a331cd37d54e64738ee72df93b6bce6dd3295fcb1d0eac30f2aa105f316",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://luma.com/edth-2026-porto": {
+   "body_sha256": "06253c9671af04297700d1ffc3b37cb5b907765ed9e7551d2b03362213d46310",
    "etag": null,
    "last_modified": null
   },
   "https://mlh.io/seasons/2027/events": {
-   "body_sha256": "b3a5806748971e86e340e4181528cee0d8b5c18039537f4a576b5ededd92ba4f",
+   "body_sha256": "2d250f29957c6d8f07e9357b4ea518eeffc607853368db3039901c849f94639d",
    "etag": null,
    "last_modified": null
   },
@@ -203,17 +237,27 @@
    "last_modified": null
   },
   "https://preh8-portal.rexx-recruitment.com/job-offers.html": {
-   "body_sha256": "81ced727557248cf204fea78945cd9aa346c68284c0c5214d38ad5e19c501671",
+   "body_sha256": "0344a475ff995809c904aedd07ff8495fcc8463f58fd5933c0915319e61d620f",
    "etag": null,
    "last_modified": null
   },
   "https://preh8-portal.rexx-recruitment.com/jobalert-eng.html": {
-   "body_sha256": "e64495e70ca9a2dad08a3842b19dd47baa8cddaf34f5527177fe5eb6bb7950da",
+   "body_sha256": "49d76f01baed8302f390670844ff84dd55ca1d499c29e8f6c486cb9244c6ef65",
    "etag": null,
    "last_modified": null
   },
   "https://register.makethefuture.shell": {
    "body_sha256": "3d18b16f879ee5ab6e671308f2787a37e5b69e73af98efb078962fa94c95baeb",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://results.sem-app.com/app?listevents=": {
+   "body_sha256": "b23826e5565e760c0cf1307cbbf93fa27fb39c8960bc2c50369a5806633dab2d",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://scholarshipinfocenter.com/fully-funded-summer-programs-2027-2028": {
+   "body_sha256": "10af4da079bd3f66ba572e2f02ecb9a540e7e295317bad8e7c99d92d7ce47c3a",
    "etag": null,
    "last_modified": null
   },
@@ -223,22 +267,22 @@
    "last_modified": "Thu, 13 Aug 2026 09:25:52 GMT"
   },
   "https://sigarra.up.pt/feup/pt/noticias_geral.lista_noticias": {
-   "body_sha256": "714fb400e814005fc47235d840513f722483647825bbd4b1b9828977b2fca6e7",
+   "body_sha256": "85f0df36c4f1c27693f554a94cbe890a8fca3586f60eb6efcf3ed6d7cf0bc677",
    "etag": null,
    "last_modified": null
   },
   "https://sigarra.up.pt/feup/pt/noticias_geral.ver_noticia?p_nr=194277": {
-   "body_sha256": "6a3bbcb0456a769d0a9958e2862a87736192ca030e79c28881ace746e25b4a01",
+   "body_sha256": "67a53b0297383d73d81281435a37207c9d80095ec68f1ba1cfcde217d8d6eff6",
    "etag": null,
    "last_modified": null
   },
   "https://sigarra.up.pt/feup/pt/noticias_geral.ver_noticia?p_nr=196637": {
-   "body_sha256": "1086439b1787a9454f38edcf4315dd9e32f2bad97ec4e47485a0726cfe165a6d",
+   "body_sha256": "f0e908ad1bdac8ec30c3ed0e7bdc09bbe58a1a54e555cf6db5c39a9e70d64c36",
    "etag": null,
    "last_modified": null
   },
   "https://sigarra.up.pt/feup/pt/noticias_geral.ver_noticia?p_nr=199522": {
-   "body_sha256": "d09d0b161fb53969205c1126c2d7f7cf5d1294e585bb97b1783b0a692cd10eff",
+   "body_sha256": "a02412580da45fe4545cf29d0c70eb82c60c1fa7016fe308b8fbed7431b4e845",
    "etag": null,
    "last_modified": null
   },
@@ -253,29 +297,39 @@
    "last_modified": "Fri, 07 Aug 2026 07:56:22 GMT"
   },
   "https://unstop.com/competitions": {
-   "body_sha256": "b47459a3cd5691d33d42a84bf80783955f8914a71f36f6a8ad9baff03b817489",
-   "etag": "W/\"6a7c6004-5e23\"",
-   "last_modified": "Wed, 12 Aug 2026 11:59:00 GMT"
+   "body_sha256": "96ab36b57fef45c93c92b831265fc6db4d5e902432ec3692c4a2f77d116a0c1a",
+   "etag": "W/\"6a7f07b1-5e23\"",
+   "last_modified": "Fri, 14 Aug 2026 12:18:57 GMT"
   },
   "https://unstop.com/hackathons": {
-   "body_sha256": "b47459a3cd5691d33d42a84bf80783955f8914a71f36f6a8ad9baff03b817489",
-   "etag": "W/\"6a7c6004-5e23\"",
-   "last_modified": "Wed, 12 Aug 2026 11:59:00 GMT"
+   "body_sha256": "96ab36b57fef45c93c92b831265fc6db4d5e902432ec3692c4a2f77d116a0c1a",
+   "etag": "W/\"6a7f07b1-5e23\"",
+   "last_modified": "Fri, 14 Aug 2026 12:18:57 GMT"
   },
   "https://uptec.up.pt/comunidade/estagios-e-bolsas": {
-   "body_sha256": "5e0bc4d39d50e870715fd99ad043bf9bbd797ee5a3f197fac8b02be14a6c8052",
-   "etag": "\"ngvveapbh92v1n\"",
+   "body_sha256": "c0cc4984e1b377ca805a8de7e3542ec601dfaf2aa3a07f1ea0ee8d7a6d3295c2",
+   "etag": "\"15fp3wmuhmr2v12\"",
    "last_modified": null
   },
   "https://uptec.up.pt/eventos/": {
-   "body_sha256": "4441ba935fe157af38806cc1af0b4ad1f807b2b2333b704b02868c0d52513aef",
-   "etag": "\"c38xyect6g29ro\"",
+   "body_sha256": "37ffe10dc5bff2b2127edd275ee1f791549b0e2e79bd00e8e5b5635206759c8b",
+   "etag": "\"dulsg7w1i029r3\"",
+   "last_modified": null
+  },
+  "https://worldengineeringday.net/hackathon": {
+   "body_sha256": "e90633cf15ab895280c13454d6a796d0c06210029b364d95e5603b8302b7a37f",
+   "etag": null,
    "last_modified": null
   },
   "https://www.asme.org/conferences-events/competitions": {
    "body_sha256": "1b141cd703ef5bffa7e6383d859b6d0977141e0055fae8b7ec46b7d1bf77a46f",
    "etag": null,
    "last_modified": "Thu, 22 Jan 2026 16:00:08 GMT"
+  },
+  "https://www.buildingsmart.org/openbim-hackathon-porto-2026": {
+   "body_sha256": "9aace35bd7fe93e4742485f14d4ac21c085b6a74e9b93d6deeaa72468464eb99",
+   "etag": null,
+   "last_modified": "Sat, 15 Aug 2026 23:32:21 GMT"
   },
   "https://www.desy.de/career/praktikum/index_eng.html": {
    "body_sha256": "e954bc4355324f4f2fae60906fa51a207605b37d8527231bf9a7c1ae858be4c6",
@@ -298,58 +352,63 @@
    "last_modified": "Thu, 13 Aug 2026 09:39:12 GMT"
   },
   "https://www.eventbrite.com/e/built-for-nyc-ai-hackathon-at-nypl-tickets-1994000516221?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=Built+for+NYC%3A+AI+Hackathon+at+NYPL": {
-   "body_sha256": "a08809064a01ac2ddf7a07019b429851cc0d27253694529572efa526cbda3656",
-   "etag": "\"k1c0xzcl4d4g79\"",
+   "body_sha256": "b8716e026a2f248d1c932555c2258e49a63f37a3755f7b1e4b44cf75778f8438",
+   "etag": "\"k7pdoy0x094fs4\"",
    "last_modified": null
   },
   "https://www.fabricadestartups.com/": {
-   "body_sha256": "9da25bfedba2f811fced7aa2eb6e958f75a243ccfa33288744376c4f975a5fae",
-   "etag": "W/\"e505e8ec5bca3e33641eb54bd3fc69ed\"",
+   "body_sha256": "187fe1b32f3d2fc61f9f49db5399b657f0650d6245303455cdc55984aa968f98",
+   "etag": "W/\"91217065399d234a9915d4388fe76d36--gzip\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/": {
-   "body_sha256": "d41d6a2dadaba32d8cf09dc040ddcc8c34dbf463fad1aa29f575c97c246219ce",
-   "etag": "W/\"a5d7b979008d51ddf99e2fdac39f2597\"",
+   "body_sha256": "c3a706370413a55655f79cb463e22f9899e994a89de7f53f6c6ed1ec1164d16e",
+   "etag": "W/\"baba9a24741e26053088a6f7b95c6368\"",
+   "last_modified": null
+  },
+  "https://www.formulastudent.pt/about": {
+   "body_sha256": "5cfdc7b3aa55dc6d3f2bcb50247e040ac45d9e4c8127f68abac43f248d84a22b",
+   "etag": "W/\"5bb876cbd3ff34ec751cab5ef98649db\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition": {
-   "body_sha256": "4fd4d85f909a3970349f7e6cf06888b79ac4a2e371e4f5e96d06b7379a0d08c8",
-   "etag": "W/\"327114878a40d203910b38b878a6c5cd\"",
+   "body_sha256": "c23806e7340f48dcedb849208151a32d51b08bae234d526837a46681f5a2addf",
+   "etag": "W/\"1b8ff6e136507fe53e46753a09ebda43\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/fspt23": {
-   "body_sha256": "c40acf892a6b55548eb7b9840abc8ac0091573eae1c16b8374e4ecf51c48986a",
-   "etag": "W/\"b504a788fd8e07396576dea1649a724e\"",
+   "body_sha256": "7a49b595f6b2995b32973fdc7be7186f285f341198d86eb9a9a4d989767e2864",
+   "etag": "W/\"ae2660f7842bce0a0944e31d4a689d5f\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/fspt24": {
-   "body_sha256": "6fb1ace03cdaa557f56d7cf5b75a7e3b3583ded2668ca163fa51defd6ba1b2ed",
-   "etag": "W/\"01f424d6d92e8e218473c6fd500757fd\"",
+   "body_sha256": "6dfdcce0ee7a625fde0147f116d5f7984caf68b1cfbdd533ff68a51829a89125",
+   "etag": "W/\"69deef0b45b23f76cbf2051a1b1ce0fb\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/fspt25": {
-   "body_sha256": "88ffb9cb4e0072bd7fe6fab09cae3fbb9297018f9a286fec69a2e9ea3fd710e5",
-   "etag": "W/\"befc97ae2ad9670d8286628bf974a61c\"",
+   "body_sha256": "9b205441ac29e9c58a04821f6ee830880abbcece99ea71e9eea0b87c9fe1cfea",
+   "etag": "W/\"c0c371768fed35ebe74ffff2e783d532\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/fspt25/c\u00f3pia-penalties-2025": {
-   "body_sha256": "7fe3e8b4888982aa29838910128948c37f26b76622a9b93e6e7fbbaf8d028f57",
-   "etag": "W/\"eadd8c4296d3144f67694994de10c280\"",
+   "body_sha256": "6f59bfb5cced6a81c2c7ab3e6563d14f49c8ce3f467813a53abea0c63f607404",
+   "etag": "W/\"bbbd337b14d5f0c353991b8c2ba1456f\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/fspt26": {
-   "body_sha256": "70a90cee4530f0c1a00dfc0ead1114d82c2eb20160e2a53cc7e9878166306eff",
-   "etag": "W/\"3e137024d83ad282f177d74132786b48\"",
+   "body_sha256": "35f8043376b894665466257b202e312f82e9165ee160ec892ff59178059d51d9",
+   "etag": "W/\"294ee0e27690bb07a5ef37abd7997081\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/pre-event-2025": {
-   "body_sha256": "3c149eebe516774e3e5cf8db701e96387952ef95e8d2234549996f24d724a08b",
-   "etag": "W/\"4743fa950fd0a3fe2d0fc04f69188c5a\"",
+   "body_sha256": "41604ab3b4aff2b49be8735a9d2cf9c3c858ad80f6a2006755c5b2628d69b4e4",
+   "etag": "W/\"3ac8032253d3514e0a74aed5666d9a46\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/why-fspt": {
-   "body_sha256": "7c9de6959d2d0405ed961ab2677d493c4e1b814a12a588992543810950a83e4f",
-   "etag": "W/\"4926740780a5661379146d26009bff67\"",
+   "body_sha256": "a34d5f5bdc3e74633984583b38b5519ae3145681fa4ba07671f38bce9d53c35f",
+   "etag": "W/\"18f21eb8f9d283bc76404c9ba9c8d97c\"",
    "last_modified": null
   },
   "https://www.henhackshackathon.com/?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=HenHacks": {
@@ -393,32 +452,32 @@
    "last_modified": null
   },
   "https://www.jeronimomartins.com/en/careers/": {
-   "body_sha256": "2a90b206a90de0884f63f53d4a469fa4f6e6da1a2901555e97aa513b46056cec",
+   "body_sha256": "ec1820c57c756674a114f82a5dac3fa6e587869cc39fb6d9ef27edf405650f9d",
    "etag": null,
    "last_modified": null
   },
   "https://www.jeronimomartins.com/en/careers/students-and-recent-graduates/curricular-internship/": {
-   "body_sha256": "8401f043ea5a56dbc793b722e211bf2cd936bebcd9a74210cc43e6c8e67c4496",
+   "body_sha256": "4c58125519471861ae49a880374cd282381b280491159223a1e829b7d06449ca",
    "etag": null,
    "last_modified": null
   },
   "https://www.jeronimomartins.com/en/careers/students-and-recent-graduates/professional-internship-programme/": {
-   "body_sha256": "8dc34dc0b193947456c471d575219978cbf12980e18fdf8442d3eeb0d4e1e37d",
+   "body_sha256": "adb17a0b8a7826d9fa343d60c5bd6330645e8444d902731d5e7eab27507f6c3d",
    "etag": null,
    "last_modified": null
   },
   "https://www.jeronimomartins.com/en/careers/students-and-recent-graduates/summer-internship-programme/": {
-   "body_sha256": "8861f61b96ae4d9d7b97afba69ccb9cd03021cafe46ad89ffa3944e6702a3d74",
+   "body_sha256": "f34104b026e43776dc605adbcf336cc4f3045ef954289f8d125dcc9224336406",
    "etag": null,
    "last_modified": null
   },
   "https://www.kaggle.com/competitions": {
-   "body_sha256": "1098f12f164d8f1d748921d7c9a53e7148aedf8631133f856faca1031029ca31",
+   "body_sha256": "3399b9e8e5f296c565c0f2f4822242caf56f51c88495502d2907ab6060a88933",
    "etag": null,
    "last_modified": null
   },
   "https://www.kirchhoff-automotive.com/career": {
-   "body_sha256": "0630a27f79f3c29b4dc610872ea8e67c156ab789bd8890e5b11698ecb8439c1f",
+   "body_sha256": "890b8a02ad80fb756288c3b23f79b489c5a07a3b66390ca56ab964d8d8563d56",
    "etag": null,
    "last_modified": null
   },
@@ -428,12 +487,17 @@
    "last_modified": null
   },
   "https://www.meetup.com/find/?location=pt--Porto&source=EVENTS": {
-   "body_sha256": "7b5b94e349916a8f6afe27cfdcce51d9414bf6170e8839c5a7e7ab3c67fe2df3",
-   "etag": "W/\"OVNTOnhLCi4T2ZfDkRAZ8oI6Mbrf0aX3\"",
+   "body_sha256": "e9e575823b4cfedf46416c77a111b682b035a5e560eb10a52179fd62a4422f43",
+   "etag": "W/\"2Enl469E2DIPWCcUHUATcloI_JRMeB-F\"",
    "last_modified": null
   },
   "https://www.mlh.com/seasons/2026/events": {
    "body_sha256": "a8d61723c4b918ab0938cc9bbad4c73e779f9355f607bc04d1b4507e670ec681",
+   "etag": null,
+   "last_modified": null
+  },
+  "https://www.mlh.com/seasons/2027/events": {
+   "body_sha256": "a0bcd9d4a982b5b9e179975577a8b9da73681dac040099efb317ce6841d3cac2",
    "etag": null,
    "last_modified": null
   },
@@ -443,12 +507,12 @@
    "last_modified": null
   },
   "https://www.porto.ucp.pt/en/events": {
-   "body_sha256": "8f7db6db7465d1c7b55523582af3582d4c5446cfc66e580dc99e69ccebb08f57",
-   "etag": "\"1786614309-1\"",
-   "last_modified": "Thu, 13 Aug 2026 09:45:09 GMT"
+   "body_sha256": "6b3981bf67c8fc48eca35d29d123e9427ba8cb7deac2a12056d5de289f3a7a1d",
+   "etag": "\"1786839667-1\"",
+   "last_modified": "Sun, 16 Aug 2026 00:21:07 GMT"
   },
   "https://www.preh.com/en/career/": {
-   "body_sha256": "81ced727557248cf204fea78945cd9aa346c68284c0c5214d38ad5e19c501671",
+   "body_sha256": "0344a475ff995809c904aedd07ff8495fcc8463f58fd5933c0915319e61d620f",
    "etag": null,
    "last_modified": null
   },
@@ -467,6 +531,11 @@
    "etag": null,
    "last_modified": null
   },
+  "https://www.scholarshipscentral.com/blog/european-scholarships-for-engineering": {
+   "body_sha256": "b786e7fcb51c79b0c3306944c8d80ad34bfbed8fff7478447468a5639cafafb3",
+   "etag": null,
+   "last_modified": null
+  },
   "https://www.shellecomarathon.com": {
    "body_sha256": "95d5d7354043bb448731b1135f3aa6f1fc693f9c3f7aa76969e07868d147309c",
    "etag": null,
@@ -480,7 +549,7 @@
   "https://www.shellecomarathon.com/about/register.html": {
    "body_sha256": "a0fa1aff03e6384142a0c9caa546979c816915ea856057e24b5c83d89e1a387c",
    "etag": null,
-   "last_modified": "Wed, 12 Aug 2026 09:50:12 GMT"
+   "last_modified": "Wed, 12 Aug 2026 16:50:54 GMT"
   },
   "https://www.shellecomarathon.com/programme.html": {
    "body_sha256": "8d8a972425e484c78c20ae80d4efd69e45266bc05e1746afcf368753f5afc683",
@@ -493,7 +562,7 @@
    "last_modified": null
   },
   "https://www.sonae.pt/en/careers/": {
-   "body_sha256": "a338f0fb74a0a0430b46dcb1b1ee0c981423e38e8710e7257874f49ab74b3b51",
+   "body_sha256": "0c20ea9edbc0f8bc0105a9db35f15c9fd67e1ebbb0eca69ad71403c473508f33",
    "etag": null,
    "last_modified": null
   },
@@ -508,7 +577,256 @@
    "last_modified": "Thu, 13 Aug 2026 09:45:11 GMT"
   }
  },
- "feedback_reasons": [],
+ "feedback_reasons": [
+  {
+   "date": "2026-08-16",
+   "reason": "too expensive"
+  },
+  {
+   "date": "2026-08-16",
+   "reason": "wrong field"
+  },
+  {
+   "date": "2026-08-16",
+   "reason": "too basic"
+  },
+  {
+   "date": "2026-08-16",
+   "reason": "too advanced"
+  },
+  {
+   "date": "2026-08-16",
+   "reason": "bad timing"
+  },
+  {
+   "date": "2026-08-16",
+   "reason": "low prestige"
+  },
+  {
+   "date": "2026-08-16",
+   "reason": "dislike this format"
+  },
+  {
+   "date": "2026-08-16",
+   "reason": "dislike this organiser"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "OPPORTUNITY SCOUT \u2014 2026-08-13"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0004 Biz & Buzz: Your After-Work Connection in Porto \u2014 Porto Business Network | other | Letraria Porto Downtown, PORTO | deadline not stated | not stated | https://www.meetup.com/porto-business-network/events/315856483/ [estimates: effort: est. \u2014 1-day other norm; prestige: est. \u2014 organiser recogn"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0008 Microsoft AI Certification Paths & AI Upskilling \u2014 Data-Driven Innovation - DDI | other | online | deadline not stated | not stated | https://www.meetup.com/ddi-meetup-group/events/315866513/ [estimates: effort: est. \u2014 1-day other norm; prestige: est. \u2014 organiser recognition heuristic; cv: es"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0005 Learn about volunteering in Porto \u2014 Porto Volunteers | volunteer | Novo Imperador Cafe, Porto | deadline not stated | not stated | https://www.meetup.com/meetup-group-euqbagnh/events/314941672/ [estimates: effort: est. \u2014 1-day volunteer norm; prestige: est. \u2014 organiser recognition heuristic; "
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0001 Cursor Togo - From IDE to Agent \u2014 Cursor Lome, Togo, Africa | other | online | deadline not stated | free | https://luma.com/cursor-ytfr [estimates: effort: est. \u2014 1-day other norm; prestige: est. \u2014 organiser recognition heuristic; cv: est. \u2014 type + organiser heuristic; networking: est. \u2014 eve"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0002 Porto Future Tech - Casual Networking \u2014 Porto Future Tech | other | A F\u00e1brica da Picaria, Porto | deadline not stated | not stated | https://www.meetup.com/porto-future-tech/events/315850875/ [estimates: effort: est. \u2014 1-day other norm; prestige: est. \u2014 organiser recognition heuristic; cv: es"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0003 SOCIAL Boardgames: Play and meet new friends! \u2014 LOOK.Sharp Cafe Porto | Coworking | Events | Retail | other | Look.Sharp Retail Cafe, Porto | deadline not stated | not stated | https://www.meetup.com/looksharp/events/315664821/ [estimates: effort: est. \u2014 1-day other norm; prestige: est. \u2014 org"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0006 Why Aren't You Happy Yet? - By a Psychic Reader & a Hypnotherapist \u2014 Inner Growth Community | other | online | deadline not stated | not stated | https://www.meetup.com/inner-growth-community/events/315857593/ [estimates: effort: est. \u2014 1-day other norm; prestige: est. \u2014 organiser recognition"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0007 Crafting & Craft Beer Night \u2014 Porto Torto | other | Letraria Porto Downtown, Porto | deadline not stated | not stated | https://www.meetup.com/porto-torto/events/316055360/ [estimates: effort: est. \u2014 1-day other norm; prestige: est. \u2014 organiser recognition heuristic; cv: est. \u2014 type + organis"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0009 Porto 10000 steps walk (To be defined) \u2014 Porto 10000 steps walk | other | No defined, Porto | deadline not stated | not stated | https://www.meetup.com/porto-10000-steps-walk/events/315800908/ [estimates: effort: est. \u2014 1-day other norm; prestige: est. \u2014 organiser recognition heuristic; cv: e"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0010 MEANINGFUL MEAL: Insightful Dinner with New Friends \u2014 LOOK.Sharp Cafe Porto | Coworking | Events | Retail | other | Look.Sharp Cafe and Event Space, Porto | deadline not stated | not stated | https://www.meetup.com/looksharp/events/315801191/ [estimates: effort: est. \u2014 1-day other norm; prest"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0011 Free International PUBCRAWL w/ Local Guides! \ud83d\udc83 \ud83c\udf0d\ud83c\udf89 \u2014 Porto Internationals and Locals | other | Baixa Bar, Porto | deadline not stated | free | https://www.meetup.com/porto-internationals-locals/events/315800869/ [estimates: effort: est. \u2014 1-day other norm; prestige: est. \u2014 organiser recognitio"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0012 Quiz & Beer Night / Noite de Quiz e Cerveja \u2014 Porto Torto | other | Letraria Porto Downtown, Porto | deadline not stated | not stated | https://www.meetup.com/porto-torto/events/315382220/ [estimates: effort: est. \u2014 1-day other norm; prestige: est. \u2014 organiser recognition heuristic; cv: est. "
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0013 Online Speed Dating | For UK Indian Singles (Ages 27 - 40) \u2014 Elite Rishtas | Modern Indians & South Asians Singles UK | other | online | deadline not stated | not stated | https://www.meetup.com/elite-rishtas-modern-indians-south-asians-singles-uk/events/315724953/ [estimates: effort: est. \u2014 "
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0014 Publica\u00e7\u00e3o de Brasil Terminal Portu\u00e1rio \u2014 not stated | internship | not stated | deadline not stated | not stated | https://pt.linkedin.com/posts/brasilterminalportuario_porto-portodesantos-est%C3%A1gio-activity-7082701340635709440-2fAl [estimates: effort: est. \u2014 4w internship norm; prestige:"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0015 Toyota do Brasil | 26 coment\u00e1rios \u2014 not stated | internship | not stated | deadline not stated | not stated | https://pt.linkedin.com/posts/toyota-do-brasil_talentos-programadeest%C3%A1gio-carreiras-activity-6987815941749284864-USJs [estimates: effort: est. \u2014 4w internship norm; prestige: est"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0016 Andr\u00e9 Zandamela Jr. | 11 coment\u00e1rios \u2014 not stated | internship | not stated | deadline not stated | not stated | https://pt.linkedin.com/posts/andr%C3%A9-zandamela-jr-bb24282a7_engenhariamecanica-estagio-desenhotecnico-activity-7323731810012577792-tanW [estimates: effort: est. \u2014 4w internship"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0017 #eudisdefencetech #hackathon #innovation #defencetech #portugal #productized #europeandefence | Andre Marquet \u2014 not stated | hackathon | not stated | deadline not stated | not stated | https://www.linkedin.com/posts/marquet_eudisdefencetech-hackathon-innovation-activity-7387057787119321088-DN"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0018 #sinfo #datascience #hackathon #internshipopportunity #nortechdifference | Nortech AI \u2014 not stated | internship | not stated | deadline not stated | not stated | https://www.linkedin.com/posts/nortech-ai_sinfo-datascience-hackathon-activity-7184565319644954624-w_Hk [estimates: effort: est. \u2014 "
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0019 openBIM Hackathon in Porto, March 22-24, 2026 \u2014 not stated | hackathon | not stated | deadline not stated | not stated | https://www.linkedin.com/posts/buildingsmart-usa_openbim-hackathon-bssporto26-activity-7433179368459337728-XCqX [estimates: effort: est. \u2014 1-day hackathon norm; prestige: e"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0020 Yungo at openBIM Hackathon 2026 in Porto \u2014 not stated | hackathon | not stated | deadline not stated | not stated | https://www.linkedin.com/posts/yungonetworks_buildingsmart-international-summit-in-porto-activity-7437845433365823488-5qvm [estimates: effort: est. \u2014 1-day hackathon norm; prest"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0021 openBIM Hackathon: Porto 2023 - Building Innovation with ... \u2014 not stated | hackathon | not stated | deadline not stated | not stated | https://www.linkedin.com/posts/buildingsmart-international_openbim-hackathon-ifc-activity-7429102269381394432-8t0U [estimates: effort: est. \u2014 1-day hackathon"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0022 Hugo Vaz - hackathon #coreflux #best #feup \u2014 not stated | hackathon | not stated | deadline not stated | not stated | https://www.linkedin.com/posts/hugopvaz_hackathon-coreflux-best-activity-7439317064181354496-en91 [estimates: effort: est. \u2014 1-day hackathon norm; prestige: est. \u2014 organiser r"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0023 Boost Business Development: RPS+ Workshop with LinkedIn ... \u2014 not stated | internship | not stated | deadline not stated | not stated | https://tcommunity.linkedin.com/events/boost-business-development-rps-workshop-with-linkedin-talent-insights-275 [estimates: effort: est. \u2014 4w internship nor"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0024 I first heard of Formula Student in October 2012 during a lunch at the university canteen. I vividly remember immediately wanting to join the team and ended up going through the recruitment process -\u2026 \u2014 not stated | internship | not stated | deadline not stated | not stated | https://www.link"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0025 Formula Student Portugal on LinkedIn: The 2024 Formula Student Season is Here! Get set for a summer of non-stop\u2026 \u2014 not stated | competition | not stated | deadline not stated | not stated | https://www.linkedin.com/posts/formula-student-portugal_the-2024-formula-student-season-is-here-activit"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0026 Formula Student Portugal on LinkedIn: FSPT TALKS | FS Portugal \u2014 not stated | competition | not stated | deadline not stated | not stated | https://www.linkedin.com/posts/formula-student-portugal_fspt-talks-fs-portugal-activity-7133446649795817472-qJJX [estimates: effort: est. \u2014 1-day competi"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0027 Formula Student Portugal on LinkedIn: FSPT23 - Award Ceremony Video \u2014 not stated | competition | not stated | deadline not stated | not stated | https://www.linkedin.com/posts/formula-student-portugal_fspt23-award-ceremony-video-activity-7095339566068301824-LzVP [estimates: effort: est. \u2014 1-d"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0028 Formula Students Technical University of Crete on LinkedIn: #fs_tuc #formulastudent #sponsorship #racecar #engineering #formula\u2026 \u2014 not stated | internship | not stated | deadline not stated | not stated | https://www.linkedin.com/posts/fs-tuc_fstuc-formulastudent-sponsorship-activity-70188741"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0029 Formula Student Germany on LinkedIn: #fsg23 #allovertheworld #bigfamily #skillsandspirit #international \u2014 not stated | competition | not stated | deadline not stated | not stated | https://www.linkedin.com/posts/fsg-gmbh_fsg23-allovertheworld-bigfamily-activity-7093232673476734978-hZ2F [estim"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0030 SOLVIO AI Hackathon 2025 \u2014 not stated | hackathon | not stated | deadline not stated | not stated | https://www.facebook.com/events/sheba-hq-jessore-high-tech-it-park/solvio-ai-hackathon-2025/1695699487746822 [estimates: effort: est. \u2014 1-day hackathon norm; prestige: est. \u2014 organiser recognit"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0031 Hackathon by SAYNA avec ERANOVE ACADEMY \u2014 not stated | hackathon | not stated | deadline not stated | not stated | https://www.facebook.com/events/1995615374222563?ref_source=newsfeed&ref_mechanism=feed_attachment&action_context=%257B%2522action_history%2522%253A%2522null%2522%257D [estimates"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0032 Hackathon : Morocco Social TECH \u2014 not stated | hackathon | not stated | deadline not stated | not stated | https://www.facebook.com/events/casablanca-morocco/hackathon-morocco-social-tech/1798565046825804 [estimates: effort: est. \u2014 1-day hackathon norm; prestige: est. \u2014 organiser recognition "
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0033 Sedrah Hackathon \u2014 not stated | hackathon | not stated | deadline not stated | not stated | https://www.facebook.com/events/saudi-arabia-riyadh/sedrah-hackathon/679392564217688 [estimates: effort: est. \u2014 1-day hackathon norm; prestige: est. \u2014 organiser recognition heuristic; cv: est. \u2014 type +"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0034 Khalti Events - Nepal\u2019s biggest hackathon is back! \ud83d\ude0e... \u2014 not stated | hackathon | not stated | deadline not stated | not stated | https://www.facebook.com/events.khalti/posts/nepals-biggest-hackathon-is-back-codefest-2025-is-your-chance-to-turn-ideas-into/784608627908097 [estimates: effort: "
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0035 Yala Smart AI Hackathon 2025 SEASON 3 - Final Competition \u2014 not stated | hackathon | not stated | deadline not stated | not stated | https://www.facebook.com/events/tk-park-yala/yala-smart-ai-hackathon-2025-season-3-final-competition/1095089708689583 [estimates: effort: est. \u2014 1-day hackathon"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0036 EBEC Porto 2017 \u2014 not stated | competition | not stated | deadline not stated | not stated | https://www.facebook.com/events/1425197234159380?ref_source=NEWS_FEED [estimates: effort: est. \u2014 1-day competition norm; prestige: est. \u2014 organiser recognition heuristic; cv: est. \u2014 type + organiser h"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0037 Cern student program 2027 in Switzerland fully funded - Facebook \u2014 not stated | summer_school | not stated | deadline not stated | funded | https://www.facebook.com/groups/742415256445565/posts/1841644096522670 [estimates: effort: est. \u2014 1-day summer_school norm; prestige: est. \u2014 organiser re"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0038 CERN openlab Summer Student Programme 2026 - LinkedIn \u2014 not stated | internship | not stated | deadline not stated | funded | https://www.linkedin.com/pulse/cern-openlab-summer-student-programme-vcz8e [estimates: effort: est. \u2014 4w internship norm; prestige: est. \u2014 organiser recognition heuris"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0039 Instagram \u2014 not stated | other | not stated | deadline not stated | not stated | https://www.instagram.com/p/DPdZWW6COQH [estimates: effort: est. \u2014 1-day other norm; prestige: est. \u2014 organiser recognition heuristic; cv: est. \u2014 type + organiser heuristic; networking: est. \u2014 event-type heuristi"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0040 Featuring our very own student Ali Rasheed who received ... \u2014 not stated | summer_school | not stated | deadline not stated | not stated | https://www.facebook.com/RoyalInstituteCMB/posts/featuring-our-very-own-student-ali-rasheed-who-received-the-prestigious-scholars/8387164967962094 [estima"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0041 We're recruiting for the 2026/27 season! \ud83c\udfce\ufe0f KTH Formula ... \u2014 not stated | internship | not stated | deadline not stated | not stated | https://www.instagram.com/p/Db1JZpaDZq5 [estimates: effort: est. \u2014 4w internship norm; prestige: est. \u2014 organiser recognition heuristic; cv: est. \u2014 type + or"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0042 We're looking for new members for the Driver Interface, ... \u2014 not stated | competition | not stated | deadline not stated | not stated | https://www.instagram.com/reel/DUoBSxmjffD [estimates: effort: est. \u2014 1-day competition norm; prestige: est. \u2014 organiser recognition heuristic; cv: est. \u2014 t"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0043 How to get into F1 without racing experience | Mike Law posted on the topic | LinkedIn \u2014 not stated | other | not stated | deadline not stated | not stated | https://www.linkedin.com/posts/mike-law-29435395_f1-formulastudent-fsae-activity-7341698831870251008-GsVY [estimates: effort: est. \u2014 1-"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "E-0044 SAE University Programs (@sae_universityprograms) \u2014 not stated | competition | not stated | deadline not stated | not stated | https://www.instagram.com/sae_universityprograms?hl=en [estimates: effort: est. \u2014 1-day competition norm; prestige: est. \u2014 organiser recognition heuristic; cv: est. \u2014"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "sources queried: 41"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "sources errored: eventbrite-porto (HTTP 405 on https://www.eventbrite.com/d/portugal--porto/engineering/; HTTP 405 on https://www.eventbrite.com/d/portugal--porto/business/; HTTP 405 on https://www.eventbrite.com/d/online/hackathon/), inesc-tec (network error on https://www.inesctec.pt/en/news), ise"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Tavily credits used 16 / remaining today 14"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Gemini calls: 9"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "pages fetched: 105, unchanged (304/hash): 3"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "runtime: 343s"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Gemini errors: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=AQ.Ab8RN6I1vFyRFOp4vsBfYCkhMTbmSc9W1b_n2vmFG8gUXm3zLQ; 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/ge"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "Reply to teach the scout. Two commands, two different lessons:"
+  },
+  {
+   "date": "2026-08-16",
+   "note": "After a not-interested, add one line with a reason: too expensive / wrong field / too basic / too advanced / bad timing / low prestige / dislike this format / dislike this organiser."
+  }
+ ],
  "geocode_cache": {
   "1 chome 15 30 tenjin fukuoka": {
    "country": "jp",
@@ -534,6 +852,10 @@
    "country": null,
    "municipality": null
   },
+  "geneva switzerland": {
+   "country": "ch",
+   "municipality": "Gen\u00e8ve"
+  },
   "gridakl john lysaght startup coworking space auckland": {
    "country": null,
    "municipality": null
@@ -543,6 +865,10 @@
    "municipality": "Las Vegas"
   },
   "lemon studio nairobi": {
+   "country": null,
+   "municipality": null
+  },
+  "line up coworking mar del plata": {
    "country": null,
    "municipality": null
   },
@@ -570,9 +896,21 @@
    "country": "us",
    "municipality": "New York"
   },
+  "switzerland": {
+   "country": "ch",
+   "municipality": null
+  },
+  "tiradentes innovation center aracaju": {
+   "country": "br",
+   "municipality": "Aracaju"
+  },
   "toronto on toronto": {
    "country": "ca",
    "municipality": "Toronto"
+  },
+  "united states": {
+   "country": "us",
+   "municipality": null
   },
   "verndale quito": {
    "country": null,
@@ -582,14 +920,19 @@
    "country": "dk",
    "municipality": "K\u00f8benhavns Kommune"
   },
+  "washington d c other u s cities and more than 100 u s embassies": {
+   "country": null,
+   "municipality": null
+  },
   "wiseapple coffee shop lusaka": {
    "country": null,
    "municipality": null
   }
  },
- "next_event_id": 45,
+ "last_imap_uid": 11812,
+ "next_event_id": 49,
  "tavily": {
-  "date": "2026-08-13",
-  "used": 16
+  "date": "2026-08-16",
+  "used": 8
  }
 }
