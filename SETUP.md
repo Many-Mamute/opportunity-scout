@@ -78,7 +78,12 @@ The workflow also has `workflow_dispatch`, which means you can press a button to
 ## 8. First run
 
 1. In your repo click the **Actions** tab. If GitHub asks you to enable workflows, click enable.
-2. Click **opportunity-scout** in the left list → **Run workflow** → **Run workflow** (green button). A manual run does both phases at once and emails immediately, so you never have to wait until 06:30 to test.
+2. Click **opportunity-scout** in the left list → **Run workflow**. A **mode** dropdown appears:
+   - **full** (default) — build and email immediately. Use this for testing; you never have to wait until 06:30.
+   - **prepare** — build now and queue it for the 06:30 delivery job.
+   - **deliver** — send whatever is currently queued.
+
+**The daily schedule is already automatic.** Once `daily.yml` is on your default branch, the four crons fire every morning on their own — there is nothing else to switch on. Two caveats worth knowing: GitHub disables scheduled workflows in a repository with no activity for 60 days (it emails you first, and one click re-enables them), and scheduled runs can start a few minutes late when GitHub is busy, which is part of why the prepare phase has a 20-minute head start on the 06:30 delivery.
 3. Wait a few minutes; a digest should arrive at the recipient address. The very first run backfills every currently-open opportunity into the database but still emails only the top 20 — the backlog drains over the following days and Sunday roundups. (Optionally, for a bigger first sweep, run locally once with `--backfill`, step 10, and push the resulting `data/` files.)
 
 ## 9. Reading the Actions log when a run fails
@@ -173,9 +178,11 @@ They are lookup tables in `config/filters.yaml`, not judgements about the specif
 
 To change them, edit the tables. To teach the ranking instead, reply — `interested` / `meh` / `uninterested` adjust the weight of the type, organiser and field, which is the part that actually learns.
 
-## 17. The "Also still open" list
+## 17. The bottom list, and the Sunday recap
 
-Every open opportunity that did not make the daily shortlist appears there. Each row is a `<details>` toggle: tap it to expand the full card, including the feedback buttons, without leaving the email.
+On weekdays, the bottom section is **Also still open**: every open opportunity that did not make the top ten, so nothing good is invisible just because it ranked eleventh.
+
+On **Sunday** it becomes **Sunday recap — everything still open**: a complete inventory of every opportunity you have not rejected, including the ones shown as full cards above and the unverified snippets, sorted by soonest deadline. Nothing is filtered out of that list. Each row is a `<details>` toggle: tap it to expand the full card, including the feedback buttons, without leaving the email.
 
 Apple Mail, iOS Mail and Thunderbird collapse these properly. Gmail strips the `<details>` tag but keeps its contents, so in Gmail the rows render already expanded — longer, but nothing is hidden behind a link. There is no way to build a reliable collapsible section that Gmail honours without JavaScript, which email cannot run.
 
@@ -185,5 +192,6 @@ The three failure shapes and what they mean:
 
 - **Too much noise** (social events, irrelevant posts) → add a pattern to `social_noise` in `config/filters.yaml`. Anything matching that list is dropped before scoring, no matter how it ranked.
 - **Almost nothing, and Diagnostics shows Gemini errors** → the Gemini key is the problem. The scout auto-discovers a working model if the configured one 404s, but it cannot fix an invalid key. Regenerate it (step 5).
+- **An online event starts in the middle of the night** → that is deliberate. The scout converts the time to Lisbon, flags it (`starts 02:00 Lisbon — you would be up at night`) and leaves the decision to you. Set `reject_night_online: true` in `config/filters.yaml` if you would rather it drop them.
 - **Junk you thought was filtered keeps reappearing** → it was stored before the rule existed. Each run now re-tests every stored event against the current filters and retires the failures, listing them in Diagnostics. One run after a config change is enough.
 - **Nothing at all, and no email** → the job crashed. Check the Actions log (step 9). The scout never sends a clean-looking email built on a failed run.

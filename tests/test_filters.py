@@ -55,11 +55,13 @@ def test_funded_or_prestigious_override_anywhere():
     assert ok and "worth the travel" in e.flags
 
 
-def test_online_night_sessions_rejected():
+def test_online_night_sessions_flagged_not_rejected():
+    """Your call, not the tool's — but it must be impossible to miss."""
     e = ev(format="online", location="online",
            one_line_summary="Live sessions daily at 03:00 UTC")
-    ok, reason = filters.geography_filter(e, CFG)
-    assert not ok and "00:00" in reason
+    ok, _ = filters.geography_filter(e, CFG)
+    assert ok
+    assert any("03:00" in f and "night" in f for f in e.flags), e.flags
 
 
 # -------------------------------------------------------------- calendar

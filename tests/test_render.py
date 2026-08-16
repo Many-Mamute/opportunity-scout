@@ -41,13 +41,18 @@ def test_unstated_timezone_is_labelled_not_assumed():
     assert "no timezone stated" in R._when(e, TODAY)
 
 
-def test_online_event_at_night_in_lisbon_is_rejected():
-    """The Guatemala workshop: 19:00 UTC-6 is 02:00 here."""
+def test_online_event_at_night_is_flagged_and_kept():
+    """The Guatemala workshop: 19:00 UTC-6 is 02:00 here. Keep it, but make
+    the hour impossible to overlook."""
     e = Event(title="Cursor Guatemala Workshop", url="https://x", format="online",
               location="online", start_date=date(2026, 8, 21),
               start_time="02:00", tz_known=True, tz_source="UTC-06:00")
-    ok, reason = filters._online_hours(e)
-    assert not ok and "02:00 Lisbon" in reason
+    ok, _ = filters._online_hours(e)
+    assert ok
+    assert any("02:00 Lisbon" in f for f in e.flags), e.flags
+    enrich_estimates(e, CFG)
+    card = R._card_body(e, TODAY, "me@example.com")
+    assert "02:00 Lisbon" in card and "up at night" in card
 
 
 def test_jsonld_end_to_end_carries_times():
@@ -103,3 +108,41 @@ def test_scores_state_their_own_basis():
     assert "hackathon baseline" in e.estimate_notes["cv"]
     card = R._card_body(e, TODAY, "me@example.com")
     assert ">Why<" in card and "baseline" in card
+
+
+# ------------------------------------------------------- Sunday full recap
+def _open_set():
+    mk = lambda t, s, conf="verified": Event(
+        title=t, organiser="Org", url=f"https://{t}", type="hackathon",
+        fields=["mechanical"], location="Porto", confidence=conf,
+        start_date=date(2026, 9, 1), end_date=date(2026, 9, 1), score=s)
+    return [mk("Alpha", 0.9), mk("Bravo", 0.8), mk("Charlie", 0.4),
+            mk("Delta snippet", 0.3, "low")]
+
+
+def test_sunday_recap_lists_everything_including_the_cards():
+    evs = _open_set()
+    for e in evs:
+        enrich_estimates(e, CFG)
+    top, low = evs[:2], [evs[3]]
+    _, html, text = R.build(
+        date(2026, 8, 16), True, act_now=[], top=top, worth_travel=[],
+        roundup=evs,                      # Sunday: the complete inventory
+        low_conf=low, diagnostics={}, ask_reason_for=[], reply_to="x@y.z")
+    assert "Sunday recap — everything still open" in html
+    assert "all 4 opportunities you have not rejected" in html
+    for e in evs:                         # every open item appears in the recap
+        assert e.title in text
+    assert "SUNDAY RECAP" in text
+
+
+def test_weekday_list_is_only_the_overflow():
+    evs = _open_set()
+    for e in evs:
+        enrich_estimates(e, CFG)
+    _, html, text = R.build(
+        date(2026, 8, 18), False, act_now=[], top=evs[:2], worth_travel=[],
+        roundup=evs[2:], low_conf=[], diagnostics={}, ask_reason_for=[],
+        reply_to="x@y.z")
+    assert "Also still open" in html and "Sunday recap" not in html
+    assert "2 more — tap any line" in html

@@ -262,9 +262,18 @@ def main(argv=None) -> int:
     top = [e for e in ranked if e not in worth
            and e.id not in alerted][:top_cap]
 
-    # Everything open that did not make a full card, so nothing is ever lost.
-    shown = {e.id for e in top + worth + low_conf} | alerted
-    roundup = [e for e in ranked if e.id not in shown]
+    if sunday:
+        # Sunday is a complete inventory: every single thing still open that you
+        # have not rejected, including the ones shown as cards above and the
+        # unverified snippets. Nothing is filtered out of this list.
+        roundup = sorted(store.open.values(),
+                         key=lambda e: (e.next_deadline or far,
+                                        -e.score))
+    else:
+        # Weekdays: everything open that did not make a full card, so a good
+        # opportunity is never invisible just because it ranked eleventh.
+        shown = {e.id for e in top + worth + low_conf} | alerted
+        roundup = [e for e in ranked if e.id not in shown]
     diag.update(tavily_used=state.data["tavily"]["used"],
                 tavily_remaining=state.tavily_remaining(today, tavily_budget.cap),
                 gemini_calls=gemini.used, fetched=fetcher.fetched,

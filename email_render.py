@@ -158,6 +158,13 @@ def _pill(text: str, strong: bool = False) -> str:
             f'{escape(text)}</span>')
 
 
+def _warn_pill(text: str) -> str:
+    return (f'<span style="display:inline-block;background:#fdf3e3;color:{WARM};'
+            f'border:1px solid #e8d5b0;border-radius:11px;padding:3px 10px;'
+            f'font:600 11px/1.4 -apple-system,Segoe UI,sans-serif;'
+            f'margin:0 5px 5px 0">{escape(text)}</span>')
+
+
 def _row(label: str, value: str) -> str:
     return (f'<tr><td style="padding:3px 12px 3px 0;color:{MUT};'
             f'font:600 11px/1.6 -apple-system,Segoe UI,sans-serif;'
@@ -202,8 +209,20 @@ def _card_body(ev: Event, today: date, reply_to: str, lead: str = "") -> str:
     pills = (_pill("Online" if ev.format == "online" else "In person", True)
              + _pill(ev.type.replace("_", " ").title())
              + "".join(_pill(f.replace("_", " ")) for f in ev.fields[:3]))
-    if ev.calendar_conflict in ("near_exams", "clashes_with_term_time"):
-        pills += _pill("clashes with term time")
+    if "new today" in ev.flags:
+        pills = _pill("New today", True) + pills
+    # Things you should see before deciding: awkward hours, term clashes,
+    # travel exceptions, age advantages, and any change since last time.
+    for f in dict.fromkeys(ev.flags):
+        if f == "new today":
+            continue
+        if (f.startswith("starts ") or f.startswith("changed: ")
+                or f in ("worth the travel", "clashes with term time",
+                         "age-category advantage", "you marked this interesting")):
+            pills += _warn_pill(f)
+    if ev.calendar_conflict in ("near_exams", "clashes_with_term_time") \
+            and "clashes with term time" not in ev.flags:
+        pills += _warn_pill("clashes with term time")
 
     summary = clean_text(ev.one_line_summary) if ev.one_line_summary else ""
     summary_html = (f'<div style="font:400 14px/1.65 Georgia,serif;color:{INK};'
@@ -341,11 +360,18 @@ def build(today: date, sunday: bool, *,
         inner = "".join(_roundup_row(e, today, reply_to) for e in roundup)
         week = [e for e in roundup if e.days_until_next_deadline is not None
                 and e.days_until_next_deadline <= 7]
-        parts.append(_section("Also still open", inner,
-                              f"{len(roundup)} more — tap any line to open the "
-                              f"full card; "
-                              + (f"{len(week)} close within 7 days" if week
-                                 else "none close within 7 days")))
+        closing_note = (f"{len(week)} close within 7 days" if week
+                        else "none close within 7 days")
+        if sunday:
+            heading = "Sunday recap — everything still open"
+            note = (f"all {len(roundup)} opportunities you have not rejected, "
+                    f"soonest deadline first, including the cards above; "
+                    f"{closing_note}. Tap any line for the full card.")
+        else:
+            heading = "Also still open"
+            note = (f"{len(roundup)} more — tap any line to open the full card; "
+                    f"{closing_note}")
+        parts.append(_section(heading, inner, note))
     parts.append(_section("Unverified", "".join(
         _card(e, today, reply_to) for e in low_conf),
         "found only as a search snippet — check the link before acting"))
@@ -425,6 +451,12 @@ def _plain_text(today, sunday, act_events, act_leads, top, worth_travel,
         if e.one_line_summary:
             lines.append(f"  {clean_text(e.one_line_summary, 200)}")
         lines += [f"  When:  {_when(e, today)}", f"  Where: {_where(e)}"]
+        notable = [f for f in dict.fromkeys(e.flags)
+                   if f.startswith("starts ") or f.startswith("changed: ")
+                   or f in ("worth the travel", "clashes with term time",
+                            "age-category advantage", "new today")]
+        if notable:
+            lines.append("  Note:  " + " | ".join(notable))
         if e.next_deadline:
             lines.append(f"  Deadline: {e.next_deadline} "
                          f"({e.days_until_next_deadline} days left)")
@@ -451,7 +483,8 @@ def _plain_text(today, sunday, act_events, act_leads, top, worth_travel,
     if roundup:
         # Plain text has no toggle, so give each line enough to decide on
         # without opening the link.
-        out += ["— ALSO STILL OPEN " + "—" * 33, ""]
+        out += [("— SUNDAY RECAP: EVERYTHING STILL OPEN " + "—" * 13) if sunday
+                else ("— ALSO STILL OPEN " + "—" * 33), ""]
         for e in roundup:
             out += [f"{e.id}  {clean_text(e.title, 70)}",
                     f"  {e.organiser} · {_when(e, today)} · {_where(e)}",

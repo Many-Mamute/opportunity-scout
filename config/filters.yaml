@@ -10,6 +10,7 @@ settings:
   gemini_model: gemini-2.5-flash-lite
   gemini_seconds_between_calls: 5   # free tier ~15 RPM
   top_section_cap: 10       # the daily shortlist you actually read
+  reject_night_online: false  # false = flag awkward online hours, you decide
   low_confidence_cap: 4      # snippets are leads, not a second digest
   max_total_events: 16       # ceiling on full cards; the roundup below is unlimited
   max_detail_pages_per_source: 8

@@ -147,7 +147,10 @@ def is_override(ev: Event, cfg: dict) -> bool:
 
 def geography_filter(ev: Event, cfg: dict, geocoder=None) -> Tuple[bool, str]:
     if ev.format == "online":
-        return _online_hours(ev)
+        ok, reason = _online_hours(ev)
+        if not ok and cfg["settings"].get("reject_night_online", False):
+            return ok, reason
+        return True, ""
     override = is_override(ev, cfg)
     muni, minutes = resolve_municipality(ev.location, cfg, geocoder)
     if minutes is not None:
@@ -169,26 +172,27 @@ def geography_filter(ev: Event, cfg: dict, geocoder=None) -> Tuple[bool, str]:
 
 
 def _online_hours(ev: Event) -> Tuple[bool, str]:
-    """Reject only if core sessions are stated to fall 00:00–07:00 Lisbon;
-    flag if merely awkward; unknown times pass (never infer)."""
-    # A real converted start time beats scraping digits out of prose. This is
-    # what catches an online workshop published as 19:00 UTC-6 — 02:00 here.
+    """Label the hour; never reject on it.
+
+    An online session at 02:00 Lisbon may still be worth setting an alarm for,
+    and that is a judgement call about one specific opportunity, not a rule.
+    So the scout states the fact loudly and leaves the decision alone.
+    (Set settings.reject_night_online: true to restore hard rejection.)
+    """
+    hour = None
     if ev.start_time and ev.tz_known:
         hour = int(ev.start_time[:2])
-        if 0 <= hour < 7:
-            return False, (f"online: starts {ev.start_time} Lisbon "
-                           f"(published {ev.tz_source})")
-        if hour >= 22:
-            ev.flags.append("late-night session")
+    else:
+        m = re.search(r"\b([01]?\d|2[0-3]):[0-5]\d\b", ev.one_line_summary or "")
+        if m:
+            hour = int(m.group(1))
+    if hour is None:
         return True, ""
-    m = re.search(r"\b([01]?\d|2[0-3]):[0-5]\d\b", ev.one_line_summary or "")
-    if not m:
-        return True, ""
-    hour = int(m.group(1))
+    stamp = ev.start_time or f"{hour:02d}:00"
     if 0 <= hour < 7:
-        return False, "online: core sessions 00:00–07:00 Lisbon"
-    if hour >= 22:
-        ev.flags.append("awkward hours")
+        ev.flags.append(f"starts {stamp} Lisbon — you would be up at night")
+    elif hour >= 22:
+        ev.flags.append(f"starts {stamp} Lisbon — late night")
     return True, ""
 
 
