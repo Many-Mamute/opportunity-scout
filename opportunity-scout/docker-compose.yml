@@ -1,0 +1,8 @@
+# Future VPS move: `docker compose run --rm scout` executes one run.
+# Pair with the line in crontab.example; state persists in ./data on the host.
+services:
+  scout:
+    build: .
+    env_file: .env
+    volumes:
+      - ./data:/app/data
