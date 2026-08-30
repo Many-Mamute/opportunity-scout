@@ -9,7 +9,7 @@
  },
  "etag_cache": {
   "https://aefeup.pt/": {
-   "body_sha256": "d023f720b11673d81c070c11d378b788160d0b109f3e1f1447ec1578c1aa5c20",
+   "body_sha256": "139b04a2cedf27c2698f806858e2ed343430f49d56054ebc67305a4ae8d11cd7",
    "etag": null,
    "last_modified": null
   },
@@ -54,12 +54,12 @@
    "last_modified": null
   },
   "https://careers.vestas.com/search/?q=&locationsearch=Portugal": {
-   "body_sha256": "11fa9a9c390dbc6ba408a14cf9f3975bdef96fb53d1d26e7c45f418ba4ecfc6a",
+   "body_sha256": "d12712b422350c4355ce9aefe01b1f81ae523515150152820ce43aacbd3592b4",
    "etag": null,
    "last_modified": null
   },
   "https://carreiras.ana.pt/go/Talento-Jovem/8917902": {
-   "body_sha256": "334839ac3d08d130d9acb7f72e27d1488cbae9dc6417b4cebcfc215bc77ad557",
+   "body_sha256": "125717db8b9836f0b0e3011830c2aa837ef1fa7a2a29000abdb9174da7fb6fc4",
    "etag": null,
    "last_modified": null
   },
@@ -74,22 +74,22 @@
    "last_modified": "Sat, 29 Aug 2026 04:37:27 GMT"
   },
   "https://devpost.com/hackathons": {
-   "body_sha256": "f53d2f43988625d815f574a048252a8de00428e98c67deaa250c4d635de09c42",
+   "body_sha256": "2459445afe8a74259ab403fce978ef65cd9896b455940479dd0d2baf127a2f1d",
    "etag": null,
    "last_modified": null
   },
   "https://devpost.com/hackathons?status[]=upcoming&status[]=open": {
-   "body_sha256": "d527cac3062f6651da258c63cb79d1875e61344cdb606fa109b78da3a2e429c5",
+   "body_sha256": "ef2bc1531e67947e397c0421f3c1390b9dd195af18dbfb6c9447a5c13fcd5a51",
    "etag": null,
    "last_modified": null
   },
   "https://devpost.com/hackathons?status[]=upcoming&status[]=open#host-a-hackathon": {
-   "body_sha256": "fd5d8fcbca8bcf189b5286fff7fcdc8e9c0a4fefe183cefaae3e8c761fd0c33b",
+   "body_sha256": "45b284df79638409870bb203383b8e0993e17f836eee56a1d7e3150463f9d1b6",
    "etag": null,
    "last_modified": null
   },
   "https://devpost.com/hackathons?status[]=upcoming&status[]=open#join-a-hackathon": {
-   "body_sha256": "6d36233cdd6b4aedec28827d500edaccba9f1fd85c7bc56df1270c32143ecb26",
+   "body_sha256": "0408bb8820dfeb9de7b3a5bad489e6ea9fbd00ee5f054298d65097947bf4dfee",
    "etag": null,
    "last_modified": null
   },
@@ -104,12 +104,12 @@
    "last_modified": null
   },
   "https://events.mlh.com/events/14413-midnight-hackathon?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=Midnight+Virtual+Hackathon+%5BJuly%5D": {
-   "body_sha256": "3e789d1157d71d3b93dc7b548890a581698464c9c6338f5fdaf54ce74c256f72",
+   "body_sha256": "d95ba0b90ad0df4c2af90b9fa7e2adbb4c0ab5c514834cfeb517a91b622af81b",
    "etag": null,
    "last_modified": null
   },
   "https://events.mlh.com/events/14510-midnight-hackathon-august?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=Midnight+Virtual+Hackathon+%5BAugust%5D": {
-   "body_sha256": "260cf3bf53b7756ab991f73a57de91674cbeb90f6e094c6bb9122bd38ba09425",
+   "body_sha256": "18ae46b88ddadff1c8280990062b6a1c5998d458473e2c66af0cc7f174c87507",
    "etag": null,
    "last_modified": null
   },
@@ -144,7 +144,7 @@
    "last_modified": null
   },
   "https://hackp.ac/fellowship-faq": {
-   "body_sha256": "0282da5b19c80be8d572ecfcb39d3cc77497e3b6dd432beae8135419f4199a46",
+   "body_sha256": "b8e9ef845fe396a6b22b878a292087dd649b2163f85304d945da748cea69d1c8",
    "etag": null,
    "last_modified": null
   },
@@ -166,7 +166,7 @@
   "https://info.devpost.com/product/devpost-for-teams": {
    "body_sha256": "3f246c5498231ceceef592ffe0f6d3cbacc0df5911844fa2737ebb7b3ffb8c92",
    "etag": null,
-   "last_modified": "Wed, 19 Aug 2026 17:26:14 GMT"
+   "last_modified": "Wed, 19 Aug 2026 17:35:45 GMT"
   },
   "https://info.devpost.com/product/public-hackathons": {
    "body_sha256": "bc1b3d90e40432451c1cc77b07f47a4798c488de6571baf75d65d510237d6c29",
@@ -174,19 +174,19 @@
    "last_modified": "Wed, 19 Aug 2026 17:35:45 GMT"
   },
   "https://jobs.siemens.com/careers?location=Portugal": {
-   "body_sha256": "eeaf735e20cddd04704a0ca20c3eaf130354e830ff12c1f9158e0e6e272b8921",
+   "body_sha256": "6a6e171ef7411af8bc035a87f6cdc1620764b541b110fcfc226dd5f9b7ff7204",
    "etag": null,
-   "last_modified": "Sat, 29 Aug 2026 05:32:14 GMT"
+   "last_modified": "Sun, 30 Aug 2026 05:32:20 GMT"
   },
   "https://jobs.siemens.com/pt_PT/externaljobs/Home": {
-   "body_sha256": "d64b9ebe54bf3cc25ec2e93c00b2e55cb91640bb62301f60f7c936eaa5a3408c",
+   "body_sha256": "adb615a11b5f8fd4bd03184780cd6272bf5775599e127145212d77a0324c5f08",
    "etag": null,
-   "last_modified": "Sat, 29 Aug 2026 05:32:17 GMT"
+   "last_modified": "Sun, 30 Aug 2026 05:32:24 GMT"
   },
   "https://jobs.siemens.com/pt_PT/externaljobs/SearchJobs": {
-   "body_sha256": "99cd992eb42f7de5c39f65c1bd186c30aa71cbb1977d6e563e1e88a44917b755",
+   "body_sha256": "d2f83d7f1875d01f74e788bfe5155413ee8f1ebedef28b4771a4744f8d6dadf0",
    "etag": null,
-   "last_modified": "Sat, 29 Aug 2026 05:32:19 GMT"
+   "last_modified": "Sun, 30 Aug 2026 05:32:25 GMT"
   },
   "https://junifeup.pt/": {
    "body_sha256": "954cda8f6bc7bce99cccca427e2e7313480eadf79846a48cec467460c6b3b3fb",
@@ -204,22 +204,22 @@
    "last_modified": "Thu, 13 Aug 2026 09:16:31 GMT"
   },
   "https://lu.ma/cursorcommunity?k=c": {
-   "body_sha256": "f6b59ac22d4b1a89897c485aacb775612f5eb176949222eef0e5b65c293e730d",
+   "body_sha256": "305f1359d674e2607475e8c284abffdc8b8600004edf349e3ac22939d38fb5b8",
    "etag": null,
    "last_modified": null
   },
   "https://lu.ma/porto": {
-   "body_sha256": "c32cd71767557bcfd63e23a497a7b0e6b9c4951a2cbf32b6e783e00a62f79b3d",
+   "body_sha256": "ff022cd3dea483558c0a5cfd0bfff044c9e531d3742b0997934077c4e8780578",
    "etag": null,
    "last_modified": null
   },
   "https://luma.com/edth-2026-porto": {
-   "body_sha256": "a2ad7494773ee3e9603554d8a1ab83df5cd200fcc3557f13a074968811dd42c3",
+   "body_sha256": "8fccacd452351abb95be2b9c5619e8d4ce3cf0d1e22d1f99f9a605badffe391b",
    "etag": null,
    "last_modified": null
   },
   "https://mlh.io/seasons/2027/events": {
-   "body_sha256": "944455d3dcc327be4f3254bc37ad33b0d1605699ba766f39439054f6e598253c",
+   "body_sha256": "858a46fa65ff9e5ecc59aecd86d325e0dec895dc8b260f225fd67665ad68d24e",
    "etag": null,
    "last_modified": null
   },
@@ -229,7 +229,7 @@
    "last_modified": null
   },
   "https://newengineer.com/advice/the-top-engineering-summer-schools-in-europe-1382363": {
-   "body_sha256": "b4690112ec3802644d824e72e71ef2c90354b3b74b5845603dfc4b02c11c0c2f",
+   "body_sha256": "4c2b8d80430d8cdcf76e297c8b8e56e1986ee3c30a8edc41914d013ec4ed181e",
    "etag": null,
    "last_modified": null
   },
@@ -284,7 +284,7 @@
    "last_modified": null
   },
   "https://results.sem-app.com/app?listevents=": {
-   "body_sha256": "b23826e5565e760c0cf1307cbbf93fa27fb39c8960bc2c50369a5806633dab2d",
+   "body_sha256": "04472d54d799aee430a73c53cad05ab0cc7344e28417115b2e765c44c4ec5af6",
    "etag": null,
    "last_modified": null
   },
@@ -299,37 +299,37 @@
    "last_modified": "Thu, 13 Aug 2026 09:25:52 GMT"
   },
   "https://sigarra.up.pt/feup/pt/noticias_geral.lista_noticias": {
-   "body_sha256": "af4938fe5b7bac1cf6bc62a80606ce8bd304da93e5161c6bc23f58eb725e70e0",
+   "body_sha256": "6db4473f15c715932985daf46a5058a0694ce0a520a232289869af004002579a",
    "etag": null,
    "last_modified": null
   },
   "https://sigarra.up.pt/feup/pt/noticias_geral.ver_noticia?p_nr=194277": {
-   "body_sha256": "df9e9f744add8e90371572820227052d3767034b0d571e94d668a2c08c7acb6c",
+   "body_sha256": "30ba36b4d90bd62fb957e59e0019d29041af8dbacbd2d784ba54daebe40be797",
    "etag": null,
    "last_modified": null
   },
   "https://sigarra.up.pt/feup/pt/noticias_geral.ver_noticia?p_nr=196637": {
-   "body_sha256": "6261b5137913a9dc94cbf3fc29f849dd26d669af45cfef43c45a27fed0586ea0",
+   "body_sha256": "368d3ad62cfe4949c542ae1f12082fb688745aff8609379f383750aa1e674393",
    "etag": null,
    "last_modified": null
   },
   "https://sigarra.up.pt/feup/pt/noticias_geral.ver_noticia?p_nr=199522": {
-   "body_sha256": "1c181d5ca5c9fe8d24f50e935e9924d4a751bdb9ce75564e79f1e5f05dd23398",
+   "body_sha256": "7043b50f995082318ac646b064335294a33015f74509174d202d221f85e54ea7",
    "etag": null,
    "last_modified": null
   },
   "https://sigarra.up.pt/feup/pt/noticias_geral.ver_noticia?p_nr=200082": {
-   "body_sha256": "b0334e4c7d9808cfb004b7d849e7a15e048621ee7e187e39caee5010090ce1c9",
+   "body_sha256": "36d1dc543bea860a2c9421fa14fc5aa9c66e85f3d83c744fc4f3c04683520301",
    "etag": null,
    "last_modified": null
   },
   "https://sigarra.up.pt/feup/pt/noticias_geral.ver_noticia?p_nr=200162": {
-   "body_sha256": "756f6e35847f0c42e55b293d263488a4087afd03d2cf6300322d4088550b10d6",
+   "body_sha256": "d2993d1ef013a5e28ca27947272d07e186a0abeede1f3a8b9bb3de4d47cc193c",
    "etag": null,
    "last_modified": null
   },
   "https://sigarra.up.pt/feup/pt/noticias_geral.ver_noticia?p_nr=9229": {
-   "body_sha256": "24866d46f31a55db39d6e3d4b4e99a8e2dfbfbcd1b5096580238aa4b049a7a4c",
+   "body_sha256": "edee9f96b42920483efd1d6872b683352606cc9f3a6fa343d619016018647666",
    "etag": null,
    "last_modified": null
   },
@@ -364,7 +364,7 @@
    "last_modified": null
   },
   "https://worldengineeringday.net/hackathon": {
-   "body_sha256": "328364c92c86e5313823e71256fe6d8fe8ea65513abd7b96db580844b7f2cd69",
+   "body_sha256": "5914bd5a1c6d329b53c131ae86f254cd134d1a48df75baed8193a19e328f85a3",
    "etag": null,
    "last_modified": null
   },
@@ -374,9 +374,9 @@
    "last_modified": "Thu, 22 Jan 2026 16:00:08 GMT"
   },
   "https://www.buildingsmart.org/openbim-hackathon-porto-2026": {
-   "body_sha256": "9f2d9e9b089a13498aa4a39a340da9166dc1cb59b4a26a487f3be46054125e88",
+   "body_sha256": "50e296a80bfa26dce82414b40896273c09f33b1642814f7fe198322e9ecc9fb5",
    "etag": null,
-   "last_modified": "Sat, 29 Aug 2026 01:33:36 GMT"
+   "last_modified": "Sat, 29 Aug 2026 23:35:44 GMT"
   },
   "https://www.chemeca.org/student-hackathon": {
    "body_sha256": "baf12283646a5a79b7cd1a73477615003bc7b35e03ad639964407376855bbb63",
@@ -408,65 +408,75 @@
    "etag": null,
    "last_modified": "Thu, 13 Aug 2026 09:39:12 GMT"
   },
+  "https://www.etas.com/ww/en/about-etas/careers-at-etas/students/formula-student": {
+   "body_sha256": "fd33b7986379ef7f2269c1e9fdbfad52b7428de8dac7b5870a50beddc1ebf28c",
+   "etag": null,
+   "last_modified": null
+  },
   "https://www.eventbrite.com/e/built-for-nyc-ai-hackathon-at-nypl-tickets-1994000516221?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=Built+for+NYC%3A+AI+Hackathon+at+NYPL": {
-   "body_sha256": "11d637d76bb5d2b51f7ecb0210a075288697fe2ab59838f2c10a95c2d185a1e4",
-   "etag": "\"cio1dabr7l3n37\"",
+   "body_sha256": "f82aed4932698c7208b3bb3184c557febc2a292c105aba269e5ca94cea558811",
+   "etag": "\"lo0c7kf01r3n37\"",
    "last_modified": null
   },
   "https://www.fabricadestartups.com/": {
-   "body_sha256": "615a41606371538be5016ea40a021da244cfffd00a5b91acd15174f4af3726af",
-   "etag": "W/\"63e9c417ffd7c7850bd49301b5efdb35\"",
+   "body_sha256": "07991133993a93d2c30edf03fd391e7b3bc1782a26141cbd7f25392695fef066",
+   "etag": "W/\"48a7db6bfb0f3f02e12ee0362a9b4524--gzip\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/": {
-   "body_sha256": "8cef2490291980f0e610dc41a50ab8d31e89fa6b34730798a98d61f126fd9f98",
-   "etag": "W/\"8bd02c85c9b0bfbd0f7c53854b5ab16a\"",
+   "body_sha256": "c3e69eff5e009036161db51a34abf3981a919a3d0af70565315035f4388103e7",
+   "etag": "W/\"ea10310e4ba361fcac08e06995f03340\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/about": {
-   "body_sha256": "5cfdc7b3aa55dc6d3f2bcb50247e040ac45d9e4c8127f68abac43f248d84a22b",
-   "etag": "W/\"5bb876cbd3ff34ec751cab5ef98649db\"",
+   "body_sha256": "97cdf647efed37928ddc4c6dc64ab9ece9c3d3d4419e76e795e781a928232dcb",
+   "etag": "W/\"20e55a0eb71aa70bcc77da82427b2878\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition": {
-   "body_sha256": "aba4a356a7060cf53ecbb7a4e8120c5ffe1ffff572b22bd6e26ddea7c6da3cf4",
-   "etag": "W/\"2ba6534da284aa1bd6df6a82e8487ac9\"",
+   "body_sha256": "cb08003bd6ea5fd5c6cf28e3a8692fe73320e5ffe8c3f02d8c3b742e1eacc7e0",
+   "etag": "W/\"c93be3ef687ce99689243ae40e8e7558\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/fspt23": {
-   "body_sha256": "2adc4dd68f9e041c5cc326ea61925ec32d71fea91f41d478c87473bc7e0e3c7d",
-   "etag": "W/\"e3c4c4e806661002d01e8e4cbf741946\"",
+   "body_sha256": "c1ea3c918f782a87739a2a9b4dfb7642345624a6ebfae364ceb0fa4b469495a2",
+   "etag": "W/\"faedc39fff14a18bbf8e4bf8a3ddf697\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/fspt24": {
-   "body_sha256": "f98a9a90cb077c90a9210c4dd9fcbdd1f5d8dde6082f91c51324a9419c54659e",
-   "etag": "W/\"e97da3d6fef514eb1e6cfb1f64588b10\"",
+   "body_sha256": "dbc6aae0a83e475b529f4b9ebca7287ce2094f3321744415da03a07e997edd67",
+   "etag": "W/\"3ae2263032c97362565fc34985159dd9\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/fspt25": {
-   "body_sha256": "0cf6fc9bc1dce476d1e4d7740eb1546e4798d637346c65d2ceb27b946161a4e1",
-   "etag": "W/\"85b16d57a9c54d87957ac54636f157a7\"",
+   "body_sha256": "ea1749bacbef723886ac9c1d0fc98b62fc26149b23efccf0d0a29ab30aa73d08",
+   "etag": "W/\"66ddd4941c5ccf951effd6e860ef2d45\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/fspt25/c\u00f3pia-penalties-2025": {
-   "body_sha256": "1568e1ff0fde36793379f75c5307cea9db8c720b909195168fa7dbfed4a5a9aa",
-   "etag": "W/\"b3e7e5754685cc8ccbfe0eed8e928109\"",
+   "body_sha256": "66c78084246dff7a681d40939e58f838b15f5c31f72be27de4ee83174f26d2c0",
+   "etag": "W/\"0e59b3ca6ff1d04151d13d5abc7ea438\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/fspt26": {
-   "body_sha256": "e00fcc27eeed58ec596109923b64fbb0a561f4bfbc489e13f395034fc0efb992",
-   "etag": "W/\"e1c1eb032d8a9bc0aba80f65623c2cc9\"",
+   "body_sha256": "e48b777e9a3f4b3d4e0f5c1108756e4a1cb8b0a9c0652cb4cc7e9231eff09c70",
+   "etag": "W/\"8985bc77f544b3ca7fdb78993f9af798\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/pre-event-2025": {
-   "body_sha256": "815cc6f6334ca092de640fc571b3b014d9a1993a3d6c2efff7bd0525341376ce",
-   "etag": "W/\"c4456dba18cb7f8ab47ae6befa5aa042\"",
+   "body_sha256": "751f4b93810436c762c0bd1a746dce5a61f2657333af6e864a1f52f65aa21957",
+   "etag": "W/\"46c58424e29f1213e42559dcfc2bbfff\"",
    "last_modified": null
   },
   "https://www.formulastudent.pt/competition/why-fspt": {
-   "body_sha256": "9a509178912f55fc4908072aa0cb15e9cf1c633785994cd4108150da9a57ae1a",
-   "etag": "W/\"9cdf88d259750010304ab32c1680fc5d\"",
+   "body_sha256": "01ee30c9fecd1776a0ac929b06268f34c7731caecf027b7c429131b361461e3d",
+   "etag": "W/\"8318042989f93a5cce274631d386bc2f\"",
    "last_modified": null
+  },
+  "https://www.gemmlearning.com/blog/gemm-news/esa-applications-2026-27": {
+   "body_sha256": "4c323342b32ddd033b1e310f286200434753b78fefdfb5919ad4b614b79c9222",
+   "etag": "W/\"b55ee566f9a5adc7eadc0ef306b0e936\"",
+   "last_modified": "Sat, 29 Aug 2026 16:50:27 GMT"
   },
   "https://www.henhackshackathon.com/?utm_source=mlh&utm_medium=referral&utm_campaign=events&utm_content=HenHacks": {
    "body_sha256": "b3dcf3e91c927a3c5d1594e97c5fad34466cbb991814f6b4cc24719f653422f8",
@@ -514,7 +524,7 @@
    "last_modified": null
   },
   "https://www.inesctec.pt/pt/noticias/inesc-tec-lanca-60-vagas-para-estagios-de-verao-em-engenharia": {
-   "body_sha256": "0544b6e1dcfd8a3c0d0073903f2a4c3e3a98111fb1fe9e4ff6263cc6b22fc6df",
+   "body_sha256": "c24c81e55a6f7095cdc26468322d9e9ee55bbbbfc28e413d97175868ce3d9a17",
    "etag": null,
    "last_modified": null
   },
@@ -524,32 +534,32 @@
    "last_modified": null
   },
   "https://www.jeronimomartins.com/en/careers/": {
-   "body_sha256": "7b135fd1d6a8bf5f2256638dbc3c792bc5bde2a6ebf0f1a1d90a37e2bdd3ef2d",
+   "body_sha256": "6f15055e0415950e1d9525fe49b27c55a4d95e38d913d083d5186fef728d9546",
    "etag": null,
    "last_modified": null
   },
   "https://www.jeronimomartins.com/en/careers/students-and-recent-graduates/curricular-internship/": {
-   "body_sha256": "e55cb03c2f6c85fcaf816d365b3046ce61bb0bdc53209506b28e266d83ab7877",
+   "body_sha256": "49bc024e5e2e043bf1244632c107b89bc836b0b2581d1082ebe6cec052448aad",
    "etag": null,
    "last_modified": null
   },
   "https://www.jeronimomartins.com/en/careers/students-and-recent-graduates/professional-internship-programme/": {
-   "body_sha256": "e030f4f8d4ff1375a834e1a848c2fbac461c8ddeaabc6de8c49f9f92f86582c5",
+   "body_sha256": "fa218ce7b8a9ded201d8a93371cf4fbe8a4e6e5eaa951005f980b2feaeeafbe1",
    "etag": null,
    "last_modified": null
   },
   "https://www.jeronimomartins.com/en/careers/students-and-recent-graduates/summer-internship-programme/": {
-   "body_sha256": "81213dce24fa3f36a9394100e56260999ac6b658cf9ce5880d417322efd9404d",
+   "body_sha256": "3d36bfcb1cd5d0433d2ff8d2b5fc9863ff89bdb87b975a17bfc23d4c0b78b342",
    "etag": null,
    "last_modified": null
   },
   "https://www.kaggle.com/competitions": {
-   "body_sha256": "afc8c4416fa2886baa94bc09bfee4830a5dbed07645e45ffd59e86c0d78da4d5",
+   "body_sha256": "62c5d9660e5beaa93d31e8be2da925833981531e7938357856e7ac01df78cb65",
    "etag": null,
    "last_modified": null
   },
   "https://www.kirchhoff-automotive.com/career": {
-   "body_sha256": "18969dc1f7a75165ffeac42988fc1ee4c36d76fc41d142a198c74b669df938f1",
+   "body_sha256": "9b29f1d25b1fc7b674984f07cdd8efcc5e52f7d3a8c866fa401f742a358aa962",
    "etag": null,
    "last_modified": null
   },
@@ -559,8 +569,8 @@
    "last_modified": null
   },
   "https://www.meetup.com/find/?location=pt--Porto&source=EVENTS": {
-   "body_sha256": "d77e29e71cf1ed25fa5a8b55eb7528fa29bc3fa6b4716903afc539440926275c",
-   "etag": "W/\"WvIMUCdLp_AFG8NDAtl987qM7MDHSuyH\"",
+   "body_sha256": "9b7ff2de651a442fc0f0ad4520649a400aeede9037b7b44ee271c3ab18a11b1a",
+   "etag": "W/\"nsE9HVIL0hw_m1b-T_BYAJU7gWYdOhzf\"",
    "last_modified": null
   },
   "https://www.mlh.com/seasons/2026/events": {
@@ -569,9 +579,14 @@
    "last_modified": null
   },
   "https://www.mlh.com/seasons/2027/events": {
-   "body_sha256": "38dcbde63db293e83ff5f382baccf8b444a9598ef831dd622cd25de94a1aa22e",
+   "body_sha256": "7a5066767fba7a8f1847dd996aeda5be24973452ae4b62307c887d6b15bcb367",
    "etag": null,
    "last_modified": null
+  },
+  "https://www.opportunitiescircle.com/cern-technical-student-program": {
+   "body_sha256": "640b46db39ea0262879e43a2171c6b9e84ddb782aaf6e07512986ac558b77285",
+   "etag": null,
+   "last_modified": "Sat, 29 Aug 2026 20:28:08 GMT"
   },
   "https://www.polimi.it/en/campus-e-servizi/international-mobility/study-abroad/the-opportunities/special-projects/idea-league": {
    "body_sha256": "aa6a780456a8b14e61371424bc8adb02f24d099c035e22aee4b81f48f8ee3f2c",
@@ -579,9 +594,9 @@
    "last_modified": null
   },
   "https://www.porto.ucp.pt/en/events": {
-   "body_sha256": "bbdf99f817ba470bb678ed4053992de4f1ffb9cc5b10a5b9638e1e78c5743217",
-   "etag": "\"1787981495-1\"",
-   "last_modified": "Sat, 29 Aug 2026 05:31:35 GMT"
+   "body_sha256": "75e5da5a60aefc163ce1d707251a29a0b8fdd529ff3bb7b05ac55791ad11f0b1",
+   "etag": "\"1788067901-1\"",
+   "last_modified": "Sun, 30 Aug 2026 05:31:41 GMT"
   },
   "https://www.preh.com/en/career/": {
    "body_sha256": "326277dbcc2da62b571f0d688eeb90f0d011a7c29fe0b8b231de746ef3177aee",
@@ -639,7 +654,7 @@
    "last_modified": null
   },
   "https://www.sonae.pt/en/careers/": {
-   "body_sha256": "4b76280fb217e72ceeadb576869e2aba0b6f96df964c37cad65c5d7c3587d816",
+   "body_sha256": "33ef65c9710fdad66f0d251510e2b1dac998386e23f131cffc88bca62f949e82",
    "etag": null,
    "last_modified": null
   },
@@ -1658,6 +1673,10 @@
    "country": null,
    "municipality": null
   },
+  "europe": {
+   "country": null,
+   "municipality": null
+  },
   "geneva": {
    "country": "ch",
    "municipality": "Genebra"
@@ -1671,6 +1690,22 @@
    "municipality": "Zona Metropolitan\u0103 Bra\u0219ov"
   },
   "gridakl john lysaght startup coworking space auckland": {
+   "country": null,
+   "municipality": null
+  },
+  "hamburg germany": {
+   "country": "de",
+   "municipality": "Hamburgo"
+  },
+  "hockenheimring race track": {
+   "country": null,
+   "municipality": null
+  },
+  "https us06web zoom us j 89863318636 pwd w3rno7wua8oucat8w502bcmgknqttw 1 https us06web zoom us j 89863318636 pwd w3rno7w": {
+   "country": null,
+   "municipality": null
+  },
+  "karlsruhe institute of technology kit karlsruhe germany": {
    "country": null,
    "municipality": null
   },
@@ -1694,9 +1729,25 @@
    "country": null,
    "municipality": null
   },
+  "paris lille and brussels": {
+   "country": null,
+   "municipality": null
+  },
+  "portugal": {
+   "country": "pt",
+   "municipality": null
+  },
   "pure good cape town": {
    "country": null,
    "municipality": null
+  },
+  "russia": {
+   "country": "ru",
+   "municipality": null
+  },
+  "rwth aachen university germany": {
+   "country": "de",
+   "municipality": "Aquisgr\u00e3o"
   },
   "santa marta colombia santa marta": {
    "country": null,
@@ -1749,14 +1800,18 @@
   "wiseapple coffee shop lusaka": {
    "country": null,
    "municipality": null
+  },
+  "zhu hai shi": {
+   "country": null,
+   "municipality": null
   }
  },
- "last_imap_uid": 11884,
- "next_event_id": 54,
+ "last_imap_uid": 12193,
+ "next_event_id": 59,
  "tavily": {
-  "date": "2026-08-29",
+  "date": "2026-08-30",
   "month": "2026-08",
-  "month_used": 16,
+  "month_used": 24,
   "used": 8
  }
 }
