@@ -15,7 +15,7 @@ import ssl
 from datetime import date
 from email.message import EmailMessage
 from html import escape
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 from urllib.parse import quote
 
 from models import BUILD, NOT_STATED, Event, Stage
@@ -146,7 +146,11 @@ def _money(ev: Event) -> str:
     elif ev.cost == "funded":
         bits.append("Funded — they cover the costs")
     elif ev.cost != NOT_STATED:
-        bits.append(f"Costs {ev.cost.replace('paid ', '')}")
+        # cost arrives as "paid (€15)"; strip the wrapper rather than printing it
+        pretty = ev.cost.replace("paid ", "").strip()
+        if pretty.startswith("(") and pretty.endswith(")"):
+            pretty = pretty[1:-1]
+        bits.append(f"Costs {pretty}")
     else:
         bits.append("Cost not stated")
     if ev.paid_unpaid and ev.paid_unpaid not in (NOT_STATED, ""):
@@ -170,6 +174,13 @@ def _extras(ev: Event) -> List[Tuple[str, str]]:
         out.append(("Worth it?", clean_text(ev.value_justification, 2000)))
     if ev.language != NOT_STATED:
         out.append(("Language", ev.language))
+    if ev.organiser_note:
+        out.append(("Who they are", clean_text(ev.organiser_note, 300)))
+    if ev.corroboration_note:
+        out.append(("Cross-checked", ev.corroboration_note))
+    if ev.domestic_twin:
+        out.append(("Note", f"a Portuguese edition of this is also open "
+                            f"({ev.domestic_twin}) — compare before travelling"))
     for s in ev.stages:
         span = " ".join(x for x in [
             f"opens {s.opens.day} {s.opens.strftime('%b')}" if s.opens else "",
@@ -290,6 +301,20 @@ def _card_body(ev: Event, today: date, reply_to: str, lead: str = "",
              'style="width:100%;border-collapse:collapse">'
              + "".join(rows) + "</table>")
 
+    note = ""
+    if ev.analysis:
+        body = " ".join(escape(clean_text(x, 600)) for x in ev.analysis)
+        skills = (f'<div style="margin-top:6px;color:{MUT};font-size:12px">'
+                  f'<b>You would come away with:</b> '
+                  f'{escape(", ".join(ev.skills_developed))}.</div>'
+                  if ev.skills_developed else "")
+        note = (f'<div style="margin-top:12px;padding:11px 13px;'
+                f'background:#f6f4ee;border-left:3px solid {ACCENT};'
+                f'font:400 13px/1.6 Georgia,serif;color:{INK}">'
+                f'<div style="font:700 11px -apple-system,Segoe UI,sans-serif;'
+                f'letter-spacing:.07em;text-transform:uppercase;color:{ACCENT};'
+                f'margin-bottom:5px">Why this one</div>{body}{skills}</div>')
+
     link = (f'<div style="margin-top:12px"><a href="{escape(ev.url)}" '
             f'style="color:{ACCENT};font:600 13px -apple-system,Segoe UI,sans-serif;'
             f'text-decoration:none">Read more and apply →</a>'
@@ -303,7 +328,7 @@ def _card_body(ev: Event, today: date, reply_to: str, lead: str = "",
         # stays on screen while the row is open.
         title = org = ""
     return (f'{head}{title}{org}<div style="margin-bottom:9px">{pills}</div>'
-            f'{summary_html}{table}{link}{_feedback(ev, reply_to)}')
+            f'{summary_html}{table}{note}{link}{_feedback(ev, reply_to)}')
 
 
 def _card(ev: Event, today: date, reply_to: str, lead: str = "") -> str:
@@ -311,29 +336,53 @@ def _card(ev: Event, today: date, reply_to: str, lead: str = "") -> str:
             + _card_body(ev, today, reply_to, lead) + '</td></tr>')
 
 
-def _roundup_row(ev: Event, today: date, reply_to: str) -> str:
-    """One line you can open into the full card, without leaving the email.
+def _compact_row(ev: Event, today: date, reply_to: str,
+                 already_shown: bool = False) -> str:
+    """One scannable row, complete enough to decide on without opening a link.
 
-    <details> is the only no-JavaScript disclosure widget that email clients
-    accept. Apple Mail, iOS Mail and Thunderbird collapse it properly; Gmail
-    strips the tag but keeps the contents, so there it simply renders expanded.
-    Either way the facts are in the email rather than behind a link.
+    This used to be a <details> toggle. Gmail strips the tag but keeps the
+    contents, so every row rendered fully expanded — which on a Sunday meant
+    the whole digest printed twice, and the ＋ marker appeared on some titles
+    and not others. A toggle that only works in half the world's mail clients
+    is worse than no toggle, so: compact rows, and no duplicate bodies for
+    events that already have a full card higher up.
     """
-    dl = (f"deadline {_d(ev.next_deadline)}" if ev.next_deadline
-          else "no stated deadline")
-    when = _d(ev.start_date) if ev.start_date else "dates not stated"
-    summary = (f'<summary style="cursor:pointer;padding:9px 22px;'
-               f'font:400 13px/1.5 Georgia,serif;color:{INK};'
-               f'border-bottom:1px dotted {LINE};list-style:none">'
-               f'<span style="color:{ACCENT};font:700 12px monospace">＋</span> '
-               f'<b>{escape(clean_text(ev.title, 72))}</b>'
-               f'<span style="color:{MUT}"> — {escape(ev.organiser)} · '
-               f'{escape(when)} · {escape(_money(ev).split(" · ")[0])} · '
-               f'{escape(dl)}</span></summary>')
-    body = (f'<div style="padding:16px 22px 20px;background:#fcfbf8;'
-            f'border-bottom:1px solid {LINE}">'
-            + _card_body(ev, today, reply_to, show_header=False) + '</div>')
-    return (f'<tr><td><details>{summary}{body}</details></td></tr>')
+    head = (f'<a href="{escape(ev.url)}" style="color:{INK};font:700 14px '
+            f'Georgia,serif;text-decoration:none">'
+            f'{escape(clean_text(ev.title, 78))}</a>'
+            f'<span style="color:{MUT};font:400 13px Georgia,serif"> — '
+            f'{escape(ev.organiser)}</span>')
+
+    if already_shown:
+        return (f'<tr><td style="padding:8px 22px;border-bottom:1px dotted {LINE}">'
+                f'{head}<span style="color:{ACCENT};font:600 11px '
+                f'-apple-system,Segoe UI,sans-serif"> · full card above</span>'
+                f'</td></tr>')
+
+    facts = " · ".join(x for x in [
+        _when(ev, today), _where(ev), _money(ev),
+        (f"deadline {_d(ev.next_deadline)}" if ev.next_deadline
+         else "no stated deadline")] if x)
+    desc = clean_text(ev.one_line_summary, 170) if ev.one_line_summary else ""
+    desc_html = (f'<div style="color:{INK};font:400 13px/1.55 Georgia,serif;'
+                 f'margin-top:4px">{escape(desc)}</div>' if desc else "")
+    warn = [f for f in dict.fromkeys(ev.flags)
+            if f.startswith("starts ") or f in ("worth the travel",
+                                                "clashes with term time",
+                                                "age-category advantage")]
+    warn_html = ("".join(_warn_pill(w) for w in warn) if warn else "")
+    return (f'<tr><td style="padding:13px 22px;border-bottom:1px solid {LINE}">'
+            f'{head}'
+            f'<div style="color:{MUT};font:400 12px/1.6 Georgia,serif;'
+            f'margin-top:3px">{escape(facts)}</div>'
+            f'{desc_html}'
+            + (f'<div style="margin-top:6px">{warn_html}</div>' if warn else "")
+            + f'<div style="margin-top:7px">'
+              f'<a href="{escape(ev.url)}" style="color:{ACCENT};font:600 12px '
+              f'-apple-system,Segoe UI,sans-serif;text-decoration:none">'
+              f'Read more →</a></div>'
+            + _feedback(ev, reply_to)
+            + '</td></tr>')
 
 
 def _section(title: str, inner: str, note: str = "") -> str:
@@ -357,7 +406,16 @@ def build(today: date, sunday: bool, *,
           low_conf: List[Event],
           diagnostics: dict,
           ask_reason_for: List[str],
-          reply_to: str = "") -> Tuple[str, str, str]:
+          reply_to: str = "",
+          pinned: Optional[List[Event]] = None,
+          not_yet: Optional[List[Event]] = None,
+          ask_applied: Optional[List[Event]] = None,
+          expected_soon: Optional[List[str]] = None) -> Tuple[str, str, str]:
+    pinned = pinned or []
+    not_yet = not_yet or []
+    ask_applied = ask_applied or []
+    expected_soon = expected_soon or []
+    not_yet = not_yet or []
     closing = {e.id for e in roundup + top + worth_travel
                if e.days_until_next_deadline is not None
                and e.days_until_next_deadline <= 7}
@@ -393,6 +451,25 @@ def build(today: date, sunday: bool, *,
             f'{escape(", ".join(ask_reason_for))} — a sentence on why lets the '
             f'ranking learn the right lesson instead of guessing. Just reply.'
             f'</td></tr>')
+    if ask_applied:
+        rows = "".join(
+            f'<li style="margin-bottom:4px"><b>{e.id}</b> '
+            f'{escape(clean_text(e.title, 70))} — deadline '
+            + (f"{_d(e.next_deadline)}" if e.next_deadline else "now")
+            + "</li>" for e in ask_applied)
+        parts.append(
+            f'<tr><td style="padding:16px 22px;background:#fdf3e3;'
+            f'font:400 13px/1.6 Georgia,serif;color:{INK}">'
+            f'<b>Did you actually apply?</b> You marked these interesting and '
+            f'their deadline has arrived:<ul style="margin:7px 0 7px 18px;'
+            f'padding:0">{rows}</ul>'
+            f'Reply <code>applied: {ask_applied[0].id}</code> or '
+            f'<code>skipped: {ask_applied[0].id}</code> — it is asked once, and '
+            f'it is how the scout learns which enthusiasm turns into действия.'
+            f'</td></tr>'.replace("действия", "an application"))
+    parts.append(_section("Your shortlist", "".join(
+        _card(e, today, reply_to, "pinned by you") for e in pinned),
+        "pinned until the deadline passes — reply `unpin: ID` to drop one"))
     parts.append(_section("Act now", "".join(
         _card(e, today, reply_to, act_leads.get(e.id, "")) for e in act_events),
         "stages opening and deadlines within a week"))
@@ -402,21 +479,52 @@ def build(today: date, sunday: bool, *,
         _card(e, today, reply_to) for e in worth_travel),
         "funded or exceptionally prestigious, so the 1-hour rule is waived"))
     if roundup:
-        inner = "".join(_roundup_row(e, today, reply_to) for e in roundup)
+        carded = {e.id for e in act_events + top + worth_travel + low_conf
+                  if e.id}
+        inner = "".join(_compact_row(e, today, reply_to,
+                                     bool(e.id) and e.id in carded)
+                        for e in roundup)
         week = [e for e in roundup if e.days_until_next_deadline is not None
                 and e.days_until_next_deadline <= 7]
         closing_note = (f"{len(week)} close within 7 days" if week
                         else "none close within 7 days")
         if sunday:
             heading = "Sunday recap — everything still open"
+            dupes = sum(1 for e in roundup if e.id and e.id in carded)
             note = (f"all {len(roundup)} opportunities you have not rejected, "
-                    f"soonest deadline first, including the cards above; "
-                    f"{closing_note}. Tap any line for the full card.")
+                    f"soonest deadline first; {closing_note}"
+                    + (f". {dupes} of them "
+                       + ("has" if dupes == 1 else "have")
+                       + " a full card above and appears here as one line only"
+                       if dupes else ""))
         else:
             heading = "Also still open"
-            note = (f"{len(roundup)} more — tap any line to open the full card; "
+            note = (f"{len(roundup)} more that did not make the top ten; "
                     f"{closing_note}")
         parts.append(_section(heading, inner, note))
+    if expected_soon:
+        rows = "".join(
+            f'<tr><td style="padding:9px 22px;border-bottom:1px dotted {LINE};'
+            f'font:400 13px/1.55 Georgia,serif;color:{INK}">{escape(x)}</td>'
+            f'</tr>' for x in expected_soon)
+        parts.append(_section("Expected to reopen soon", rows,
+                              "from dates the scout saw in previous years — "
+                              "predictions, not listings, so verify before "
+                              "relying on them"))
+    if not_yet:
+        rows = "".join(
+            f'<tr><td style="padding:9px 22px;border-bottom:1px dotted {LINE};'
+            f'font:400 13px/1.5 Georgia,serif">'
+            f'<a href="{escape(e.url)}" style="color:{INK}">'
+            f'{escape(clean_text(e.title, 74))}</a>'
+            f'<span style="color:{MUT}"> — {escape(e.organiser)} · '
+            f'you qualify from <b>{_d(e.eligible_from)} '
+            f'{e.eligible_from.year}</b></span></td></tr>'
+            for e in not_yet if e.eligible_from)
+        parts.append(_section("Not yet — but worth knowing about", rows,
+                              "you do not have enough semesters behind you for "
+                              "these; they return on their own once you do"))
+
     parts.append(_section("Unverified", "".join(
         _card(e, today, reply_to) for e in low_conf),
         "found only as a search snippet — check the link before acting"))
@@ -432,12 +540,25 @@ def build(today: date, sunday: bool, *,
         f"{diagnostics.get('tavily_remaining', 0)} left"
         + (f" · {diagnostics['tavily_month']}/900 this month"
            if diagnostics.get("tavily_month") is not None else "")
-        + (" — cap hit, sweep skipped" if diagnostics.get("tavily_exhausted") else ""),
+        + (" — cap hit, sweep skipped" if diagnostics.get("tavily_exhausted") else "")
+        + (f" — {diagnostics['tavily_note']}" if diagnostics.get("tavily_note") else ""),
         f"Gemini {diagnostics.get('gemini_calls', 0)} calls"
         + (f" on {diagnostics['gemini_model_used']}"
            if diagnostics.get("gemini_model_used") else "")
         + (f", {len(diagnostics.get('llm_dropped', []))} pages dropped at the cap"
            if diagnostics.get("llm_dropped") else ""),
+        f"Store: {diagnostics.get('open_total', 0)} open, "
+        f"{diagnostics.get('deferred_total', 0)} waiting on eligibility, "
+        f"{diagnostics.get('dismissed_total', 0)} rejected or dismissed"
+        + (f", {diagnostics['evicted_count']} retired by today's filters"
+           if diagnostics.get("evicted_count") else ""),
+        ("Quiet week: " + diagnostics["fallback"]
+         if diagnostics.get("fallback") else None),
+        ("Now eligible: " + ", ".join(diagnostics["released"])
+         if diagnostics.get("released") else None),
+        "Cross-checks: " + str(diagnostics.get("enrichment", "not run"))
+        + (f" · {diagnostics['domestic_twins']} foreign event(s) have a "
+           f"Portuguese twin" if diagnostics.get("domestic_twins") else ""),
         "Filtered out: " + (", ".join(
             f"{v}× {k}" for k, v in sorted(diagnostics.get("rejected", {}).items(),
                                            key=lambda x: -x[1])[:6]) or "nothing"),
@@ -445,6 +566,7 @@ def build(today: date, sunday: bool, *,
         + (" — HARD STOP reached, partial results"
            if diagnostics.get("timed_out") else ""),
     ]
+    diag_lines = [d for d in diag_lines if d]
     if diagnostics.get("feedback_error"):
         diag_lines.append(f"Could not read replies: {diagnostics['feedback_error']}")
     if diagnostics.get("gemini_errors"):
@@ -483,12 +605,22 @@ def build(today: date, sunday: bool, *,
             f'</table></td></tr></table></body>')
 
     text = _plain_text(today, sunday, act_events, act_leads, top, worth_travel,
-                       roundup, low_conf, diag_lines, ask_reason_for)
+                       roundup, low_conf, diag_lines, ask_reason_for,
+                       pinned=pinned, ask_applied=ask_applied,
+                       not_yet=not_yet,
+                       expected_soon=expected_soon)
     return subject, html, text
 
 
 def _plain_text(today, sunday, act_events, act_leads, top, worth_travel,
-                roundup, low_conf, diag_lines, ask_reason_for) -> str:
+                roundup, low_conf, diag_lines, ask_reason_for,
+                pinned=None, ask_applied=None, expected_soon=None,
+                not_yet=None) -> str:
+    pinned = pinned or []
+    not_yet = not_yet or []
+    ask_applied = ask_applied or []
+    expected_soon = expected_soon or []
+    not_yet = not_yet or []
     def block(e: Event, lead="") -> str:
         lines = [f"{e.id}  {clean_text(e.title, 90)}"]
         if lead:
@@ -509,8 +641,18 @@ def _plain_text(today, sunday, act_events, act_leads, top, worth_travel,
                          f"({e.days_until_next_deadline} days left)")
         lines.append(f"  Money: {_money(e)}")
         lines += [f"  {k}: {v}" for k, v in _extras(e)]
-        lines += [f"  Effort: ~{e.estimated_effort_hours}h ({e.intensity})*",
-                  f"  Link:  {e.url}",
+        lines.append(f"  Scored: CV {e.cv_value_score}/5 · prestige "
+                     f"{e.prestige_score}/5 · networking {e.networking_score}/5*")
+        for k in ("cv", "prestige", "networking", "effort"):
+            if e.estimate_notes.get(k):
+                lines.append(f"    - {e.estimate_notes[k]}")
+        if e.analysis:
+            lines.append("  Why this one:")
+            for sentence in e.analysis:
+                lines.append(f"    {clean_text(sentence, 600)}")
+        if e.skills_developed:
+            lines.append("  Builds: " + ", ".join(e.skills_developed))
+        lines += [f"  Link:  {e.url}",
                   f"  Reply -> interested: {e.id} | meh: {e.id} "
                   f"| uninterested: {e.id}"]
         return "\n".join(lines)
@@ -520,7 +662,16 @@ def _plain_text(today, sunday, act_events, act_leads, top, worth_travel,
     if ask_reason_for:
         out += [f"One question: you passed on {', '.join(ask_reason_for)} — "
                 f"a sentence on why helps the ranking learn.", ""]
-    for name, group, leads in (("ACT NOW", act_events, act_leads),
+    if ask_applied:
+        out += ["— DID YOU APPLY? " + "—" * 34, ""]
+        out += [f"  {e.id}  {clean_text(e.title, 70)} — reply "
+                f"'applied: {e.id}' or 'skipped: {e.id}'" for e in ask_applied]
+        out += [""]
+    if expected_soon:
+        out += ["— EXPECTED TO OPEN SOON (predicted, not listed) " + "—" * 3, ""]
+        out += [f"  {line}" for line in expected_soon] + [""]
+    for name, group, leads in (("YOUR SHORTLIST", pinned, {}),
+                               ("ACT NOW", act_events, act_leads),
                                ("TODAY'S PICKS", top, {}),
                                ("WORTH THE TRAVEL", worth_travel, {}),
                                ("UNVERIFIED (snippet only)", low_conf, {})):
@@ -532,7 +683,13 @@ def _plain_text(today, sunday, act_events, act_leads, top, worth_travel,
         # without opening the link.
         out += [("— SUNDAY RECAP: EVERYTHING STILL OPEN " + "—" * 13) if sunday
                 else ("— ALSO STILL OPEN " + "—" * 33), ""]
+        carded_t = {e.id for e in act_events + top + worth_travel + low_conf
+                    if e.id}
         for e in roundup:
+            if e.id and e.id in carded_t:
+                out += [f"{e.id}  {clean_text(e.title, 70)} "
+                        f"— {e.organiser} (full details above)"]
+                continue
             out += [f"{e.id}  {clean_text(e.title, 70)}",
                     f"  {e.organiser} · {_when(e, today)} · {_where(e)}",
                     f"  {_money(e)} · "
@@ -541,6 +698,12 @@ def _plain_text(today, sunday, act_events, act_leads, top, worth_travel,
                     f"  {e.url}",
                     f"  Reply -> interested: {e.id} | meh: {e.id} "
                     f"| uninterested: {e.id}", ""]
+        out += [""]
+    if not_yet:
+        out += ["— NOT YET, BUT WORTH KNOWING " + "—" * 21, ""]
+        out += [f"  {e.id}  {clean_text(e.title, 66)} — {e.organiser} — "
+                f"you qualify from {e.eligible_from}"
+                for e in not_yet if e.eligible_from] + [""]
     out += ["— DIAGNOSTICS " + "—" * 37, ""] + diag_lines + [
         "", "* effort and the 1-5 scores are estimates, not facts from the page.",
         "", FOOTER_SYNTAX]

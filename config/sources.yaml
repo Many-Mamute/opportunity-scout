@@ -103,6 +103,29 @@ sources:
     type: page
     urls: ["https://junifeup.pt/"]
 
+  - name: feup-nucleos
+    tier: 1
+    type: page
+    # Student nuclei run most of what a first-year can actually join.
+    urls: ["https://sigarra.up.pt/feup/pt/web_base.gera_pagina?p=nucleos",
+           "https://neemec.pt/", "https://www.feupautosport.com/"]
+
+  - name: feup-agenda
+    tier: 1
+    type: page
+    urls: ["https://sigarra.up.pt/feup/pt/eventos_geral.eventos_lista"]
+
+  - name: toastmasters-porto
+    tier: 1
+    type: page
+    urls: ["https://www.toastmasters.org/find-a-club"]
+
+  - name: porto-finance-literacy
+    tier: 1
+    type: page
+    urls: ["https://www.todoscontam.pt/pt-pt/agenda",
+           "https://www.bportugal.pt/comunicacoes"]
+
   - name: aefeup
     tier: 1
     type: page
@@ -219,6 +242,78 @@ sources:
     type: page
     urls: ["https://youth.europa.eu/news-and-events/events_en"]
 
+  # ---------------- Added 2026-08-31: Portuguese-language coverage ---------
+  - name: ordem-engenheiros
+    tier: 1
+    type: page
+    urls: ["https://www.ordemengenheiros.pt/pt/comunicacao/agenda/",
+           "https://www.oern.pt/agenda/"]
+
+  - name: best-porto
+    tier: 1
+    type: page
+    # BEST runs engineering competitions and courses across Europe, with an
+    # active Porto local group.
+    urls: ["https://www.best.eu.org/student/courses/index.jsp",
+           "https://bestporto.org/"]
+
+  - name: cm-porto-juventude
+    tier: 1
+    type: page
+    urls: ["https://www.cm-porto.pt/juventude",
+           "https://www.portolazer.pt/agenda"]
+
+  - name: ipdj-juventude
+    tier: 1
+    type: page
+    # The national youth institute: grants, volunteering and youth programmes.
+    urls: ["https://ipdj.gov.pt/agenda", "https://juventude.gov.pt/"]
+
+  - name: cienciaviva
+    tier: 1
+    type: page
+    urls: ["https://www.cienciaviva.pt/agenda/",
+           "https://www.cienciaviva.pt/estagios/"]
+
+  - name: fct-bolsas
+    tier: 1
+    type: page
+    urls: ["https://www.fct.pt/apoios/bolsas/concursos/"]
+
+  - name: cgd-culturgest-financas
+    tier: 1
+    type: page
+    # Banco de Portugal's literacy programme plus the CMVM investor education.
+    urls: ["https://www.todoscontam.pt/pt-pt/iniciativas",
+           "https://www.cmvm.pt/pt/AreadoInvestidor/Formacao/"]
+
+  - name: cfa-society-portugal
+    tier: 1
+    type: page
+    urls: ["https://www.cfasocietyportugal.org/events/"]
+
+  - name: debate-portugal
+    tier: 1
+    type: page
+    # Competitive debating: the national society and the university circuit.
+    urls: ["https://sdup.pt/", "https://www.facebook.com/DebatesUP/"]
+
+  - name: toastmasters-portugal
+    tier: 1
+    type: page
+    urls: ["https://toastmastersportugal.org/", "https://portotoastmasters.com/"]
+
+  - name: aeiou-empreendedorismo
+    tier: 1
+    type: page
+    urls: ["https://www.startupportugal.com/eventos/",
+           "https://www.iapmei.pt/Paginas/Agenda.aspx"]
+
+  - name: inovaporto
+    tier: 1
+    type: page
+    urls: ["https://inovaporto.pt/", "https://www.portotechhub.com/events"]
+
   # ---------------- Tier 2: Tavily-budgeted sweep (max 30 queries/day) ------
   - name: tavily-linkedin
     tier: 2
@@ -227,6 +322,7 @@ sources:
     queries:
       - "estágio verão engenharia mecânica Porto 2027 candidaturas abertas"
       - "hackathon Porto engineering students 2026 registration open"
+      - "FEUP núcleo estudantes recrutamento 2026 2027 candidaturas"
 
   - name: tavily-facebook
     tier: 2
@@ -245,3 +341,26 @@ sources:
       - "European summer school mechanical engineering 2027 funded undergraduate"
       - "Formula Student team recruiting members Portugal 2026 2027 applications"
       - "Shell Eco-marathon Europe 2027 team registration deadline"
+      - "public speaking debate workshop Porto 2026 oratória comunicação"
+      - "literacia financeira workshop Porto online gratuito 2026"
+      - "torneio de debate universitário Portugal 2027 inscrições"
+      - "Toastmasters Porto reunião aberta visitantes"
+      - "concurso engenharia mecânica estudantes Portugal 2027"
+      - "bolsa estágio verão engenharia Porto 2027"
+
+  # ---------------- Fallback: only runs on a quiet week ---------------------
+  # Deliberately broader and vaguer than the daily sweep. These trade precision
+  # for coverage, which is the right trade only when the precise queries came
+  # back nearly empty. Marked `fallback: true` so they never run otherwise.
+  - name: tavily-fallback
+    tier: 2
+    type: tavily
+    fallback: true
+    max_results: 6
+    queries:
+      - "oportunidades estudantes engenharia Porto próximos meses"
+      - "student competition Europe 2027 undergraduate applications open"
+      - "workshop gratuito estudantes universitários Porto inscrições"
+      - "summer programme 2027 undergraduate engineering applications"
+      - "concurso ideias jovens Portugal 2027 candidaturas"
+      - "evento estudantes universidade do porto próximas semanas"

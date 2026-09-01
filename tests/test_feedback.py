@@ -108,3 +108,105 @@ def test_a_real_reply_still_captures_its_justification():
 
 def test_short_followup_reason_without_an_id_still_counts():
     assert parse_body("It was too expensive for me.")["reasons"] == ["too expensive"]
+
+
+# ------------------------------------ replies must leave the inbox (run 4)
+class _FakeIMAP:
+    """Enough IMAP to prove the move happens, without a network."""
+    def __init__(self, messages):
+        self.messages = messages          # {mailbox: {uid: raw_bytes}}
+        self.selected = None
+        self.created, self.copied, self.flagged, self.expunged = [], [], [], 0
+
+    def login(self, *a):
+        return ("OK", [])
+
+    def create(self, folder):
+        self.created.append(folder.strip('"'))
+        return ("OK", [])
+
+    def select(self, mailbox):
+        name = mailbox.strip('"')
+        self.selected = name
+        return ("OK", []) if name in self.messages else ("NO", [])
+
+    def uid(self, cmd, *args):
+        box = self.messages.get(self.selected, {})
+        if cmd == "search":
+            return ("OK", [b" ".join(str(u).encode() for u in sorted(box))])
+        if cmd == "fetch":
+            uid = int(args[0])
+            return ("OK", [(b"", box[uid])]) if uid in box else ("OK", [None])
+        if cmd == "copy":
+            self.copied.append((int(args[0]), args[1].strip('"')))
+            return ("OK", [])
+        if cmd == "store":
+            self.flagged.append((int(args[0]), args[2]))
+            return ("OK", [])
+        return ("OK", [])
+
+    def expunge(self):
+        self.expunged += 1
+        return ("OK", [])
+
+
+def _raw(subject, body, scout_header=False):
+    hdr = "X-Opportunity-Scout: digest\r\n" if scout_header else ""
+    return (f"Subject: {subject}\r\n{hdr}Content-Type: text/plain\r\n\r\n"
+            f"{body}").encode()
+
+
+def test_processed_replies_are_moved_out_of_the_inbox(tmp_path, monkeypatch):
+    import feedback as F
+    state = State(tmp_path / "s.json")
+    store = Store(tmp_path / "seen.jsonl", tmp_path / "db", state)
+    ev = Event(title="CERN Summer Student Programme", organiser="CERN",
+               url="https://home.cern", type="internship", fields=["mechanical"])
+    store.upsert(ev, TODAY)
+
+    imap = _FakeIMAP({
+        "INBOX": {7: _raw("Opportunity Scout feedback",
+                          f"interested: {ev.id}\nGreat fit for me.")},
+        "Opportunity Scout": {},
+    })
+    monkeypatch.setattr(F.imaplib, "IMAP4_SSL",
+                        lambda *a, **k: _ctx(imap))
+    diag = {}
+    F.poll_inbox(store, state, CFG, TODAY, gmail_address="a@b.c",
+                 app_password="x", diagnostics=diag)
+
+    assert "Opportunity Scout" in imap.created          # folder ensured
+    assert (7, "Opportunity Scout") in imap.copied      # copied across
+    assert (7, "(\\Deleted)") in imap.flagged           # and removed from INBOX
+    assert imap.expunged >= 1
+    assert state.data["downweights"]["type:internship"] == -1   # and applied
+    assert "feedback_error" not in diag
+
+
+def test_the_digest_is_never_moved_or_processed(tmp_path, monkeypatch):
+    import feedback as F
+    state = State(tmp_path / "s.json")
+    store = Store(tmp_path / "seen.jsonl", tmp_path / "db", state)
+    imap = _FakeIMAP({
+        "INBOX": {3: _raw("Opportunity Scout — 4 new",
+                          "OPPORTUNITY SCOUT — Sunday\ninterested: E-0004 -> more",
+                          scout_header=True)},
+        "Opportunity Scout": {},
+    })
+    monkeypatch.setattr(F.imaplib, "IMAP4_SSL", lambda *a, **k: _ctx(imap))
+    F.poll_inbox(store, state, CFG, TODAY, gmail_address="a@b.c",
+                 app_password="x", diagnostics={})
+    assert imap.copied == [] and imap.expunged == 0
+    assert state.data["last_imap_uid"] == 3        # seen, skipped, not repeated
+
+
+class _ctx:
+    """Minimal context-manager wrapper around the fake."""
+    def __init__(self, obj):
+        self.obj = obj
+
+    def __enter__(self):
+        return self.obj
+
+    def __exit__(self, *a):
+        return False

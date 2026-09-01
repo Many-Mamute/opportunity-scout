@@ -119,13 +119,27 @@ def test_level_rejects_phd_and_experience():
 # ------------------------------------------------------------------ cost
 def test_cost_rules():
     ok, _ = filters.cost_filter(ev(cost="paid (€650)"), CFG)
-    assert not ok
+    assert not ok                                    # above the ceiling
     justified = ev(cost="paid (€150)", rewards="certificate, ECTS",
                    prestige_score=4)
     ok, _ = filters.cost_filter(justified, CFG)
-    assert ok and justified.value_justification and "€150" in justified.value_justification
-    ok, _ = filters.cost_filter(ev(cost="paid (€150)"), CFG)  # no stated basis
-    assert not ok
+    assert ok and "€150" in justified.value_justification
+    assert "what you get" in justified.value_justification
+
+    # Policy change: a mid-price event with nothing stated is no longer hidden.
+    # You see it, with the gap named, and decide for yourself.
+    unjustified = ev(cost="paid (€150)")
+    ok, _ = filters.cost_filter(unjustified, CFG)
+    assert ok
+    assert "paid, with no stated benefit" in unjustified.flags
+    assert "check what the fee actually buys" in unjustified.value_justification
+
+
+def test_cheap_events_are_never_filtered_on_price():
+    cheap = ev(cost="paid (€35)", title="Evening workshop",
+               organiser="Porto Maker Space")
+    ok, _ = filters.cost_filter(cheap, CFG)
+    assert ok and not cheap.flags
 
 
 def test_certificate_mill_rejected():

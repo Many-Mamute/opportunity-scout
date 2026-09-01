@@ -21,7 +21,7 @@ from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-from models import Event, Stage
+from models import STICKY_FLAGS, Event, Stage
 
 FUZZY_THRESHOLD = 0.90
 FUZZY_WINDOW_DAYS = 90
@@ -49,7 +49,10 @@ def default_state() -> dict:
         "downweights": {},       # "type:hackathon" / "organiser:x" / "field:y" -> count
         "feedback_reasons": [],  # [{event_id, reason, date}]
         "ask_reason_for": [],
-        "last_imap_uid": 0,    # event ids to prompt a reason for, top of next digest
+        "last_imap_uid": 0,
+        "last_imap_uid_folder": 0,
+        "outcomes": [],
+        "recurrence": {},    # event ids to prompt a reason for, top of next digest
     }
 
 
@@ -98,6 +101,7 @@ class Store:
         self.state = state
         self.open: Dict[str, Event] = {}
         self.dismissed: Dict[str, dict] = {}
+        self.deferred: Dict[str, Event] = {}   # too early now, dated for later
         self._load()
         # Ephemeral SQLite rebuilt from seen.jsonl — losing it loses nothing.
         db_path = Path(db_path)
@@ -135,6 +139,9 @@ class Store:
                 continue
             if rec.get("dismissed"):
                 self.dismissed[rec["hash"]] = rec
+            elif rec.get("deferred"):
+                ev = Event.model_validate(rec["event"])
+                self.deferred[ev.dedup_hash] = ev
             else:
                 ev = Event.model_validate(rec)
                 self.open[ev.dedup_hash] = ev
@@ -260,6 +267,53 @@ class Store:
                      ev.first_seen_date, 1, json.dumps(self.dismissed[h]))
 
     # --------------------------------------------------------------- prune
+    # --------------------------------------------------- not yet, but dated
+    def defer(self, ev: Event, today: date) -> str:
+        """Park something you are simply too early for.
+
+        Rejecting CERN outright throws away the fact that it is a real target
+        for 2029. Deferred events are kept whole, out of the digest, and
+        released automatically once the date arrives.
+        """
+        if not ev.dedup_hash:
+            ev.dedup_hash = event_hash(ev.title, ev.organiser, ev.start_date)
+        if ev.dedup_hash in self.dismissed:
+            return "suppressed"              # you said no; that still wins
+        existing = self.deferred.get(ev.dedup_hash)
+        if existing:
+            existing.last_seen_date = today
+            if ev.eligible_from:
+                existing.eligible_from = ev.eligible_from
+            return "deferred"
+        if not ev.id:
+            self._assign_id(ev)
+        ev.last_seen_date = today
+        self.deferred[ev.dedup_hash] = ev
+        return "deferred"
+
+    def release_eligible(self, today: date) -> List[Event]:
+        """Move anything whose date has arrived back into the digest."""
+        out = []
+        for h, ev in list(self.deferred.items()):
+            if ev.eligible_from and ev.eligible_from <= today:
+                del self.deferred[h]
+                ev.flags.append("you are now eligible for this")
+                self.open[h] = ev
+                out.append(ev)
+        return out
+
+    def upcoming_eligibility(self, today: date, within_days: int = 240) -> List[Event]:
+        """Deferred events worth mentioning because the date is approaching."""
+        soon = [e for e in self.deferred.values()
+                if e.eligible_from
+                and 0 <= (e.eligible_from - today).days <= within_days]
+        return sorted(soon, key=lambda e: e.eligible_from)
+
+    def reset_derived_flags(self) -> None:
+        """Drop everything the pipeline will re-derive this run."""
+        for ev in list(self.open.values()) + list(self.deferred.values()):
+            ev.flags = [f for f in ev.flags if f in STICKY_FLAGS]
+
     def revalidate(self, predicate, today: date) -> List[str]:
         """Re-test every stored open event against the current filters.
 
@@ -300,5 +354,8 @@ class Store:
         self.seen_path.parent.mkdir(parents=True, exist_ok=True)
         lines = [e.model_dump_json(exclude_none=True)
                  for e in sorted(self.open.values(), key=lambda e: e.id)]
+        lines += [json.dumps({"deferred": True,
+                              "event": json.loads(e.model_dump_json(exclude_none=True))})
+                  for e in sorted(self.deferred.values(), key=lambda e: e.id)]
         lines += [json.dumps(r) for r in self.dismissed.values()]
         self.seen_path.write_text("\n".join(lines) + ("\n" if lines else ""))

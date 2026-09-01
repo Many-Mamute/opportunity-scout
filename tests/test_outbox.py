@@ -62,7 +62,7 @@ def test_daily_resets_but_monthly_persists(tmp_path):
     from store import State
     s = State(tmp_path / "s.json")
     for _ in range(24):
-        s.tavily_spend(1)
+        s.tavily_spend(1, D(2026, 8, 16))     # pin the day: default is today()
     assert s.tavily_remaining(D(2026, 8, 16), 24, 900) == 0
     # New day: daily allowance returns, monthly total keeps counting.
     assert s.tavily_remaining(D(2026, 8, 17), 24, 900) == 24

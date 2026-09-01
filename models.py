@@ -13,7 +13,13 @@ from typing import Dict, List, Literal, Optional
 from pydantic import BaseModel, Field
 
 NOT_STATED = "not stated"
-BUILD = "2026-08-16.7"   # shown in Diagnostics; bump when you change the code
+
+# Flags are recomputed from scratch on every run by the filters and scorer.
+# Only these survive a reload — they record something you told the scout, not
+# something it worked out. Everything else is cleared before re-deriving, or
+# the same flag is appended again every morning and seen.jsonl grows forever.
+STICKY_FLAGS = frozenset({"you marked this interesting"})
+BUILD = "2026-08-31.4"   # shown in Diagnostics; bump when you change the code
 
 EventType = Literal[
     "internship", "competition", "hackathon", "masterclass",
@@ -22,6 +28,7 @@ EventType = Literal[
 FieldTag = Literal[
     "mechanical", "industrial_ops", "automotive_motorsport", "business",
     "finance_quant", "data_ai", "entrepreneurship",
+    "public_speaking", "economics_literacy",
 ]
 FormatT = Literal["in_person", "online", "hybrid"]
 Confidence = Literal["verified", "partial", "low"]
@@ -59,6 +66,18 @@ class Event(BaseModel):
     end_time: Optional[str] = None
     tz_known: bool = False
     tz_source: Optional[str] = None       # e.g. "UTC-06:00", for the label
+    # Second-opinion pass (enrich.py): which independent domains backed which
+    # facts, and what they said about an organiser the tables did not know.
+    corroborated_by: List[str] = Field(default_factory=list)
+    corroboration_note: Optional[str] = None
+    organiser_note: Optional[str] = None
+    domestic_twin: Optional[str] = None   # "E-0042" — same event, held in Portugal
+    enrichment_attempted: Optional[date] = None   # don't re-search daily for nothing
+    eligible_from: Optional[date] = None  # too early now; the date that changes
+    analysis: List[str] = Field(default_factory=list)   # the "why this one" note
+    pinned: bool = False                  # you replied `shortlist: E-XXXX`
+    applied: Optional[str] = None         # "yes" | "no", from the follow-up
+    asked_applied: bool = False           # the follow-up has been put to you once
     duration_days: Optional[int] = None
     estimated_effort_hours: Optional[int] = None      # ESTIMATE
     intensity: Optional[Intensity] = None

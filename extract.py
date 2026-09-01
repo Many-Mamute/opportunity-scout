@@ -271,6 +271,9 @@ def llm_extract_batches(candidates: List[dict], api_key: str, model: str,
         budget.used += 1
         try:
             parsed = _one_gemini_call(batch, api_key, model)
+            # Record the model that actually worked, not only the one that
+            # failed — the enrichment pass reuses this.
+            diagnostics["gemini_model_used"] = model
         except Exception as e:                     # noqa: BLE001
             msg = str(e)[:200]
             if "404" in msg and not rediscovered:
@@ -303,6 +306,19 @@ def llm_extract_batches(candidates: List[dict], api_key: str, model: str,
     return events, leftovers
 
 
+def _one_gemini_call_raw(prompt: str, api_key: str, model: str):
+    """One prompt in, parsed JSON out. Shared by extraction and enrichment."""
+    body = {"contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {"temperature": 0,
+                                 "response_mime_type": "application/json"}}
+    r = requests.post(GEMINI_URL.format(model=model, key=api_key),
+                      json=body, timeout=60)
+    r.raise_for_status()
+    text = r.json()["candidates"][0]["content"]["parts"][0]["text"]
+    text = re.sub(r"^```(json)?|```$", "", text.strip(), flags=re.M).strip()
+    return json.loads(text)
+
+
 def _one_gemini_call(batch: List[dict], api_key: str, model: str) -> List[dict]:
     blocks = []
     for n, c in enumerate(batch, 1):
@@ -318,15 +334,7 @@ def _one_gemini_call(batch: List[dict], api_key: str, model: str) -> List[dict]:
         + ", \"stages\": [{\"name\", \"opens\", \"closes\", \"is_advantageous\"}] "
         "listing only deadlines/rounds explicitly named in the text}.\n\n"
         + "\n\n".join(blocks))
-    body = {"contents": [{"parts": [{"text": prompt}]}],
-            "generationConfig": {"temperature": 0,
-                                 "response_mime_type": "application/json"}}
-    r = requests.post(GEMINI_URL.format(model=model, key=api_key),
-                      json=body, timeout=60)
-    r.raise_for_status()
-    text = r.json()["candidates"][0]["content"]["parts"][0]["text"]
-    text = re.sub(r"^```(json)?|```$", "", text.strip(), flags=re.M).strip()
-    out = json.loads(text)
+    out = _one_gemini_call_raw(prompt, api_key, model)
     return out if isinstance(out, list) else []
 
 

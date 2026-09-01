@@ -20,7 +20,10 @@ from zoneinfo import ZoneInfo
 
 import yaml
 
+import analysis
 import email_render
+import enrich as enrichment
+import recurrence
 import feedback
 import filters
 import score as scoring
@@ -34,11 +37,23 @@ ROOT = Path(__file__).resolve().parent
 
 
 class TavilyBudget:
-    def __init__(self, state: State, today, cap: int, monthly_cap: int = 900):
+    """Spends real money, so it refuses to spend any in --dry-run.
+
+    A dry run does not save state, which means credits it burned would not be
+    counted tomorrow — the counter would drift below the truth and the monthly
+    cap would stop protecting the free tier. Cheaper and more honest to skip
+    the paid calls entirely and say so in the diagnostics.
+    """
+
+    def __init__(self, state: State, today, cap: int, monthly_cap: int = 900,
+                 enabled: bool = True):
         self.state, self.today = state, today
         self.cap, self.monthly_cap = cap, monthly_cap
+        self.enabled = enabled
 
     def remaining(self) -> int:
+        if not self.enabled:
+            return 0
         return self.state.tavily_remaining(self.today, self.cap, self.monthly_cap)
 
     def take(self) -> bool:
@@ -49,6 +64,30 @@ class TavilyBudget:
 
 
 OUTBOX = ROOT / "data" / "outbox.json"
+
+
+def _wait_until_send_time(cfg: dict) -> None:
+    """Hold until the exact send time, then release.
+
+    GitHub starts scheduled jobs late — observed 3 to 8 minutes on this repo,
+    which is why a 06:30 cron produced 06:33 and 06:38 deliveries. So the cron
+    fires early and this sleeps off the remainder. Only the leftover minutes
+    are billed, and if GitHub was so late that the target has already passed,
+    it sends immediately rather than waiting a whole day.
+    """
+    tz = ZoneInfo(cfg["settings"]["timezone"])
+    hh, mm = str(cfg["settings"].get("send_at", "06:00")).split(":")
+    now = datetime.now(tz)
+    target = now.replace(hour=int(hh), minute=int(mm), second=0, microsecond=0)
+    wait = (target - now).total_seconds()
+    cap = int(cfg["settings"].get("max_send_wait_min", 20)) * 60
+    if wait <= 0:
+        print(f"Target {target:%H:%M} already passed (now {now:%H:%M:%S}); "
+              f"sending immediately.")
+        return
+    wait = min(wait, cap)
+    print(f"Holding {int(wait)}s until {target:%H:%M} Europe/Lisbon.")
+    time.sleep(wait)
 
 
 def deliver(cfg: dict) -> int:
@@ -69,6 +108,8 @@ def deliver(cfg: dict) -> int:
         print(f"Outbox holds a digest from {payload.get('date')}, not today "
               f"({today}). Refusing to send stale mail.", file=sys.stderr)
         return 1
+    if os.environ.get("GITHUB_EVENT_NAME", "") == "schedule":
+        _wait_until_send_time(cfg)      # manual runs send straight away
     email_render.send(payload["subject"], payload["html"], payload["text"],
                       gmail_address=gmail, app_password=app_pw,
                       recipient=payload["recipient"])
@@ -111,8 +152,6 @@ def main(argv=None) -> int:
 
     if args.deliver:
         return deliver(cfg)
-
-    filters.prime(cfg)
     if not guard(cfg, args):
         print("Outside the 06:00–07:00 Europe/Lisbon window for this cron — exiting.")
         return 0
@@ -141,24 +180,35 @@ def main(argv=None) -> int:
                             gmail_address=gmail, app_password=app_pw,
                             diagnostics=diag)
 
-    # 1b. Apply today's filters to yesterday's stored events. Tightening a rule
-    # should clean up the backlog, not only affect events not yet seen.
+    # 2. gather
+    fetcher = Fetcher(state, gmail, deadline)
+    geocoder = Geocoder(fetcher, state)
+
+    # 1b. Apply today's filters to yesterday's stored events. This runs AFTER
+    # the geocoder exists: without one, every stored event whose town was
+    # originally resolved by Nominatim fails as "location unverifiable" and is
+    # deleted — a silent, permanent data loss that looked like a clean-up.
+    store.reset_derived_flags()
+
     def _still_valid(ev):
         if ev.confidence == "low":
             return filters.relevance_filter(ev, cfg, today)
-        return filters.apply_all(ev, cfg, None, today)
+        return filters.apply_all(ev, cfg, geocoder, today)
+
+    released = store.release_eligible(today)
+    if released:
+        diag["released"] = [f"{e.id} {e.title[:40]}" for e in released]
 
     evicted = store.revalidate(_still_valid, today)
     if evicted:
         diag["evicted"] = evicted
         print(f"Retired {len(evicted)} stored events that no longer pass filters")
-
-    # 2. gather
-    fetcher = Fetcher(state, gmail, deadline)
-    geocoder = Geocoder(fetcher, state)
     tavily_budget = TavilyBudget(state, today,
                                  cfg["settings"]["tavily_daily_cap"],
-                                 cfg["settings"]["tavily_monthly_cap"])
+                                 cfg["settings"]["tavily_monthly_cap"],
+                                 enabled=not args.dry_run)
+    if args.dry_run:
+        diag["tavily_note"] = "skipped in --dry-run (paid calls, unsaved counter)"
     raw_events: list[Event] = []
     llm_candidates: list[dict] = []
     for src in sorted(sources, key=lambda s: s.get("tier", 1)):
@@ -205,37 +255,112 @@ def main(argv=None) -> int:
     # 4. enrich → filter → store → score
     low_conf: list[Event] = []
     new_events: list[Event] = []
-    for ev in raw_events:
-        try:
-            filters.classify(ev, cfg)
-            scoring.enrich_estimates(ev, cfg)
-            if ev.confidence == "low":
-                # Snippets skip geography/calendar (no facts to test) but must
-                # still clear relevance, or the digest fills with reminiscing.
-                ok, reason = filters.relevance_filter(ev, cfg, today)
+
+    def process(events, low_conf=low_conf, new_events=new_events):
+        """Classify, filter and store a batch. Used by the main pass and again
+        by the quiet-week fallback, so both get identical treatment."""
+        for ev in events:
+            try:
+                filters.classify(ev, cfg)
+                scoring.enrich_estimates(ev, cfg)
+                if ev.confidence == "low":
+                    # Snippets skip geography/calendar (no facts to test) but
+                    # must still clear relevance, or the digest fills with
+                    # reminiscing about events that already happened.
+                    ok, reason = filters.relevance_filter(ev, cfg, today)
+                    if not ok:
+                        key = reason.split(":")[0]
+                        diag["rejected"][key] = diag["rejected"].get(key, 0) + 1
+                        continue
+                    status, canonical = store.upsert(ev, today)
+                    if status == "new":
+                        low_conf.append(canonical)
+                    continue
+                ok, reason = filters.apply_all(ev, cfg, geocoder, today)
                 if not ok:
-                    diag["rejected"][reason.split(":")[0]] = \
-                        diag["rejected"].get(reason.split(":")[0], 0) + 1
+                    key = reason.split(":")[0]
+                    diag["rejected"][key] = diag["rejected"].get(key, 0) + 1
+                    # "Too early" is a date, not a no. Park it and release it
+                    # when the date arrives, rather than discarding a target.
+                    if key == "eligibility" and ev.eligible_from:
+                        store.defer(ev, today)
                     continue
                 status, canonical = store.upsert(ev, today)
-                if status == "new":
-                    low_conf.append(canonical)
-                continue
-            ok, reason = filters.apply_all(ev, cfg, geocoder, today)
-            if not ok:
-                key = reason.split(":")[0]
-                diag["rejected"][key] = diag["rejected"].get(key, 0) + 1
-                continue
-            status, canonical = store.upsert(ev, today)
-            if status == "new" or status.startswith("resurfaced"):
-                if status.startswith("resurfaced"):
-                    canonical.flags.append(status.replace("resurfaced:", "changed: "))
-                new_events.append(canonical)
-        except Exception as e:                     # noqa: BLE001
-            diag["rejected"]["error"] = diag["rejected"].get("error", 0) + 1
-            diag.setdefault("event_errors", []).append(str(e)[:120])
+                if status == "new" or status.startswith("resurfaced"):
+                    if status.startswith("resurfaced"):
+                        canonical.flags.append(status.replace("resurfaced:", "changed: "))
+                    new_events.append(canonical)
+            except Exception as e:                 # noqa: BLE001
+                diag["rejected"]["error"] = diag["rejected"].get("error", 0) + 1
+                diag.setdefault("event_errors", []).append(str(e)[:120])
+
+    process(raw_events)
+
+    # 4a. Quiet week? Spend leftover search budget rather than sending a thin
+    # digest. The broader queries live in sources.yaml and are deliberately
+    # vaguer than the daily sweep — they trade precision for coverage, which is
+    # the right trade only when the precise ones came back empty.
+    threshold = int(cfg["settings"].get("thin_digest_threshold", 6))
+    qualifying = [e for e in store.open.values() if e.confidence != "low"]
+    if (len(qualifying) < threshold and not fetcher.out_of_time()
+            and tavily_budget.remaining() > 0):
+        fallback = [s for s in sources
+                    if s.get("type") == "tavily" and s.get("fallback")]
+        extra_raw, extra_llm = [], []
+        for src in fallback:
+            if fetcher.out_of_time() or tavily_budget.remaining() <= 0:
+                break
+            try:
+                res = run_source(src, fetcher, cfg,
+                                 os.environ.get("TAVILY_API_KEY", ""), tavily_budget)
+                extra_raw += res.events
+                extra_llm += res.llm_candidates
+            except Exception as e:                 # noqa: BLE001
+                diag["sources_errored"][src["name"]] = f"{type(e).__name__}: {e}"[:150]
+        for c in extra_llm:
+            if c.pop("needs_fetch", False) and not fetcher.out_of_time():
+                status, body, _ = fetcher.get(c["url"])
+                if body:
+                    from bs4 import BeautifulSoup
+                    c["text"] = BeautifulSoup(body, "html.parser").get_text(" ", strip=True)
+                    c["http_status"] = status
+        more, _dropped = llm_extract_batches(
+            extra_llm, os.environ.get("GEMINI_API_KEY", ""),
+            diag.get("gemini_model_used") or cfg["settings"]["gemini_model"],
+            gemini, cfg["settings"]["gemini_batch_size"],
+            cfg["settings"]["gemini_seconds_between_calls"], diag)
+        before = len(qualifying)
+        process(extra_raw + more)
+        after = len([e for e in store.open.values() if e.confidence != "low"])
+        diag["fallback"] = (f"only {before} events cleared the filters (under "
+                            f"{threshold}), so a broader sweep ran and added "
+                            f"{after - before}")
 
     downweights = state.data["downweights"]
+    for ev in list(store.open.values()):
+        scoring.score(ev, cfg, today, downweights)
+
+    # 4b. Second opinion. Rank once to find the events worth spending a search
+    # on, fill their gaps from independent sources, then re-rank — a prestige
+    # score corrected from 2 to 4 has to be able to move an event up the list.
+    prelim = sorted((e for e in store.open.values()),
+                    key=lambda e: -e.score)[:cfg["settings"]["top_section_cap"] * 2]
+    enrichment.enrich(prelim, cfg,
+                      os.environ.get("TAVILY_API_KEY", ""),
+                      os.environ.get("GEMINI_API_KEY", ""),
+                      diag.get("gemini_model_used") or cfg["settings"]["gemini_model"],
+                      tavily_budget, gemini, diag,
+                      out_of_time=fetcher.out_of_time)
+    twins = enrichment.mark_domestic_twins(list(store.open.values()), cfg)
+    not_yet = store.upcoming_eligibility(
+        today, int(cfg["settings"].get("eligibility_horizon_days", 240)))
+    # Seasonal memory: note this year's dates, then look for families that
+    # opened around now in a previous year and have not reappeared yet.
+    recurrence.record(list(store.open.values()), state.data, today)
+    open_keys = {enrichment.family_key(e) for e in store.open.values()}
+    diag["expected_soon"] = recurrence.as_prompts(state.data, today, open_keys)
+    if twins:
+        diag["domestic_twins"] = twins
     for ev in list(store.open.values()):
         scoring.score(ev, cfg, today, downweights)
     # Score first, then soonest-first inside a tie — otherwise equally-scored
@@ -262,10 +387,23 @@ def main(argv=None) -> int:
                     key=lambda e: (-e.score, e.start_date or far,
                                    e.next_deadline or far))
     alerted = {ev.id for ev, _, _ in act_now}
+    pinned = [e for e in ranked if e.pinned]
+    pinned_ids = {e.id for e in pinned}
     worth = [e for e in ranked if "worth the travel" in e.flags
-             and e.id not in alerted]
-    top = [e for e in ranked if e not in worth
-           and e.id not in alerted][:top_cap]
+             and e.id not in alerted and e.id not in pinned_ids]
+    top = [e for e in ranked if e not in worth and e.id not in alerted
+           and e.id not in pinned_ids][:top_cap]
+
+    # Close the loop on things you said you liked, once each, as the deadline
+    # arrives or just after it.
+    ask_applied = []
+    for e in store.open.values():
+        near = e.days_until_next_deadline
+        if (e.applied is None and not e.asked_applied
+                and ("you marked this interesting" in e.flags or e.pinned)
+                and near is not None and near <= 1):
+            e.asked_applied = True
+            ask_applied.append(e)
 
     if sunday:
         # Sunday is a complete inventory: every single thing still open that you
@@ -277,9 +415,13 @@ def main(argv=None) -> int:
     else:
         # Weekdays: everything open that did not make a full card, so a good
         # opportunity is never invisible just because it ranked eleventh.
-        shown = {e.id for e in top + worth + low_conf} | alerted
+        shown = {e.id for e in top + worth + low_conf + pinned} | alerted
         roundup = [e for e in ranked if e.id not in shown]
-    diag.update(tavily_used=state.data["tavily"]["used"],
+    diag.update(open_total=len(store.open),
+                dismissed_total=len(store.dismissed),
+                deferred_total=len(store.deferred),
+                evicted_count=len(diag.get("evicted", [])),
+                tavily_used=state.data["tavily"]["used"],
                 tavily_remaining=tavily_budget.remaining(),
                 tavily_month=state.data["tavily"].get("month_used", 0),
                 gemini_calls=gemini.used, fetched=fetcher.fetched,
@@ -290,7 +432,8 @@ def main(argv=None) -> int:
 
     subject, html, text = email_render.build(
         today, sunday, act_now=act_now, top=top, worth_travel=worth,
-        roundup=roundup, low_conf=low_conf,
+        roundup=roundup, low_conf=low_conf, pinned=pinned, not_yet=not_yet,
+        ask_applied=ask_applied, expected_soon=diag["expected_soon"],
         diagnostics=diag, ask_reason_for=list(state.data["ask_reason_for"]),
         reply_to=gmail or recipient)
 

@@ -64,8 +64,10 @@ The run happens in **two phases**, which is how the digest arrives at 06:30 exac
 
 | Time (Lisbon) | Phase | What it does | Duration |
 |---|---|---|---|
-| 06:10 | `prepare` | scrapes, filters, ranks, renders, and parks the finished digest in `data/outbox.json` | ~6 min |
-| 06:30 | `deliver` | reads the parked digest and sends it | ~40 sec |
+| 05:05 | `prepare` | scrapes, filters, ranks, cross-checks, renders, and parks the digest in `data/outbox.json` | ~6 min |
+| 05:50 | `deliver` | reads the parked digest, sleeps until exactly **06:00**, sends | ~10 min (mostly sleeping) |
+
+The delivery job fires ten minutes early on purpose. GitHub starts scheduled runs late — 3 to 8 minutes on this repo, which is why a 06:30 cron produced 06:33 and 06:38 deliveries. The job absorbs that delay by sleeping off whatever time is left before `send_at`. If GitHub is so late that 06:00 has already passed, it sends immediately rather than waiting a day. Change the time with `send_at` in `config/filters.yaml`, and move the four crons to match.
 
 GitHub bills by wall-clock time, so holding one job open from 06:10 to 06:30 would cost 20 idle minutes a day (~600 min/month). Two separate jobs cost about 7 minutes a day instead, and the mail still lands at 06:30.
 
@@ -145,8 +147,8 @@ Anything you write after the ID, or on a following line, is kept as a justificat
 
 | Service | Free allowance | Scout's own cap | When exhausted |
 |---|---|---|---|
-| GitHub Actions | 2,000 min/month (private repos, Free plan) | ~6 min prepare + ~1 min deliver + two ~15-sec guard exits ≈ 230 min/mo | Runs stop until the month resets; GitHub emails you. |
-| Tavily | 1,000 credits/month | 12 searches/day (8 used per run), counter persisted in `data/state.json` | Search sweep is skipped; the email's diagnostics say so; Tier 1 sources still run. |
+| GitHub Actions | 2,000 min/month (private repos, Free plan) | ~6 min prepare + ~10 min deliver (mostly the wait to 06:00) + two ~15-sec guard exits ≈ 500 min/mo | Runs stop until the month resets; GitHub emails you. |
+| Tavily | 1,000 credits/month | 40/day and 900/month, both persisted in `data/state.json`. One run uses ~17: 11 for the search sweep, up to 6 for cross-checking events with missing facts. | Search sweep is skipped; diagnostics say so; Tier 1 sources still run. |
 | Gemini (Flash-Lite, AI Studio) | ~1,000 requests/day free | ≤30 batched calls/run | Leftover pages are listed as "dropped at the LLM cap" in diagnostics — never invented. |
 | Gmail SMTP/IMAP | ~2,000 sends/day | 1 email/day | Not reachable at this volume. |
 | Nominatim | 1 request/second policy | Throttled + cached forever | Unresolvable in-person locations are rejected as "location unverifiable". |
@@ -178,7 +180,13 @@ They are lookup tables in `config/filters.yaml`, not judgements about the specif
 
 To change them, edit the tables. To teach the ranking instead, reply — `interested` / `meh` / `uninterested` adjust the weight of the type, organiser and field, which is the part that actually learns.
 
-## 17. The bottom list, and the Sunday recap
+## 17. Why there is no expand/collapse toggle
+
+There was one, briefly. `<details>`/`<summary>` is the only disclosure widget email clients accept without JavaScript, and Gmail strips the tag while keeping its contents — so every row rendered fully expanded, the Sunday recap printed the entire digest a second time, and a stray `＋` appeared on some titles and not others.
+
+The bottom rows are now compact instead: title, organiser, when, where, cost, deadline, a one-line description and the three feedback buttons. Everything you need to decide, without a link and without a toggle that only works in half the world's mail clients. Anything that already has a full card higher up is listed as a single back-reference line rather than repeated.
+
+## 18. The bottom list, and the Sunday recap
 
 On weekdays, the bottom section is **Also still open**: every open opportunity that did not make the top ten, so nothing good is invisible just because it ranked eleventh.
 
@@ -186,7 +194,7 @@ On **Sunday** it becomes **Sunday recap — everything still open**: a complete 
 
 Apple Mail, iOS Mail and Thunderbird collapse these properly. Gmail strips the `<details>` tag but keeps its contents, so in Gmail the rows render already expanded — longer, but nothing is hidden behind a link. There is no way to build a reliable collapsible section that Gmail honours without JavaScript, which email cannot run.
 
-## 18. How feedback actually reaches the scout
+## 19. How feedback actually reaches the scout
 
 Nothing you send is read by a person or by an AI in a chat window. The workflow polls the Gmail inbox over IMAP at the **start of every run**, before it scrapes anything. So:
 
@@ -196,12 +204,156 @@ Nothing you send is read by a person or by an AI in a chat window. The workflow 
 - The digest itself lands in the same inbox. It carries an `X-Opportunity-Scout` header and is fingerprinted by its own text, so it is skipped rather than parsed as feedback.
 - If IMAP fails, the Diagnostics section says `Could not read replies: ...`. Silence there means the poll worked.
 
-## 19. If a digest looks wrong
+## 20. If a digest looks wrong
 
 The three failure shapes and what they mean:
 
 - **Too much noise** (social events, irrelevant posts) → add a pattern to `social_noise` in `config/filters.yaml`. Anything matching that list is dropped before scoring, no matter how it ranked.
 - **Almost nothing, and Diagnostics shows Gemini errors** → the Gemini key is the problem. The scout auto-discovers a working model if the configured one 404s, but it cannot fix an invalid key. Regenerate it (step 5).
 - **An online event starts in the middle of the night** → that is deliberate. The scout converts the time to Lisbon, flags it (`starts 02:00 Lisbon — you would be up at night`) and leaves the decision to you. Set `reject_night_online: true` in `config/filters.yaml` if you would rather it drop them.
+- **A score or its explanation looks out of date** → it isn't any more. Estimates and their wording are recomputed from `config/filters.yaml` on every run, so editing a table changes every stored event on the next digest. (They used to be computed once and frozen into `seen.jsonl`.)
 - **Junk you thought was filtered keeps reappearing** → it was stored before the rule existed. Each run now re-tests every stored event against the current filters and retires the failures, listing them in Diagnostics. One run after a config change is enough.
 - **Nothing at all, and no email** → the job crashed. Check the Actions log (step 9). The scout never sends a clean-looking email built on a failed run.
+
+
+## 21. Where your feedback goes
+
+Replies are read at the start of every run and then **moved out of your inbox** into a Gmail label called `Opportunity Scout` (created automatically on first run). The poller checks both the inbox and that label, so if you also add a Gmail filter to skip the inbox entirely, feedback is still found.
+
+To add that filter — it removes the reply from your inbox the moment you send it, rather than the next morning:
+**Gmail → Settings → Filters → Create a new filter → Subject: `Opportunity Scout feedback` → Create filter → tick "Skip the Inbox" and "Apply the label: Opportunity Scout".**
+
+## 22. Cross-checking against independent sources
+
+Events arrive with gaps — no dates, no cost, an organiser the prestige table has never heard of. Each run picks up to `enrichment_max_events` (default 6) of the highest-ranked gap-ridden events and runs one search each.
+
+A result only counts as a second opinion if it passes three tests:
+
+1. **Different site.** Same registrable domain as the event's own URL is rejected, and only one result per domain is kept — two pages on `publico.pt` are one source.
+2. **Not an aggregator.** Eventbrite, Luma, Meetup, LinkedIn, Facebook and friends republish rather than report.
+3. **Not a copy.** If the text is more than 72% similar to the original description, it is a syndicated press release, not corroboration.
+
+What survives is quoted to the model under the usual anti-fabrication instruction. Filled fields appear on the card under **Cross-checked**, naming the domains. A prestige score raised this way says so explicitly instead of citing the lookup table. Anything with no independent support stays "not stated" — the scout does not guess.
+
+## 23. Foreign events with a Portuguese twin
+
+If an event's title, stripped of country names and years, matches an open Portuguese event, the foreign one is flagged: *"a Portuguese edition exists: E-0001"*. It is not rejected — the German round of a competition may well be the better one — but you are told, rather than having to spot it yourself across two cards.
+
+
+## 24. Eligibility: what you can actually apply to
+
+The CERN Summer Student Programme wants six completed semesters. That sentence
+was being extracted and printed on the card — but never compared against where
+you are, so the scout recommended something you could not apply to.
+
+`config/filters.yaml` now records your position in the degree:
+
+```yaml
+level:
+  academic:
+    first_semester_end: 2027-02-05
+    second_semester_end: 2027-07-13
+    degree_semesters: 10          # MIEM: 5 years
+    assume_within_days: 365       # for events that state no dates
+```
+
+From that the scout works out how many semesters you will have finished by the
+event's start date, and rejects anything asking for more. It reads the bar out
+of prose in either language: "at least six semesters", "two years of university
+study", "third-year students and above", "final year", "terceiro ano",
+"pelo menos quatro semestres". Events with no such requirement are unaffected,
+and one you will have grown into by the time it runs is kept.
+
+The rejection is explicit in Diagnostics: *"requires 6 completed semesters
+(\"completed at least six semesters\"); by 2027-06-21 you will have 1"*.
+
+**Keep those two dates current.** They are the anchor for the whole
+calculation; when the 2027/28 FEUP calendar is published, update them.
+
+
+## 25. Shortlist, and the "did you apply?" follow-up
+
+Two more reply commands:
+
+```
+shortlist: E-0049      (or: pin:)    keeps it at the top of every digest
+unshortlist: E-0049    (or: unpin:)  releases it
+applied: E-0049                      you sent an application
+skipped: E-0049        (or: didn't apply:)   you decided not to
+```
+
+A pinned event appears in **Your shortlist** above everything else until its
+deadline passes. Pins survive reloads — they are stored on the event, not as a
+flag, so the nightly flag reset cannot wipe them.
+
+When something you marked *interested* or pinned is about to close, the next
+digest asks once whether you applied. Once, not every morning: the question is
+recorded on the event so it cannot nag.
+
+## 26. Seasonal memory
+
+Most of these run annually. Each time an event's application window is seen,
+the month and day are recorded against a family key (the title with years and
+country names stripped). When that anniversary comes round and nothing matching
+is currently open, the digest says so under **Expected to open soon**, naming
+the year it is extrapolating from:
+
+> CERN Summer Student Programme — opened on 2025-11-01 last time, so expect it
+> around 2026-11-01 (56 days away). Not found open yet; this is a prediction
+> from last year, not a listing.
+
+It is labelled a prediction every time, because that is what it is.
+
+## 27. Cost policy
+
+- **At or under €50**, price is never a reason to hide something.
+- **€50 to €500**, the event is shown with the price stated plainly. If the page
+  names no prize, certificate or selection process, the note says so directly
+  rather than the event being dropped.
+- **Above €500**, still rejected.
+- A **certificate mill** — paid, self-paced, no cohort, no named institution —
+  is rejected at any price, because that is a quality judgement, not a price one.
+
+## 28. The academic calendar beyond 2026/27
+
+`config/filters.yaml` holds the published FEUP 2026/27 dates. Until the real
+2027/28 calendar exists, later years are **projected** by shifting those dates
+forward whole years (`project_years: 4`). Without this the calendar simply
+stops protecting you on 14 July 2027 — a heavy event in January 2028 would see
+no exam period at all.
+
+Anything judged against a projected date is flagged *"term dates projected, not
+published"* on the card. **Replace `exam_periods`, `class_periods` and `breaks`
+with the real dates when FEUP publishes them**, and update
+`level.academic.first_semester_end` / `second_semester_end`, which anchor the
+eligibility calculation.
+
+
+## 29. "Not yet" — events you are too early for
+
+Something rejected purely on eligibility is no longer discarded. It is parked
+with the date you would qualify, and it comes back on its own:
+
+- It stays out of the digest entirely while the date is far off.
+- Once you are within `eligibility_horizon_days` (default 240) it appears under
+  **Not yet — but worth knowing about**, one line, with the date.
+- On that date it re-enters the digest normally, flagged *"you are now eligible
+  for this"*.
+
+CERN is the worked example: parked in 2026, first mentioned in early 2029,
+released on 13 July 2029.
+
+An explicit `uninterested:` still beats this — saying no is permanent, and a
+future eligibility date will not resurrect something you rejected.
+
+## 30. Quiet weeks
+
+When fewer than `thin_digest_threshold` events clear the filters, the scout
+spends leftover search budget on a **broader sweep** instead of sending you a
+thin digest. Those queries live in `sources.yaml` marked `fallback: true`; they
+are deliberately vaguer than the daily ones, trading precision for coverage,
+which is only the right trade when the precise queries came back empty. They
+never run on a normal week, and the Diagnostics line says when they did.
+
+Worst case — a quiet week with full enrichment — is 29 Tavily credits, still
+inside both the daily cap and the free tier over a month.

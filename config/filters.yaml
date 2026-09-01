@@ -1,17 +1,24 @@
 # All behaviour knobs live here. sources.yaml only lists where to look.
 
 settings:
-  target_hour: 6              # local Europe/Lisbon hour the scheduled run may execute in
+  target_hour: 5            # local hour both crons must land in
+  send_at: "06:00"          # exact delivery time; the deliver job sleeps to it
+  max_send_wait_min: 20     # never hold a runner longer than this              # local Europe/Lisbon hour the scheduled run may execute in
   timezone: Europe/Lisbon
   max_runtime_min: 18        # cron fires 06:05, so worst case lands 06:23 — before 06:30         # hard stop: send what we have
-  tavily_daily_cap: 24       # 8 per run, so ~3 runs/day incl. manual tests
+  tavily_daily_cap: 60       # ~23 per run: the scheduled run plus two manual tests
   tavily_monthly_cap: 900    # the real guard on the 1,000/month free tier
+  # 15 sweep + up to 8 enrichment = 23/run -> ~690/month, inside the cap.
   gemini_run_cap: 30          # max LLM calls per run
   gemini_batch_size: 10       # candidate pages per LLM call
   gemini_model: gemini-2.5-flash-lite
   gemini_seconds_between_calls: 5   # free tier ~15 RPM
   top_section_cap: 10       # the daily shortlist you actually read
   reject_night_online: false  # false = flag awkward online hours, you decide
+  enrichment_max_events: 8   # searches per run for missing dates/cost/organiser
+  thin_digest_threshold: 6   # below this many qualifying events, sweep wider
+  eligibility_horizon_days: 240   # how far ahead to mention "not yet" events
+  enrichment_retry_days: 14  # don't re-search an event that had no coverage
   low_confidence_cap: 4      # snippets are leads, not a second digest
   max_total_events: 16       # ceiling on full cards; the roundup below is unlimited
   max_detail_pages_per_source: 8
@@ -225,6 +232,11 @@ override:
 
 # ------------------------------------------------- FEUP 2026/27 hard blackout
 calendar:
+  # The published FEUP calendar below covers 2026/27 only. Until the real
+  # 2027/28 one exists, later years are projected by shifting these forward and
+  # are marked provisional wherever they are used. Replace the real dates as
+  # soon as you have them; projection is a stopgap, not a substitute.
+  project_years: 4
   heavy_buffer_days: 14        # 20h+ events must end this many days before exams
   heavy_hours: 20
   light_hours: 5
@@ -261,10 +273,22 @@ level:
     - pre-university
     - "students and recent graduates"
   min_age_user: 18
+
+  # Where you actually are in the degree. CERN's summer programme wants six
+  # completed semesters; the requirement WAS extracted and shown on the card,
+  # but nothing compared it against you, so it was offered anyway.
+  academic:
+    first_semester_end: 2027-02-05    # FEUP 2026/27 semester 1 exam period ends
+    second_semester_end: 2027-07-13   # semester 2 exam period ends
+    degree_semesters: 10              # MIEM: 5 years
+    # When an event states no date, assume it happens within this horizon
+    # rather than skipping the check entirely.
+    assume_within_days: 365
   advantage_age_patterns: ["under.?19", "under.?21", "sub.?19", "sub.?21", "u19", "u21"]
 
 # ------------------------------------------------------------------------ cost
 cost:
+  never_exclude_below_eur: 50   # under this, price is never a reason to hide it
   max_eur: 500
   justification_above_eur: 100
   certificate_mill_signals: ["self.?paced", "learn at your own pace", "lifetime access",
@@ -290,7 +314,9 @@ classify:
     business: ["business", "gest[ãa]o", "management", "consult", "marketing", "neg[óo]cio"]
     finance_quant: ["finance", "financ", "quant", "trading", "investment", "banking", "atuari"]
     data_ai: ["\\bdata\\b", "\\bai\\b", "machine learning", "\\bml\\b", "analytics", "intelig[êe]ncia artificial", "python"]
-    entrepreneurship: ["startup", "entrepreneur", "empreendedor", "pitch", "incubat", "accelerat", "venture"]
+    entrepreneurship: ["startup", "entrepreneur", "empreendedor", "pitch\\b", "incubat", "accelerat", "\\bventure"]
+    public_speaking: ["public speaking", "oratória", "orat[óo]ria", "toastmaster", "\\bdebat", "debating", "elevator pitch", "pitch(ing)? (competition|training|workshop)", "comunica[çc][ãa]o (em p[úu]blico|oral)", "apresenta[çc][ãa]o em p[úu]blico", "rhetoric", "ret[óo]rica", "storytelling", "model united nations", "\\bmun\\b"]
+    economics_literacy: ["economia", "economic", "macroecon", "microecon", "literacia financeira", "financial literacy", "personal finance", "finan[çc]as pessoais", "poupan[çc]a", "investing basics", "bolsa de valores", "stock market", "mercados financeiros", "educa[çc][ãa]o financeira"]
 
 # ---------------------------------------------------------------------- scoring
 scoring:
@@ -302,7 +328,14 @@ scoring:
     competition_bonus: 0.12
     prestige: 0.08
   advantageous_stage_bonus: 0.15   # flat, on top of the composite
-  field_weights:                   # target fields, weighted in the user's order
+  # You are a FEUP student: things run by your own faculty are easier to reach,
+  # cheaper, and count for more locally. Flat bonus, applied before downweights.
+  affiliation_bonus: 0.12
+  affiliation_patterns: ["feup", "u\\.?porto", "universidade do porto", "sigarra",
+                         "junifeup", "aefeup", "neemec", "feup autosport", "inesc"]
+  field_weights:
+    public_speaking: 0.85
+    economics_literacy: 0.8                   # target fields, weighted in the user's order
     mechanical: 1.00
     industrial_ops: 0.90
     automotive_motorsport: 0.85

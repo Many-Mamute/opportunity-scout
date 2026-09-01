@@ -8,6 +8,7 @@ cv+prestige alone still clears the top-20 bar in practice.
 """
 from __future__ import annotations
 
+import re
 from datetime import date
 from typing import Dict
 
@@ -16,72 +17,81 @@ from store import normalise
 
 
 def enrich_estimates(ev: Event, cfg: dict) -> None:
+    """Recompute every estimate and its explanation, on every run.
+
+    These are pure functions of the event type, the organiser name and the
+    tables in filters.yaml — nothing about them is worth preserving across
+    runs. Guarding them behind `is None` meant an event stored yesterday kept
+    yesterday's numbers and yesterday's wording forever, so editing the tables
+    (or the explanations) only ever affected events discovered afterwards.
+    """
     est = cfg["estimates"]
     label = ev.type.replace("_", " ")
     article = "an" if label[:1] in "aeiou" else "a"
-    if ev.estimated_effort_hours is None:
-        per_day = est["hours_per_day"].get(ev.type, est["hours_per_day"]["other"])
-        if ev.type == "internship":
-            weeks = max(1, (ev.duration_days or 30) // 7)
-            ev.estimated_effort_hours = int(weeks * per_day)
-            src = ("the stated dates" if ev.duration_days
-                   else "a 30-day assumption, because no dates were stated")
-            ev.estimate_notes["effort"] = (
-                f"Effort {ev.estimated_effort_hours}h: internships are counted "
-                f"in weeks — {weeks} week(s) from {src}, at {per_day}h per week.")
-        else:
-            days = ev.duration_days or 1
-            ev.estimated_effort_hours = int(days * per_day)
-            src = ("" if ev.duration_days
-                   else " (no dates stated, so assumed a single day)")
-            ev.estimate_notes["effort"] = (
-                f"Effort {ev.estimated_effort_hours}h: {days} day(s) × {per_day}h, "
-                f"the table value for {article} {label}{src}.")
+    per_day = est["hours_per_day"].get(ev.type, est["hours_per_day"]["other"])
+
+    if ev.type == "internship":
+        weeks = max(1, (ev.duration_days or 30) // 7)
+        ev.estimated_effort_hours = int(weeks * per_day)
+        src = ("its stated dates" if ev.duration_days
+               else "an assumed 30 days, because the page gave no dates")
+        ev.estimate_notes["effort"] = (
+            f"Effort ≈{ev.estimated_effort_hours}h in total. Internships are "
+            f"measured in weeks: {weeks} week(s), taken from {src}, at the "
+            f"table's {per_day}h per week.")
+    else:
+        days = ev.duration_days or 1
+        ev.estimated_effort_hours = int(days * per_day)
+        src = ("" if ev.duration_days
+               else ", assuming a single day because the page gave no dates")
+        ev.estimate_notes["effort"] = (
+            f"Effort ≈{ev.estimated_effort_hours}h in total: {days} day(s) at "
+            f"the table's {per_day}h per day for {article} {label}{src}.")
     h = ev.estimated_effort_hours
     ev.intensity = ("light" if h < 5 else "moderate" if h < 20
                     else "heavy" if h < 60 else "intense")
 
-    # Every score below is a lookup table, not judgement. The notes say exactly
-    # which row of which table produced the number, so a wrong score points at
-    # the line of config to change.
+    # Lookup tables, not judgement. Each note names the table, the row and the
+    # arithmetic, so a score you disagree with points at the config line to fix.
     default_prestige = est["base_prestige_default"]
-    if ev.prestige_score is None:
-        org = normalise(ev.organiser)
-        boost, why = default_prestige, None
-        for key, val in est["prestige_boost"].items():
-            if key in org and int(val) >= boost:
-                boost = int(val)
-                why = (f"the organiser name contains \"{key}\", which the "
-                       f"prestige table scores {boost}")
-        for pres in cfg["override"]["prestigious_organisers"]:
-            if normalise(pres) in org:
-                boost = 5
-                why = (f"\"{pres}\" is on the prestigious-organisers list, "
-                       f"which always scores 5")
-        ev.prestige_score = boost
-        ev.estimate_notes["prestige"] = (
-            f"Prestige {boost}/5: " + (why + "." if why else
-            f"the scout does not recognise \"{ev.organiser}\", and unknown "
-            f"organisers default to {default_prestige}. This is name-matching "
-            f"only — a low score here means unrecognised, not unimpressive."))
-    if ev.cv_value_score is None:
-        base = est["base_cv"].get(ev.type, 2)
-        why = (f"CV {{}}/5: {article} {label} starts at {base} on the event-type table")
-        if ev.prestige_score >= 4:
-            base = min(5, base + 1)
-            why += ", plus 1 because the organiser scored 4 or more on prestige"
-        else:
-            why += ("; no organiser bonus, since that needs a prestige score "
-                    "of 4 or more")
-        ev.cv_value_score = base
-        ev.estimate_notes["cv"] = why.format(base) + "."
-    if ev.networking_score is None:
-        ev.networking_score = est["base_networking"].get(ev.type, 2)
-        ev.estimate_notes["networking"] = (
-            f"Networking {ev.networking_score}/5: the flat table value for "
-            f"{article} "
-            f"{label}. Nothing about who actually attends this particular "
-            f"event was assessed.")
+    org = normalise(ev.organiser)
+    boost, why = default_prestige, None
+    for key, val in est["prestige_boost"].items():
+        if key in org and int(val) >= boost:
+            boost = int(val)
+            why = (f"the organiser name contains \"{key}\", which the prestige "
+                   f"table in config/filters.yaml scores {boost} out of 5")
+    for pres in cfg["override"]["prestigious_organisers"]:
+        if normalise(pres) in org:
+            boost = 5
+            why = (f"\"{pres}\" appears on the prestigious-organisers list, "
+                   f"and everything on that list scores the maximum 5")
+    ev.prestige_score = boost
+    ev.estimate_notes["prestige"] = (
+        f"Prestige {boost} out of 5, because " + (why + "." if why else
+        f"the scout has never heard of \"{ev.organiser}\". Unrecognised "
+        f"organisers get the default of {default_prestige}. Prestige is decided "
+        f"purely by matching the organiser's name against a list, so a 2 here "
+        f"means unrecognised rather than unimpressive — check it yourself."))
+
+    base = est["base_cv"].get(ev.type, 2)
+    cv_why = (f"every {label} starts at {base} out of 5 on the event-type table")
+    if boost >= 4:
+        base = min(5, base + 1)
+        cv_why += (f", and this one gains 1 more because its organiser scored "
+                   f"{boost} on prestige (the bonus applies from 4 upwards)")
+    else:
+        cv_why += (f", and gains no organiser bonus, because that needs a "
+                   f"prestige score of at least 4 and this scored {boost}")
+    ev.cv_value_score = base
+    ev.estimate_notes["cv"] = f"CV value {base} out of 5: {cv_why}."
+
+    ev.networking_score = est["base_networking"].get(ev.type, 2)
+    ev.estimate_notes["networking"] = (
+        f"Networking {ev.networking_score} out of 5: this is simply the table "
+        f"value for {article} {label}. The scout knows nothing about who is "
+        f"actually attending this particular event, so treat it as a rough "
+        f"prior for the format, not a read on the room.")
 
     if not ev.cv_line:
         yr = (ev.start_date or ev.first_seen_date or date.today()).year
@@ -131,6 +141,14 @@ def downweight_multiplier(ev: Event, downweights: Dict[str, int],
     return min(ceiling, max(floor, mult))
 
 
+def _is_affiliated(ev: Event, cfg: dict) -> bool:
+    """Your own faculty's opportunities get a leg up: no travel, no cost, and
+    they are the ones where being a FEUP student is the entry ticket."""
+    hay = f"{ev.organiser} {ev.source} {ev.url} {ev.title}".lower()
+    return any(re.search(p, hay)
+               for p in cfg["scoring"].get("affiliation_patterns", []))
+
+
 def score(ev: Event, cfg: dict, today: date,
           downweights: Dict[str, int] | None = None) -> float:
     w = cfg["scoring"]["weights"]
@@ -147,6 +165,10 @@ def score(ev: Event, cfg: dict, today: date,
     if any(s_.is_advantageous and (not s_.closes or s_.closes >= today)
            for s_ in ev.stages):
         s += cfg["scoring"]["advantageous_stage_bonus"]
+    if _is_affiliated(ev, cfg):
+        s += cfg["scoring"].get("affiliation_bonus", 0.0)
+        if "your own faculty" not in ev.flags:
+            ev.flags.append("your own faculty")   # score() runs twice per run
     s *= downweight_multiplier(ev, downweights or {}, cfg)
     ev.score = round(s, 4)
     return ev.score

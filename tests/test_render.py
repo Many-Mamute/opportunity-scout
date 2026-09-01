@@ -47,9 +47,13 @@ def test_online_event_at_night_is_flagged_and_kept():
     e = Event(title="Cursor Guatemala Workshop", url="https://x", format="online",
               location="online", start_date=date(2026, 8, 21),
               start_time="02:00", tz_known=True, tz_source="UTC-06:00")
-    ok, _ = filters._online_hours(e)
-    assert ok
+    # _online_hours reports the fact; geography_filter decides what to do with
+    # it, and by default (reject_night_online: false) it keeps the event.
+    filters._online_hours(e)
     assert any("02:00 Lisbon" in f for f in e.flags), e.flags
+    e.flags.clear()
+    ok, _ = filters.geography_filter(e, CFG)
+    assert ok, "default config must keep it and let you decide"
     enrich_estimates(e, CFG)
     card = R._card_body(e, TODAY, "me@example.com")
     assert "02:00 Lisbon" in card and "up at night" in card
@@ -88,28 +92,29 @@ def test_revalidate_evicts_events_stored_before_the_rules_tightened(tmp_path):
 
 
 # ------------------------------------------------------------------- roundup
-def test_roundup_rows_are_expandable_and_carry_the_full_card():
+def test_compact_row_is_decidable_without_opening_the_link():
     e = Event(title="Some Workshop", organiser="Org", url="https://x",
               type="workshop", fields=["data_ai"], location="Porto",
+              one_line_summary="An evening on data pipelines.",
               start_date=date(2026, 9, 3), end_date=date(2026, 9, 3),
               start_time="18:00", tz_known=True, cost="free")
     enrich_estimates(e, CFG)
-    row = R._roundup_row(e, TODAY, "me@example.com")
-    assert row.startswith("<tr><td><details>") and "<summary" in row
-    for must in ("When", "Where", "Money", "Read more and apply",
-                 "Interested", "Meh", "Not for me"):
-        assert must in row, f"expanded row is missing {must}"
+    row = R._compact_row(e, TODAY, "me@example.com", already_shown=False)
+    for must in ("Some Workshop", "Org", "18:00", "Porto", "Free",
+                 "data pipelines", "Read more", "Interested", "Meh",
+                 "Not for me"):
+        assert must in row, f"compact row is missing {must}"
+    assert "<details>" not in row          # the toggle never worked in Gmail
 
 
 def test_scores_state_their_own_basis():
     e = Event(title="X", organiser="Bosch", url="https://x", type="hackathon")
     enrich_estimates(e, CFG)
-    assert "prestige table scores" in e.estimate_notes["prestige"]
-    assert "starts at 4 on the event-type table" in e.estimate_notes["cv"]
+    assert "prestige table in config/filters.yaml scores" in e.estimate_notes["prestige"]
+    assert "starts at 4 out of 5 on the event-type table" in e.estimate_notes["cv"]
     card = R._card_body(e, TODAY, "me@example.com")
     assert "How scored" in card and "event-type table" in card
-    # Full sentences, not shorthand.
-    assert "est. —" not in card
+    assert "est. —" not in card and "heuristic" not in card
 
 
 # ------------------------------------------------------- Sunday full recap
@@ -147,7 +152,7 @@ def test_weekday_list_is_only_the_overflow():
         roundup=evs[2:], low_conf=[], diagnostics={}, ask_reason_for=[],
         reply_to="x@y.z")
     assert "Also still open" in html and "Sunday recap" not in html
-    assert "2 more — tap any line" in html
+    assert "2 more that did not make the top ten" in html
 
 
 # ------------------------------------------- truncated snippet text (run 2)
@@ -192,17 +197,40 @@ def test_build_stamp_appears_in_diagnostics():
 
 
 # ---------------------------------------- card layout fixes from run 3
-def test_roundup_body_does_not_repeat_the_title():
-    """<summary> stays visible when open, so the body must not repeat it."""
+def test_event_with_a_card_above_is_not_repeated_in_full():
+    """The Sunday recap must not print the whole digest a second time."""
     e = Event(title="CERN Summer Student Programme 2027", organiser="CERN",
               url="https://home.cern", type="internship", fields=["mechanical"],
-              location="Geneva, Switzerland")
+              location="Geneva, Switzerland",
+              one_line_summary="Flagship international programme.")
     enrich_estimates(e, CFG)
-    row = R._roundup_row(e, TODAY, "me@example.com")
-    body = row.split("</summary>", 1)[1]
-    assert "CERN Summer Student Programme 2027" not in body
-    assert "When" in body and "Interested" in body      # facts still there
+    row = R._compact_row(e, TODAY, "me@example.com", already_shown=True)
+    assert "full card above" in row
+    assert "Flagship international programme" not in row
+    assert "Interested" not in row          # the buttons are on the card above
     assert row.count("CERN Summer Student Programme 2027") == 1
+
+
+def test_sunday_recap_does_not_duplicate_carded_events():
+    e = Event(title="CERN Summer Student Programme 2027", organiser="CERN",
+              url="https://home.cern", type="internship", fields=["mechanical"],
+              location="Geneva, Switzerland",
+              one_line_summary="Flagship international programme.", score=0.9,
+              id="E-0049")
+    other = Event(title="KTH Formula Student recruiting", organiser="KTH",
+                  url="https://kth.se", type="competition", id="E-0051",
+                  fields=["automotive_motorsport"], location="Porto", score=0.5)
+    for x in (e, other):
+        enrich_estimates(x, CFG)
+    _, html, text = R.build(date(2026, 8, 16), True, act_now=[], top=[e],
+                            worth_travel=[], roundup=[e, other], low_conf=[],
+                            diagnostics={}, ask_reason_for=[], reply_to="x@y.z")
+    # One full card, one back-reference.
+    assert html.count("Flagship international programme") == 1
+    assert "full card above" in html
+    assert "1 of them has a full card above" in html
+    assert "KTH Formula Student recruiting" in html
+    assert "(full details above)" in text
 
 
 def test_requirements_are_not_truncated():
