@@ -1,7 +1,0 @@
-# Plain crontab line for a future VPS (crontab -e). Server clocks are usually
-# UTC, so pin the zone and let main.py's guard do nothing (non-Actions runs
-# bypass it). Logs land in logs/cron.log.
-CRON_TZ=Europe/Lisbon
-30 6 * * * cd /opt/opportunity-scout && /usr/bin/python3 main.py >> logs/cron.log 2>&1
-# Docker variant:
-# 30 6 * * * cd /opt/opportunity-scout && /usr/bin/docker compose run --rm scout >> logs/cron.log 2>&1
