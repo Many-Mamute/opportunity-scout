@@ -11,7 +11,7 @@ import main
 from models import NOT_STATED, Event
 from score import enrich_estimates, score
 
-CFG = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" / "filters.yaml").read_text())
+CFG = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" / "filters.yaml").read_text(encoding="utf-8"))
 filters.prime(CFG)
 TODAY = date(2026, 8, 31)
 

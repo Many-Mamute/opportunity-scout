@@ -314,7 +314,7 @@ sources:
     type: page
     urls: ["https://inovaporto.pt/", "https://www.portotechhub.com/events"]
 
-  # ---------------- Tier 2: Tavily-budgeted sweep (max 30 queries/day) ------
+  # ---------------- Tier 2: Tavily-budgeted sweep (~15 queries/run; 60/day cap) --
   - name: tavily-linkedin
     tier: 2
     type: tavily

@@ -16,7 +16,7 @@ from models import Event
 from score import enrich_estimates, score
 from store import State, Store
 
-CFG = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" / "filters.yaml").read_text())
+CFG = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" / "filters.yaml").read_text(encoding="utf-8"))
 filters.prime(CFG)
 DAY1 = date(2026, 9, 1)
 
@@ -108,6 +108,7 @@ def test_state_survives_a_save_load_cycle(tmp_path):
     _morning(store, CFG, DAY1)
     store.save()
     state.save()
+    store.close()                                      # free the db file before reopening
 
     state2 = State(tmp_path / "s.json")
     store2 = Store(tmp_path / "seen.jsonl", tmp_path / "db", state2)

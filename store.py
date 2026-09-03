@@ -62,13 +62,14 @@ class State:
         self.data = default_state()
         if self.path.exists():
             try:
-                self.data.update(json.loads(self.path.read_text()))
+                self.data.update(json.loads(self.path.read_text(encoding="utf-8")))
             except Exception:
                 pass  # corrupt state must not kill the run; start fresh
 
     def save(self) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.path.write_text(json.dumps(self.data, indent=1, sort_keys=True))
+        self.path.write_text(json.dumps(self.data, indent=1, sort_keys=True),
+                             encoding="utf-8")
 
     # Tavily daily budget -------------------------------------------------
     def _tavily_roll(self, today: date) -> dict:
@@ -121,6 +122,22 @@ class Store:
                          rec.get("first_seen"), 1, json.dumps(rec))
         self.db.commit()
 
+    def close(self) -> None:
+        """Release the SQLite handle. seen.jsonl is the durable truth, so the
+        working copy can go at any time — but on Windows the file cannot be
+        deleted or reopened while this connection is live, which is why the
+        next run's Store() (it unlinks events.db) and the tests both need it.
+        Idempotent."""
+        if getattr(self, "db", None) is not None:
+            self.db.close()
+            self.db = None
+
+    def __enter__(self) -> "Store":
+        return self
+
+    def __exit__(self, *exc) -> None:
+        self.close()
+
     def _db_put(self, h, tn, on, fs, dis, js):
         fs = fs.isoformat() if isinstance(fs, date) else (fs or "")
         self.db.execute("INSERT OR REPLACE INTO events VALUES (?,?,?,?,?,?)",
@@ -129,7 +146,7 @@ class Store:
     def _load(self) -> None:
         if not self.seen_path.exists():
             return
-        for line in self.seen_path.read_text().splitlines():
+        for line in self.seen_path.read_text(encoding="utf-8").splitlines():
             line = line.strip()
             if not line:
                 continue
@@ -358,4 +375,5 @@ class Store:
                               "event": json.loads(e.model_dump_json(exclude_none=True))})
                   for e in sorted(self.deferred.values(), key=lambda e: e.id)]
         lines += [json.dumps(r) for r in self.dismissed.values()]
-        self.seen_path.write_text("\n".join(lines) + ("\n" if lines else ""))
+        self.seen_path.write_text("\n".join(lines) + ("\n" if lines else ""),
+                                  encoding="utf-8")

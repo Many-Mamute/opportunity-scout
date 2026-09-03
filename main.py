@@ -102,7 +102,7 @@ def deliver(cfg: dict) -> int:
         print("No digest was prepared this morning — the 06:10 job must have "
               "failed. Nothing to send.", file=sys.stderr)
         return 1
-    payload = json.loads(OUTBOX.read_text())
+    payload = json.loads(OUTBOX.read_text(encoding="utf-8"))
     today = datetime.now(ZoneInfo(cfg["settings"]["timezone"])).date()
     if payload.get("date") != today.isoformat():
         print(f"Outbox holds a digest from {payload.get('date')}, not today "
@@ -119,8 +119,8 @@ def deliver(cfg: dict) -> int:
 
 
 def load_cfg():
-    fcfg = yaml.safe_load((ROOT / "config" / "filters.yaml").read_text())
-    scfg = yaml.safe_load((ROOT / "config" / "sources.yaml").read_text())
+    fcfg = yaml.safe_load((ROOT / "config" / "filters.yaml").read_text(encoding="utf-8"))
+    scfg = yaml.safe_load((ROOT / "config" / "sources.yaml").read_text(encoding="utf-8"))
     return fcfg, scfg["sources"]
 
 
@@ -442,6 +442,7 @@ def main(argv=None) -> int:
         print(text)
         print(f"\n[dry-run] subject: {subject}")
         print(f"[dry-run] html: {len(html)} bytes; no email sent, no state written")
+        store.close()
         return 0
     if args.prepare:
         # Park it. The 06:30 cron picks it up in a ~40-second job, which costs
@@ -450,7 +451,7 @@ def main(argv=None) -> int:
         OUTBOX.write_text(json.dumps(
             {"prepared_at": datetime.now(tz).isoformat(), "date": today.isoformat(),
              "subject": subject, "html": html, "text": text,
-             "recipient": recipient}, ensure_ascii=False))
+             "recipient": recipient}, ensure_ascii=False), encoding="utf-8")
         print(f"Prepared '{subject}' -> {OUTBOX} (delivery job will send it)")
     else:
         email_render.send(subject, html, text, gmail_address=gmail,
@@ -460,6 +461,7 @@ def main(argv=None) -> int:
     store.prune(today)
     store.save()
     state.save()
+    store.close()
     print(f"{'Queued' if args.prepare else 'Sent'} '{subject}' for {recipient}; "
           f"{len(store.open)} open, {len(store.dismissed)} dismissed on record.")
     return 0

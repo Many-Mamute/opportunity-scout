@@ -12,7 +12,7 @@ from models import Event
 from score import enrich_estimates
 from store import State, Store
 
-CFG = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" / "filters.yaml").read_text())
+CFG = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" / "filters.yaml").read_text(encoding="utf-8"))
 filters.prime(CFG)
 TODAY = date(2026, 8, 16)
 
@@ -60,7 +60,7 @@ def test_online_event_at_night_is_flagged_and_kept():
 
 
 def test_jsonld_end_to_end_carries_times():
-    html = (Path(__file__).parent / "fixtures" / "eventbrite_event.html").read_text()
+    html = (Path(__file__).parent / "fixtures" / "eventbrite_event.html").read_text(encoding="utf-8")
     [e] = parse_jsonld(html, "https://x", "src", 200)
     assert e.start_time == "09:00" and e.tz_known
 

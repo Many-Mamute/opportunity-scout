@@ -11,7 +11,7 @@ import yaml
 
 import main
 
-CFG = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" / "filters.yaml").read_text())
+CFG = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" / "filters.yaml").read_text(encoding="utf-8"))
 
 
 @pytest.fixture

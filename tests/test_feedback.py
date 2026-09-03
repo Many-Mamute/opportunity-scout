@@ -7,7 +7,7 @@ from feedback import apply_feedback, parse_body
 from models import Event
 from store import State, Store
 
-CFG = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" / "filters.yaml").read_text())
+CFG = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" / "filters.yaml").read_text(encoding="utf-8"))
 TODAY = date(2026, 8, 13)
 
 

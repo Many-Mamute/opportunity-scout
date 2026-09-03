@@ -12,7 +12,7 @@ from models import Event, Stage
 from score import enrich_estimates, score
 from store import State, Store
 
-CFG = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" / "filters.yaml").read_text())
+CFG = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" / "filters.yaml").read_text(encoding="utf-8"))
 filters.prime(CFG)
 TODAY = date(2026, 9, 1)
 
@@ -41,6 +41,7 @@ def test_shortlist_pins_and_survives_a_reload(tmp_path):
     assert store.find_by_id(e.id).pinned is True
     store.save()
     state.save()
+    store.close()                                      # free the db file before reopening
 
     state2 = State(tmp_path / "s.json")
     store2 = Store(tmp_path / "seen.jsonl", tmp_path / "db", state2)
@@ -198,7 +199,7 @@ def test_future_years_are_projected_and_labelled():
 def test_projection_is_idempotent():
     """prime() runs on every import and every run."""
     cfg = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" /
-                          "filters.yaml").read_text())
+                          "filters.yaml").read_text(encoding="utf-8"))
     filters.prime(cfg)
     n = len(cfg["calendar"]["exam_periods"])
     for _ in range(5):
@@ -245,6 +246,7 @@ def test_deferred_events_survive_a_reload(tmp_path):
     store.defer(ev, TODAY)
     store.save()
     state.save()
+    store.close()                                      # free the db file before reopening
 
     state2 = State(tmp_path / "s.json")
     store2 = Store(tmp_path / "seen.jsonl", tmp_path / "db", state2)
@@ -291,7 +293,7 @@ def test_saying_no_beats_deferral(tmp_path):
 # ============================ quiet-week fallback (idea 4) ===================
 def test_fallback_queries_exist_and_are_opt_in():
     src = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" /
-                          "sources.yaml").read_text())["sources"]
+                          "sources.yaml").read_text(encoding="utf-8"))["sources"]
     fb = [s for s in src if s.get("fallback")]
     assert fb, "no fallback source defined"
     assert all(s["type"] == "tavily" for s in fb)
@@ -308,7 +310,7 @@ def test_thin_threshold_is_configured():
 
 def test_budget_stays_inside_the_free_tier_even_on_a_quiet_week():
     src = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" /
-                          "sources.yaml").read_text())["sources"]
+                          "sources.yaml").read_text(encoding="utf-8"))["sources"]
     daily = sum(len(s.get("queries", [])) for s in src
                 if s.get("type") == "tavily" and s.get("enabled", True)
                 and not s.get("fallback"))

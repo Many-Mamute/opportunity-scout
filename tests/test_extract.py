@@ -7,7 +7,7 @@ FIX = Path(__file__).parent / "fixtures"
 
 
 def test_jsonld_full_mapping():
-    html = (FIX / "eventbrite_event.html").read_text()
+    html = (FIX / "eventbrite_event.html").read_text(encoding="utf-8")
     evs = parse_jsonld(html, "https://www.eventbrite.com/e/x", "eventbrite-porto", 200)
     assert len(evs) == 1
     e = evs[0]
@@ -23,7 +23,7 @@ def test_jsonld_full_mapping():
 
 
 def test_jsonld_graph_and_online():
-    html = (FIX / "graph_online_event.html").read_text()
+    html = (FIX / "graph_online_event.html").read_text(encoding="utf-8")
     evs = parse_jsonld(html, "https://x", "src", 200)
     assert len(evs) == 1
     e = evs[0]
@@ -32,7 +32,7 @@ def test_jsonld_graph_and_online():
 
 
 def test_no_jsonld_yields_nothing():
-    html = (FIX / "no_jsonld.html").read_text()
+    html = (FIX / "no_jsonld.html").read_text(encoding="utf-8")
     assert parse_jsonld(html, "https://x", "src", 200) == []
 
 

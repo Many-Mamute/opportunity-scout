@@ -9,7 +9,7 @@ from models import Event
 from score import enrich_estimates, score
 from store import State, Store
 
-CFG = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" / "filters.yaml").read_text())
+CFG = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" / "filters.yaml").read_text(encoding="utf-8"))
 filters.prime(CFG)
 TODAY = date(2026, 8, 13)
 
@@ -152,7 +152,7 @@ def test_certificate_mill_rejected():
 
 # ---------------------------------- end-to-end: one Tier 1 fixture source
 def test_fixture_end_to_end_through_pipeline(tmp_path):
-    html = (Path(__file__).parent / "fixtures" / "eventbrite_event.html").read_text()
+    html = (Path(__file__).parent / "fixtures" / "eventbrite_event.html").read_text(encoding="utf-8")
     [e] = parse_jsonld(html, "https://www.eventbrite.com/e/x", "eventbrite-porto", 200)
     filters.classify(e, CFG, html)
     enrich_estimates(e, CFG)

@@ -74,6 +74,7 @@ def test_persistence_roundtrip_and_sqlite_ephemeral(tmp_path):
     store, state = make_store(tmp_path)
     store.upsert(ev(), TODAY)
     store.save(); state.save()
+    store.close()                                   # release the SQLite handle first
     (tmp_path / "events.db").unlink()               # losing the db loses nothing
     store2, _ = make_store(tmp_path)
     assert len(store2.open) == 1

@@ -28,7 +28,7 @@ An **app password** is a separate 16-character password Google creates so a scri
 
 ## 4. Get a Tavily key (search)
 
-Tavily is a search service with a free tier of 1,000 credits per month; one basic search costs one credit, and the scout hard-caps itself at 30 per day.
+Tavily is a search service with a free tier of 1,000 credits per month; one basic search costs one credit, and the scout hard-caps itself at 60 per day (and 900 per month).
 
 1. Go to https://app.tavily.com, sign up (no credit card).
 2. Copy the API key from the dashboard — it starts with `tvly-`.
@@ -148,7 +148,7 @@ Anything you write after the ID, or on a following line, is kept as a justificat
 | Service | Free allowance | Scout's own cap | When exhausted |
 |---|---|---|---|
 | GitHub Actions | 2,000 min/month (private repos, Free plan) | ~6 min prepare + ~10 min deliver (mostly the wait to 06:00) + two ~15-sec guard exits ≈ 500 min/mo | Runs stop until the month resets; GitHub emails you. |
-| Tavily | 1,000 credits/month | 40/day and 900/month, both persisted in `data/state.json`. One run uses ~17: 11 for the search sweep, up to 6 for cross-checking events with missing facts. | Search sweep is skipped; diagnostics say so; Tier 1 sources still run. |
+| Tavily | 1,000 credits/month | 60/day and 900/month, both persisted in `data/state.json`. One run uses ~23: 15 for the search sweep, up to 8 for cross-checking events with missing facts (~690/month). | Search sweep is skipped; diagnostics say so; Tier 1 sources still run. |
 | Gemini (Flash-Lite, AI Studio) | ~1,000 requests/day free | ≤30 batched calls/run | Leftover pages are listed as "dropped at the LLM cap" in diagnostics — never invented. |
 | Gmail SMTP/IMAP | ~2,000 sends/day | 1 email/day | Not reachable at this volume. |
 | Nominatim | 1 request/second policy | Throttled + cached forever | Unresolvable in-person locations are rejected as "location unverifiable". |

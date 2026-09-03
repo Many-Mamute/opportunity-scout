@@ -10,7 +10,7 @@ from models import STICKY_FLAGS, Event
 from score import enrich_estimates, score
 from store import State, Store
 
-CFG = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" / "filters.yaml").read_text())
+CFG = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" / "filters.yaml").read_text(encoding="utf-8"))
 filters.prime(CFG)
 TODAY = date(2026, 8, 31)
 
@@ -146,7 +146,7 @@ def test_bug_a_user_set_flags_survive_the_reset(tmp_path):
 
 def test_bug_b_reject_night_online_knob_actually_works():
     cfg = yaml.safe_load((Path(__file__).resolve().parents[1] / "config" /
-                          "filters.yaml").read_text())
+                          "filters.yaml").read_text(encoding="utf-8"))
     filters.prime(cfg)
     def night():
         return Event(title="X", url="https://x", format="online",
